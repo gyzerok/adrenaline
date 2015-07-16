@@ -1,6 +1,9 @@
 /* @flow */
 
 import React, { Componenet, PropTypes } from 'react';
+import getDisplayName from '../utils/getDisplayName';
+import { map } from '../utils/dash';
+import compileQuery from '../utils/compileQuery';
 
 export default function createGraphQLContainer(ComposedComponent, { queries = {}, queryParams = {} }) {
   let _queryParams = { ...queryParams };

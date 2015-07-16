@@ -1,6 +1,7 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react';
+import { reduce } from '../utils/dash';
 
 export default export class GraphQLConnector extends Component {
   static propTypes = {
