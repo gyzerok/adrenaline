@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Componenet, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import getDisplayName from '../utils/getDisplayName';
 import { map } from '../utils/dash';
 import compileQuery from '../utils/compileQuery';
