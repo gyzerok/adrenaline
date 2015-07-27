@@ -4,6 +4,8 @@ This is a pack of tools which provides Relay-like functionality for Redux-based 
 
 ## Example
 
+As you can see from following example its somelike close to [Relay examples provided by Facebook](http://facebook.github.io/react/blog/2015/03/19/building-the-facebook-news-feed-with-relay.html).
+
 ```javascript
 // ./index.js
 
