@@ -4,9 +4,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  externals: {
-    react: 'react'
-  },
+  externals: ['react'],
   target: 'node',
   entry: path.join(__dirname, 'src'),
   output: {
