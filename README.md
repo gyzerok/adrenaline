@@ -4,6 +4,8 @@ This is a pack of tools which provides Relay-like functionality for Redux-based 
 
 You can check [this repository](https://github.com/gyzerok/redux-react-graphql-example) to see a dirty working example of Todo app.
 
+***NOTE:*** Currently this is nothing but proof of concept. Project is in the very early stage.
+
 ## Example
 
 As you can see from following example its somelike close to [Relay examples provided by Facebook](http://facebook.github.io/react/blog/2015/03/19/building-the-facebook-news-feed-with-relay.html).
