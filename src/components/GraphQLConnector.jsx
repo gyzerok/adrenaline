@@ -1,7 +1,8 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react';
-import { reduce } from '../utils/dash';
+import { reduce } from '../utils/transformers';
+import { ACTION_TYPE } from '../constants';
 
 export default class GraphQLConnector extends Component {
   static propTypes = {

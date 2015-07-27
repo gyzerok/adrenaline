@@ -1,6 +1,6 @@
 /* @flow */
 
-import { reduce } from './dash';
+import { reduce } from './transformers';
 
 export function compileQuery(query: string, params: Object): string {
   return reduce(params, (acc, val, key) => {
