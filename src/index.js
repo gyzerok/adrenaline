@@ -1,6 +1,6 @@
 /* @flow */
 
-import createGraphQLContainer from './componeents/createGraphQLContainer';
+import createGraphQLContainer from './components/createGraphQLContainer';
 import GraphQLConnector from './components/GraphQLConnector';
 import createReducer from './utils/createReducer';
 

@@ -1,6 +1,6 @@
 /* @flow */
 
-export function map(obj, predicate) {
+export function map(obj: Object, predicate: Function): Object {
   const result = {};
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
@@ -10,7 +10,7 @@ export function map(obj, predicate) {
   return result;
 }
 
-export function reduce(obj, predicate, initial) {
+export function reduce(obj: Object, predicate: Function, initial: any): any {
   let acc = initial;
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {

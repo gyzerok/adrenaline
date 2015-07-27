@@ -3,10 +3,11 @@
 import React, { Component, PropTypes } from 'react';
 import { reduce } from '../utils/dash';
 
-export default export class GraphQLConnector extends Component {
+export default class GraphQLConnector extends Component {
   static propTypes = {
     endpoint: PropTypes.string.isRequired,
     children: PropTypes.any.isRequired,
+    dispatch: PropTypes.func.isRequired,
   }
 
   static childContextTypes = {
