@@ -1,7 +1,7 @@
 /* @flow */
 
 export function map(obj: Object, predicate: Function): Object {
-  const result = {};
+  let result = {};
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
       result[key] = predicate(obj[key], key);

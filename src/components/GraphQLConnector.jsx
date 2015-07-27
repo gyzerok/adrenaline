@@ -27,9 +27,13 @@ export default class GraphQLConnector extends Component {
 
   onGraphQLRefresh = () => {
     const { endpoint, dispatch, children } = this.props;
-    const query = reduce(children.type.getQuery(), (acc, val, key) => {
-      return acc + '\n' + key + ': ' + val;
+    const query = reduce(children, (memo, child) => {
+      return !child.type.getQuery ? memo :
+        memo + '\n' + reduce(child, (acc, val, key) => {
+          return acc + '\n' + key + ': ' + val;
+        }, '');
     }, '');
+
     const opts = {
       method: 'post',
       headers: {
@@ -41,12 +45,7 @@ export default class GraphQLConnector extends Component {
     // TODO: Somehow deal with errors
     fetch(endpoint, opts)
       .then(res => res.json())
-      .then(json => {
-        dispatch({
-          type: ACTION_TYPE,
-          payload: json.data,
-        });
-      });
+      .then(json => dispatch({ type: ACTION_TYPE, payload: json.data }));
   }
 
   render() {

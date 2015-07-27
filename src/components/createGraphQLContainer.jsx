@@ -6,7 +6,7 @@ import { map } from '../utils/transformers';
 import compileQuery from '../utils/compileQuery';
 
 export default function createGraphQLContainer(ComposedComponent, { queries = {}, queryParams = {} }) {
-  let _queryParams = { ...queryParams };
+  let currentParams = { ...queryParams };
 
   return class extends Component {
     static displayName = `GraphQLContainer(${getDisplayName(ComposedComponent)})`;
@@ -16,7 +16,7 @@ export default function createGraphQLContainer(ComposedComponent, { queries = {}
     }
 
     static getQuery = (key) => {
-      const compiledQueries = map(queries, q => compileQuery(q, _queryParams));
+      const compiledQueries = map(queries, q => compileQuery(q, currentParams));
       return !key ? compiledQueries : '... on ' + compiledQueries[key];
     }
 
@@ -25,7 +25,7 @@ export default function createGraphQLContainer(ComposedComponent, { queries = {}
     }
 
     setQueryParams = (nextParams) => {
-      _queryParams = {
+      currentParams = {
         ...queryParams,
         ...nextParams,
       };
@@ -36,7 +36,7 @@ export default function createGraphQLContainer(ComposedComponent, { queries = {}
     render() {
       return (
         <ComposedComponent {...this.props}
-          queryParams={{..._queryParams}}
+          queryParams={{...currentParams}}
           setQueryParams={this.setQueryParams} />
       );
     }
