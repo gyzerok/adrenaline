@@ -12,7 +12,7 @@ var reactExternal = {
 
 module.exports = {
   externals: {
-    'react': reactExternal
+    react: reactExternal
   },
   entry: path.join(__dirname, 'src'),
   output: {
@@ -22,11 +22,11 @@ module.exports = {
     libraryTarget: 'umd'
   },
   resolve: {
-    extensions: ['', '.js', '.jsx', '.json']
+    extensions: ['', '.js', '.jsx']
   },
   plugins: [
     new webpack.DefinePlugin({
-			"process.env": {
+			'process.env': {
 				NODE_ENV: JSON.stringify('production')
 			}
 		}),
