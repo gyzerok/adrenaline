@@ -1,27 +1,33 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react';
+import invariant from 'invariant';
 import getDisplayName from '../utils/getDisplayName';
 import { map } from '../utils/transformers';
 import compileQuery from '../utils/compileQuery';
 
 export default function createGraphQLContainer(ComposedComponent, { queries = {}, queryParams = {} }) {
   let currentParams = { ...queryParams };
+  const displayName = `GraphQLContainer(${getDisplayName(ComposedComponent)})`;
 
   return class extends Component {
-    static displayName = `GraphQLContainer(${getDisplayName(ComposedComponent)})`;
+    static displayName = displayName;
 
     static contextTypes = {
       graphQLRefresh: PropTypes.func.isRequired,
     }
 
     static getQuery = (key) => {
-      const compiledQueries = map(queries, q => compileQuery(q, currentParams));
-      return !key ? compiledQueries : '... on ' + compiledQueries[key];
+      invariant(
+        key !== undefined && key !== null,
+        'You cant call getQuery without key in %s',
+        displayName
+      );
+      return '... on ' + compileQuery(queries[key], currentParams);
     }
 
     componentWillMount() {
-      this.context.graphQLRefresh();
+      this.context.graphQLRefresh(compileQuery(queries, currentParams));
     }
 
     setQueryParams = (nextParams) => {
@@ -30,7 +36,7 @@ export default function createGraphQLContainer(ComposedComponent, { queries = {}
         ...nextParams,
       };
       this.forceUpdate();
-      this.context.graphQLRefresh();
+      this.context.graphQLRefresh(compileQuery(queries, currentParams));
     }
 
     render() {

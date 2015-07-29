@@ -25,14 +25,8 @@ export default class GraphQLConnector extends Component {
     this.onGraphQLRefresh();
   }
 
-  onGraphQLRefresh = () => {
-    const { endpoint, dispatch, children } = this.props;
-    const query = reduce([].concat(children), (memo, child) => {
-      return !child.type.getQuery ? memo :
-        memo + '\n' + reduce(child.type.getQuery(), (acc, val, key) => {
-          return acc + '\n' + key + ': ' + val;
-        }, '');
-    }, '');
+  onGraphQLRefresh = (query) => {
+    const { endpoint, dispatch } = this.props;
 
     const opts = {
       method: 'post',
