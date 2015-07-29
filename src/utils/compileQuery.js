@@ -1,6 +1,6 @@
 /* @flow */
 
-import { map, reduce, isString } from './transformers';
+import { map, reduce, filter, isString } from './transformers';
 
 export default function compileQuery(queries: string | Object, params: Object): string {
   if (isString(queries)) {
@@ -9,7 +9,8 @@ export default function compileQuery(queries: string | Object, params: Object): 
     }, queries);
   }
 
-  const compiledQueries = map(queries, q => compileQuery(q, params));
+  const filteredQueries = filter(queries, q => !q.trim().startsWith('...'));
+  const compiledQueries = map(filteredQueries, q => compileQuery(q, params));
   return reduce(compiledQueries, (acc, val, key) => {
     return acc + '\n' + key + ': ' + val;
   }, '');

@@ -24,6 +24,16 @@ export function reduce(obj: Object | Array, predicate: Function, initial: any): 
   return acc;
 }
 
+export function filter(arr, predicate) {
+  let result = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (predicate(arr[i])) {
+      result = result.concat(arr[i]);
+    }
+  }
+  return result;
+}
+
 export function isString(value) {
   return typeof value === 'string' || value instanceof String;
 }
