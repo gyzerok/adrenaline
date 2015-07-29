@@ -29,7 +29,7 @@ export default class GraphQLConnector extends Component {
     const { endpoint, dispatch, children } = this.props;
     const query = reduce([].concat(children), (memo, child) => {
       return !child.type.getQuery ? memo :
-        memo + '\n' + reduce(child, (acc, val, key) => {
+        memo + '\n' + reduce(child.type.getQuery(), (acc, val, key) => {
           return acc + '\n' + key + ': ' + val;
         }, '');
     }, '');
