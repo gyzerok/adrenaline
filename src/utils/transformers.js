@@ -10,7 +10,11 @@ export function map(obj: Object, predicate: Function): Object {
   return result;
 }
 
-export function reduce(obj: Object, predicate: Function, initial: any): any {
+export function reduce(obj: Object | Array, predicate: Function, initial: any): any {
+  if (obj.length) {
+    return obj.reduce(predicate, initial);
+  }
+
   let acc = initial;
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
