@@ -23,7 +23,7 @@ export default function createGraphQLContainer(ComposedComponent, { queries = {}
         'You cant call getQuery without key in %s',
         displayName
       );
-      return '... on ' + compileQuery(queries[key], currentParams);
+      return compileQuery(queries[key], currentParams);
     }
 
     componentWillMount() {

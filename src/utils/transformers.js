@@ -24,11 +24,11 @@ export function reduce(obj: Object | Array, predicate: Function, initial: any): 
   return acc;
 }
 
-export function filter(arr, predicate) {
-  let result = [];
-  for (let i = 0; i < arr.length; i++) {
-    if (predicate(arr[i])) {
-      result = result.concat(arr[i]);
+export function filter(obj: Object, predicate: Function): Object {
+  let result = {};
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key) && predicate(obj[key])) {
+      result[key] = obj[key];
     }
   }
   return result;
