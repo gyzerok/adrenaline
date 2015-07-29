@@ -3,7 +3,7 @@
 import { map, reduce } from './transformers';
 
 export default function compileQuery(queries: string | Object, params: Object): string {
-  if (typeof queries.charAt === 'function') {
+  if (typeof queries === 'string' || queries instanceof String) {
     return reduce(params, (acc, val, key) => {
       return acc.replace(new RegExp('<' + key + '>', 'g'), val);
     }, queries);

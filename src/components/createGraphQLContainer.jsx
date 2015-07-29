@@ -27,12 +27,12 @@ export default function createGraphQLContainer(ComposedComponent, { queries = {}
     }
 
     componentWillMount() {
-      this.context.graphQLRefresh(compileQuery(queries, currentParams));
+      this.context.graphQLRefresh(compileQuery(queries, queryParams));
     }
 
     setQueryParams = (nextParams) => {
       currentParams = {
-        ...queryParams,
+        ...currentParams,
         ...nextParams,
       };
       this.forceUpdate();
