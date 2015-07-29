@@ -4,12 +4,21 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  externals: ['react'],
+  externals: {
+    react: {
+      root: 'React',
+      commonjs2: 'react',
+      commonjs: 'react',
+      amd: 'react'
+    }
+  },
   target: 'node',
   entry: path.join(__dirname, 'src'),
   output: {
     path: path.join(__dirname, 'lib'),
     filename: 'redux-graphql.js',
+    library: 'ReduxGraphQL',
+    libraryTarget: 'umd'
   },
   resolve: {
     extensions: ['', '.js', '.jsx']
@@ -20,6 +29,7 @@ module.exports = {
 				NODE_ENV: JSON.stringify('production')
 			}
 		}),
+    new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
