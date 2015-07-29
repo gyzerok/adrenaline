@@ -11,7 +11,7 @@ export function map(obj: Object, predicate: Function): Object {
 }
 
 export function reduce(obj: Object | Array, predicate: Function, initial: any): any {
-  if (obj.length) {
+  if (Array.isArray(obj)) {
     return obj.reduce(predicate, initial);
   }
 
@@ -22,4 +22,8 @@ export function reduce(obj: Object | Array, predicate: Function, initial: any): 
     }
   }
   return acc;
+}
+
+export function isString(value) {
+  return typeof value === 'string' || value instanceof String;
 }

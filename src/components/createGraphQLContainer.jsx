@@ -3,7 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
 import getDisplayName from '../utils/getDisplayName';
-import { map } from '../utils/transformers';
+import { isString } from '../utils/transformers';
 import compileQuery from '../utils/compileQuery';
 
 export default function createGraphQLContainer(ComposedComponent, { queries = {}, queryParams = {} }) {
@@ -19,7 +19,7 @@ export default function createGraphQLContainer(ComposedComponent, { queries = {}
 
     static getQuery = (key) => {
       invariant(
-        key !== undefined && key !== null,
+        isString(key),
         'You cant call getQuery without key in %s',
         displayName
       );

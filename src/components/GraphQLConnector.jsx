@@ -23,7 +23,7 @@ export default class GraphQLConnector extends Component {
   onGraphQLRefresh = (query) => {
     const { endpoint, dispatch } = this.props;
 
-    console.log('performing query', query);
+    console.log('performing query', JSON.stringify(query));
 
     const opts = {
       method: 'post',
