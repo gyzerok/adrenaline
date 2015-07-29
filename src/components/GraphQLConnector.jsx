@@ -1,7 +1,6 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react/addons';
-import { reduce } from '../utils/transformers';
 import { ACTION_TYPE } from '../constants';
 
 export default class GraphQLConnector extends Component {
@@ -21,12 +20,10 @@ export default class GraphQLConnector extends Component {
     };
   }
 
-  componentWillMount() {
-    this.onGraphQLRefresh();
-  }
-
   onGraphQLRefresh = (query) => {
     const { endpoint, dispatch } = this.props;
+
+    console.log('performing query');
 
     const opts = {
       method: 'post',
@@ -39,7 +36,9 @@ export default class GraphQLConnector extends Component {
     // TODO: Somehow deal with errors
     fetch(endpoint, opts)
       .then(res => res.json())
-      .then(json => dispatch({ type: ACTION_TYPE, payload: json.data }));
+      .then(json => {
+        dispatch({ type: ACTION_TYPE, payload: json.data });
+      });
   }
 
   render() {
