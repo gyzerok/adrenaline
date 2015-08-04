@@ -1,6 +1,6 @@
 /* @flow */
 
-export function map(obj: Object, predicate: Function): Object {
+/*export function map(obj: Object, predicate: Function): Object {
   let result = {};
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
@@ -32,8 +32,27 @@ export function filter(obj: Object, predicate: Function): Object {
     }
   }
   return result;
+}*/
+
+export function trace(tag) {
+  return x => {
+    console.log(tag, x);
+    return x;
+  };
 }
 
-export function isString(value) {
+export function replaceObj(str: string, params: Object): string {
+  console.log(str);
+  let result = str;
+  for (const key in params) {
+    if (params.hasOwnProperty(key)) {
+      result = result.replace(new RegExp('<' + key + '>', 'g'), params[key]);
+    }
+  }
+  console.log('REPLACE!!!', result);
+  return result;
+}
+
+export function isString(value: any): boolean {
   return typeof value === 'string' || value instanceof String;
 }

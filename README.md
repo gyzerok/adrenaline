@@ -125,7 +125,7 @@ class TodoItem extends Component {
 export default createContainer(TodoItem, {
   queries: {
     todo: `
-      Todo {
+      ... on Todo {
         text
       }
     `,

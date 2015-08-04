@@ -3,7 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
 import getDisplayName from '../utils/getDisplayName';
-import { isString } from '../utils/transformers';
+import { isString } from '../utils/helpers';
 import compileQuery from '../utils/compileQuery';
 
 export default function createGraphQLContainer(ComposedComponent, { queries = {}, queryParams = {} }) {
