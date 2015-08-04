@@ -1,4 +1,4 @@
-jest.dontMock('ramda');
+jest.dontMock('lodash');
 jest.dontMock('deepmerge');
 jest.dontMock('../../utils/createReducer');
 

@@ -21,7 +21,7 @@ describe('compileQuery', () => {
 
     const compiled = compileQuery(queries, params);
 
-    expect(compiled).toEqual(`
+    expect(compiled.replace(/\s+/g, ' ').trim()).toEqual(`
       todos: todos(count: 5) {
         _id,
         ... on Todo {

@@ -6,7 +6,7 @@ export default function compileQuery(queries: string | Object, params: Object): 
   if (isString(queries)) {
     return reduce(params, (acc, val, key) => {
       return acc.replace(new RegExp('<' + key + '>', 'g'), val);
-    }, queries).replace(/\s+/g, ' ').trim();
+    }, queries);
   }
 
   //const filteredQueries = filter(queries, q => !q.trim().startsWith('...'));
@@ -15,5 +15,5 @@ export default function compileQuery(queries: string | Object, params: Object): 
 
   return reduce(compiledQueries, (acc, val, key) => {
     return acc + '\n' + key + ': ' + val;
-  }, '').trim();
+  }, '');
 }

@@ -1,6 +1,6 @@
 /* @flow */
 
-import { mapObj, reduce } from 'ramda';
+import { mapValues, reduce } from 'lodash';
 import mergeDeep from 'deepmerge';
 import { ACTION_TYPE } from '../constants';
 
@@ -8,14 +8,14 @@ export default function createReducer() {
   return (state = {}, action) => {
     const { type, payload } = action;
 
-    const keyedPayload = mapObj(value => {
-      return reduce((acc, v) => {
+    const keyedPayload = mapValues(payload, value => {
+      return reduce(value, (acc, v) => {
         return {
           ...acc,
           [v._id]: v,
         };
-      }, {}, value);
-    }, payload);
+      }, {});
+    });
 
     switch (type) {
       case ACTION_TYPE:
