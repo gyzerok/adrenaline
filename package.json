@@ -21,7 +21,6 @@
     "eslint-plugin-react": "^3.0.0",
     "jest-cli": "^0.4.17",
     "node-libs-browser": "^0.5.2",
-    "ramda": "^0.17.1",
     "webpack": "^1.10.1"
   },
   "dependencies": {
