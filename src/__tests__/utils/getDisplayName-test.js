@@ -1,4 +1,4 @@
-jest.dontMock('../../utils/getDisplayName');
+jest.autoMockOff();
 
 describe('getDisplayName', () => {
   it('should return component for undefined', () => {

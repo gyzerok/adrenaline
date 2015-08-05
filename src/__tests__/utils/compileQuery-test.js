@@ -1,5 +1,4 @@
-jest.dontMock('lodash');
-jest.dontMock('../../utils/compileQuery');
+jest.autoMockOff();
 
 describe('compileQuery', () => {
   it('should correctly compile query', () => {

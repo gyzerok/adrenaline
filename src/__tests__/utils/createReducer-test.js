@@ -1,6 +1,4 @@
-jest.dontMock('lodash');
-jest.dontMock('deepmerge');
-jest.dontMock('../../utils/createReducer');
+jest.autoMockOff();
 
 describe('createReducer', () => {
   it('should correctly append query results', () => {
