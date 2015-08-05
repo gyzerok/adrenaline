@@ -1,5 +1,7 @@
 # redux-graphql
 
+[![Build Status](https://travis-ci.org/gyzerok/redux-graphql.svg)](https://travis-ci.org/gyzerok/redux-graphql)
+
 This is a pack of tools which provides Relay-like functionality for Redux-based applications.
 
 You can check [this repository](https://github.com/gyzerok/redux-react-graphql-example) to see a dirty working example of Todo app.
