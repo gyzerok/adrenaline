@@ -2,7 +2,7 @@ jest.autoMockOff();
 
 describe('createReducer', () => {
   it('should correctly append query results', () => {
-    const createReducer = require('../../utils/createReducer');
+    const createReducer = require('../createReducer');
 
     const initialState = {};
     const store = createReducer();

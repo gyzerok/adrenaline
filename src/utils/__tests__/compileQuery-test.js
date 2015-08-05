@@ -2,7 +2,7 @@ jest.autoMockOff();
 
 describe('compileQuery', () => {
   it('should correctly compile query', () => {
-    const compileQuery = require('../../utils/compileQuery');
+    const compileQuery = require('../compileQuery');
 
     const queries = {
       todos: `
