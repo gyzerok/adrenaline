@@ -34,8 +34,7 @@
     ],
     "moduleFileExtensions": [
       "js",
-      "jsx",
-      "json"
+      "jsx"
     ]
   }
 }

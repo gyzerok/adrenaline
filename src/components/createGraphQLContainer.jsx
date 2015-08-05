@@ -6,12 +6,13 @@ import getDisplayName from '../utils/getDisplayName';
 import { isString } from '../utils/helpers';
 import compileQuery from '../utils/compileQuery';
 
-export default function createGraphQLContainer(ComposedComponent, { queries = {}, queryParams = {} }) {
+export default function createGraphQLContainer(DecoratedComponent, { queries = {}, queryParams = {} }) {
   let currentParams = { ...queryParams };
-  const displayName = `GraphQLContainer(${getDisplayName(ComposedComponent)})`;
+  const displayName = `GraphQLContainer(${getDisplayName(DecoratedComponent)})`;
 
   return class extends Component {
     static displayName = displayName;
+    static DecoratedComponent = DecoratedComponent;
 
     static contextTypes = {
       graphQLRefresh: PropTypes.func.isRequired,
@@ -41,7 +42,7 @@ export default function createGraphQLContainer(ComposedComponent, { queries = {}
 
     render() {
       return (
-        <ComposedComponent {...this.props}
+        <DecoratedComponent {...this.props}
           queryParams={{...currentParams}}
           setQueryParams={this.setQueryParams} />
       );
