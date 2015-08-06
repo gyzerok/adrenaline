@@ -2,7 +2,7 @@ import test from 'tape';
 import React, { Component } from 'react';
 import createGraphQLContainer from '../createGraphQLContainer';
 
-test('createGraphQLContainer should return React.Component', assert => {
+test('createGraphQLContainer should return React.Component', { skip: true }, assert => {
   class TestComponent {
     render() {
       return <div></div>;
