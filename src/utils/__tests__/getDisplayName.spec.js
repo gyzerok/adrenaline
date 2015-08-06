@@ -1,9 +1,8 @@
-jest.autoMockOff();
+import test from 'tape';
+import getDisplayName from '../getDisplayName';
 
-describe('getDisplayName', () => {
-  it('should return component for undefined', () => {
-    const getDisplayName = require('../getDisplayName');
+test('getDisplayName should return Component for empty object', assert => {
+  assert.equal(getDisplayName({}), 'Component');
 
-    expect(getDisplayName({})).toEqual('Component');
-  });
+  assert.end();
 });

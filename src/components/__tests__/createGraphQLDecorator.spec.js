@@ -1,17 +1,16 @@
-jest.autoMockOff();
+import test from 'tape';
+import React, { Component } from 'react';
+import createGraphQLDecorator from '../createGraphQLDecorator';
 
-describe('createGraphQLDecorator', () => {
-  it('should return React Component', () => {
-    /*const React = require('react');
-    const createGraphQLDecorator = require('../createGraphQLDecorator');
+test('createGraphQLDecorator should return React.Component', assert => {
+  class TestComponent {
+    render() {
+      return <div></div>;
+    }
+  }
+  const decorated = createGraphQLDecorator(x => x)(TestComponent);
 
-    @createGraphQLDecorator(x => x)
-    class TestComponent {
-      render() {
-        return <div></div>;
-      }
-    }*/
+  assert.equal(decorated instanceof Component, true);
 
-    expect(true).toBe(true);
-  });
+  assert.end();
 });
