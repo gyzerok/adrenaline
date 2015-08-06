@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node_modules/.bin/babel-tape-runner 'src/**/*.spec.js' | node_modules/.bin/tap-spec"
   },
-  "author": "Fedor Nezhivoy <gyzerok@gmail.com>",
+  "author": "Fedor Nezhivoi <gyzerok@gmail.com>",
   "license": "MIT",
   "peerDependencies": {
     "react": "^0.13.3"
