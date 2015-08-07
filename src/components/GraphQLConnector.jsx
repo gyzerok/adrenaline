@@ -80,7 +80,7 @@ export default class GraphQLConnector extends Component {
     const state = context.store.getState();
     const slice = {
       ...props.select(state),
-      graphql: state.graphql,
+      ...state.graphql,
     };
 
     invariant(
