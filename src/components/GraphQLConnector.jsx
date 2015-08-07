@@ -23,6 +23,10 @@ export default class GraphQLConnector extends Component {
     endpoint: '/graphql-endpoint',
   }
 
+  static childContextTypes = {
+    fetch: PropTypes.func.isRequired,
+  }
+
   getChildContext() {
     return {
       fetch: ::this.onFetch,
