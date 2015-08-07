@@ -8,12 +8,6 @@ module.exports = {
       commonjs2: 'react',
       commonjs: 'react',
       amd: 'react'
-    },
-    'react/addons': {
-      root: 'React',
-      commonjs2: 'react/addons',
-      commonjs: 'react/addons',
-      amd: 'react/addons'
     }
   },
   target: 'node',

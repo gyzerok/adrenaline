@@ -15,20 +15,20 @@ export default function createGraphQLContainer(DecoratedComponent, { queries = {
     static DecoratedComponent = DecoratedComponent;
 
     static contextTypes = {
-      graphQLRefresh: PropTypes.func.isRequired,
+      fetch: PropTypes.func.isRequired,
     }
 
     static getQuery = (key) => {
       invariant(
         isString(key),
-        'You cant call getQuery without key in %s',
+        'You cant call getQuery() without key in %s',
         displayName
       );
       return compileQuery(queries[key], currentParams);
     }
 
     componentWillMount() {
-      this.context.graphQLRefresh(compileQuery(queries, queryParams));
+      this.context.fetch(compileQuery(queries, queryParams));
     }
 
     setQueryParams = (nextParams) => {
@@ -37,7 +37,7 @@ export default function createGraphQLContainer(DecoratedComponent, { queries = {
         ...nextParams,
       };
       this.forceUpdate();
-      this.context.graphQLRefresh(compileQuery(queries, currentParams));
+      this.context.fetch(compileQuery(queries, currentParams));
     }
 
     render() {

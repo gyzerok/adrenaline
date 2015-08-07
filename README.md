@@ -7,7 +7,7 @@ This is a pack of tools which provides Relay-like functionality for Redux-based 
 
 You can check [this repository](https://github.com/gyzerok/redux-react-graphql-example) to see a dirty working example of Todo app.
 
-***NOTE:*** Currently this is nothing but proof of concept. Project is in the very early stage.
+***NOTE:*** Docs are out of date! Currently this is nothing but proof of concept. Project is in the very early stage.
 
 ## Example
 

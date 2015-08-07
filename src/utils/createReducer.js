@@ -4,24 +4,26 @@ import { mapValues, reduce } from 'lodash';
 import mergeDeep from 'deepmerge';
 import { ACTION_TYPE } from '../constants';
 
+function graphql(state = {}, action) {
+  const { type, payload } = action;
+
+  const keyedPayload = mapValues(payload, value => {
+    return reduce(value, (acc, v) => {
+      return {
+        ...acc,
+        [v._id]: v,
+      };
+    }, {});
+  });
+
+  switch (type) {
+    case ACTION_TYPE:
+      return mergeDeep(state, keyedPayload);
+    default:
+      return state;
+  }
+}
+
 export default function createReducer() {
-  return (state = {}, action) => {
-    const { type, payload } = action;
-
-    const keyedPayload = mapValues(payload, value => {
-      return reduce(value, (acc, v) => {
-        return {
-          ...acc,
-          [v._id]: v,
-        };
-      }, {});
-    });
-
-    switch (type) {
-      case ACTION_TYPE:
-        return mergeDeep(state, keyedPayload);
-      default:
-        return state;
-    }
-  };
+  return { graphql };
 }
