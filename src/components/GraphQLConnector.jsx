@@ -13,7 +13,7 @@ export default class GraphQLConnector extends Component {
   }
 
   static propTypes = {
-    chilren: PropTypes.func.isRequired,
+    chidlren: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
     endpoint: PropTypes.string.isRequired,
   }
