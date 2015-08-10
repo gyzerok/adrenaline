@@ -13,6 +13,7 @@ export default function createGraphQLContainer(DecoratedComponent, { queries = {
   return class extends Component {
     static displayName = displayName;
     static DecoratedComponent = DecoratedComponent;
+    static queryParams = { ...queryParams };
 
     static contextTypes = {
       fetch: PropTypes.func.isRequired,
@@ -31,7 +32,7 @@ export default function createGraphQLContainer(DecoratedComponent, { queries = {
       this.context.fetch(compileQuery(queries, queryParams));
     }
 
-    setQueryParams = (nextParams) => {
+    setQueryParams(nextParams) {
       currentParams = {
         ...currentParams,
         ...nextParams,
@@ -44,7 +45,7 @@ export default function createGraphQLContainer(DecoratedComponent, { queries = {
       return (
         <DecoratedComponent {...this.props}
           queryParams={{...currentParams}}
-          setQueryParams={this.setQueryParams} />
+          setQueryParams={this.setQueryParams.bind(this)} />
       );
     }
   };
