@@ -4,7 +4,7 @@ import { mapValues, reduce } from 'lodash';
 import mergeDeep from 'deepmerge';
 import { ACTION_TYPE } from '../constants';
 
-function graphql(state = {}, action) {
+export default function graphql(state = {}, action) {
   const { type, payload } = action;
 
   const keyedPayload = mapValues(payload, value => {
@@ -22,8 +22,4 @@ function graphql(state = {}, action) {
     default:
       return state;
   }
-}
-
-export default function createReducer() {
-  return { graphql };
 }
