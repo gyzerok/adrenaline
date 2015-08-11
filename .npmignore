@@ -2,5 +2,6 @@
 .gitignore
 node_modules
 src
+example
 webpack.config.js
 .*

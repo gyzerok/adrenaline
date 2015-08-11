@@ -1,3 +1,4 @@
 node_modules
 src/**/__tests__/*
 webpack.config.js
+lib

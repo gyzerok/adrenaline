@@ -14,7 +14,10 @@ export default function createGraphQLStore() {
   return next => (reducer, initialState) => {
     const extendedReducer = reduceReducers(
       reducer,
-      (state, action) => ({ ...state, graphql: graphql(state.graphql, action) }),
+      (state, action) => ({
+        ...state,
+        graphql: graphql(state.graphql, action),
+      }),
     );
     return next(extendedReducer, initialState);
   };
