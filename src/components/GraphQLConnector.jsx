@@ -94,7 +94,6 @@ export default class GraphQLConnector extends Component {
 
   onFetch(query: string) {
     if (!query.trim().length) return;
-    console.log(query);
 
     const { dispatch } = this.context.store;
     const { endpoint } = this.props;

@@ -20,15 +20,16 @@ export default function createGraphQLContainer(DecoratedComponent: Component, sp
     }
 
     static getQuery(key: String) {
-      invariant(
-        isString(key),
-        'You cant call getQuery() without key in %s',
-        displayName
-      );
       return compileQuery(queries[key], currentParams);
     }
 
     static getFragment(key: String) {
+      invariant(
+        isString(key),
+        'You cant call getFragment() without string key in %s',
+        displayName
+      );
+
       return fragments[key](currentParams);
     }
 
@@ -46,8 +47,9 @@ export default function createGraphQLContainer(DecoratedComponent: Component, sp
         ...currentParams,
         ...updates,
       };
-      this.setState({ params: nextParams });
-      this.context.fetch(compileQuery(queries, params));
+      currentParams = nextParams;
+      this.forceUpdate();
+      this.context.fetch(compileQuery(queries, nextParams));
     }
 
     render() {

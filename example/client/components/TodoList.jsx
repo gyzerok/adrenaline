@@ -15,6 +15,12 @@ class TodoList extends Component {
     todos: [],
   }
 
+  componentDidMount() {
+    setTimeout(() => {
+      this.props.setParams({ count: 3 });
+    }, 2000);
+  }
+
   render() {
     //const { createTodo } = this.props.actions;
     const createTodo = x => console.log(x);
@@ -33,7 +39,7 @@ class TodoList extends Component {
 
 export default createContainer(TodoList, {
   params: {
-    count: 5,
+    count: 2,
   },
   queries: {
     todos: ({ count }) => `
