@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react';
-import { createGraphQLContainer as createContainer } from '../../../src';
+import { createContainer } from '../../../src';
 
 class TodoItem extends Component {
   static propTypes = {

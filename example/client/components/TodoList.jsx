@@ -3,7 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import TodoInput from './TodoInput';
 import TodoItem from './TodoItem';
-import { createGraphQLContainer as createContainer } from '../../../src';
+import { createContainer } from '../../../src';
 
 class TodoList extends Component {
   static propTypes = {
