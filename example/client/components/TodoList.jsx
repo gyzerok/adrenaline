@@ -16,7 +16,8 @@ class TodoList extends Component {
   }
 
   render() {
-    const { createTodo } = this.props.actions;
+    //const { createTodo } = this.props.actions;
+    const createTodo = x => console.log(x);
     return (
       <div>
         <TodoInput createTodo={createTodo} />
@@ -36,11 +37,9 @@ export default createContainer(TodoList, {
   },
   queries: {
     todos: ({ count }) => `
-      query {
-        todos(count: ${count}) {
-          _id,
-          ${TodoItem.getFragment('todo')}
-        }
+      todos(count: ${count}) {
+        _id,
+        ${TodoItem.getFragment('todo')}
       }
     `,
   },

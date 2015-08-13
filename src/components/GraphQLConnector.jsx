@@ -29,7 +29,7 @@ export default class GraphQLConnector extends Component {
 
   getChildContext() {
     return {
-      fetch: ::this.onFetch,
+      fetch: this.onFetch.bind(this),
     };
   }
 
@@ -40,7 +40,7 @@ export default class GraphQLConnector extends Component {
 
   componentDidMount() {
     const { store } = this.context;
-    this.unsubscribe = store.subscribe(::this.handleChange);
+    this.unsubscribe = store.subscribe(this.handleChange.bind(this));
     this.handleChange();
   }
 
@@ -94,6 +94,7 @@ export default class GraphQLConnector extends Component {
 
   onFetch(query: string) {
     if (!query.trim().length) return;
+    console.log(query);
 
     const { dispatch } = this.context.store;
     const { endpoint } = this.props;
@@ -103,7 +104,7 @@ export default class GraphQLConnector extends Component {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ query: '{' + query + '}' }),
+      body: JSON.stringify({ query: `{ ${query} }` }),
     };
     // TODO: Somehow deal with errors
     fetch(endpoint, opts)

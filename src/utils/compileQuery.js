@@ -11,7 +11,7 @@ export default function compileQuery(queries: string | Object, params: Object): 
 
   //const filteredQueries = filter(queries, q => !q.trim().startsWith('...'));
   //const compiledQueries = mapValues(filteredQueries, q => compileQuery(q, params));
-  const compiledQueries = mapValues(queries, q => compileQuery(q, params));
+  const compiledQueries = mapValues(queries, q => q(params));
 
   return reduce(compiledQueries, (acc, val, key) => {
     return acc + '\n' + key + ': ' + val;

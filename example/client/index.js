@@ -4,10 +4,9 @@ import 'whatwg-fetch';
 import React from 'react';
 import { Provider } from 'react-redux';
 import App from './components/App';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { createGraphQLStore } from '../../src';
-import { compose, identity } from 'ramda';
 
 const finalCreateStore = compose(
   applyMiddleware(thunk),
@@ -15,7 +14,8 @@ const finalCreateStore = compose(
   createStore
 );
 
-const store = finalCreateStore(identity);
+const store = finalCreateStore(x => x);
+//const store = applyMiddleware(thunk)(createStore)(x => x);
 
 const rootNode = document.getElementById('root');
 React.render(
