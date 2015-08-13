@@ -8,7 +8,8 @@ import { createContainer } from '../../../src';
 class TodoList extends Component {
   static propTypes = {
     actions: PropTypes.object,
-    todos: PropTypes.array,
+    todos: PropTypes.array.isRequired,
+    setParams: PropTypes.func.isRequired,
   }
 
   static defaultProps = {

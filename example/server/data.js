@@ -25,5 +25,5 @@ export function findById(id) {
 }
 
 export function find({ count }) {
-  return data.todos.slice(0, count);
+  return data.todos.slice(-count);
 }
