@@ -1,1 +1,4 @@
 node_modules
+example/.tmp
+example/node_modules
+*.log

@@ -20,7 +20,7 @@ export default class GraphQLConnector extends Component {
 
   static defaultProps = {
     select: state => state,
-    endpoint: '/graphql-endpoint',
+    endpoint: '/graphql',
   }
 
   static childContextTypes = {

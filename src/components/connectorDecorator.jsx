@@ -7,7 +7,7 @@ import shadowEqualScalar from '../utils/shadowEqualScalar';
 
 export default function connectorDecorator(select) {
   return DecoratedComponent => class extends Component {
-    static displayName = `GraphQLConnector(${getDisplayName(DecoratedComponent)})`;
+    static displayName = `Adrenaline(${getDisplayName(DecoratedComponent)})`;
     static DecoratedComponent = DecoratedComponent;
 
     shouldComponentUpdate(nextProps) {

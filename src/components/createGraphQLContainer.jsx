@@ -6,20 +6,20 @@ import getDisplayName from '../utils/getDisplayName';
 import { isString } from '../utils/helpers';
 import compileQuery from '../utils/compileQuery';
 
-export default function createGraphQLContainer(DecoratedComponent, { queries = {}, queryParams = {} }) {
-  let currentParams = { ...queryParams };
-  const displayName = `GraphQLContainer(${getDisplayName(DecoratedComponent)})`;
+export default function createGraphQLContainer(DecoratedComponent: Component, specs: Object) {
+  const { params, queries, fragments } = specs;
+  let currentParams = { ...params };
+  const displayName = `Adrenaline(${getDisplayName(DecoratedComponent)})`;
 
   return class extends Component {
     static displayName = displayName;
     static DecoratedComponent = DecoratedComponent;
-    static queryParams = { ...queryParams };
 
     static contextTypes = {
       fetch: PropTypes.func.isRequired,
     }
 
-    static getQuery = (key) => {
+    static getQuery(key: String) {
       invariant(
         isString(key),
         'You cant call getQuery() without key in %s',
@@ -28,24 +28,33 @@ export default function createGraphQLContainer(DecoratedComponent, { queries = {
       return compileQuery(queries[key], currentParams);
     }
 
-    componentWillMount() {
-      this.context.fetch(compileQuery(queries, queryParams));
+    static getFragment(key: String) {
+      return fragments[key](currentParams);
     }
 
-    setQueryParams(nextParams) {
-      currentParams = {
+    constructor(props, context) {
+      super(props, context);
+      this.state = { params };
+    }
+
+    componentWillMount() {
+      this.context.fetch(compileQuery(queries, params));
+    }
+
+    setParams(updates: Object) {
+      const nextParams = {
         ...currentParams,
-        ...nextParams,
+        ...updates,
       };
-      this.forceUpdate();
-      this.context.fetch(compileQuery(queries, currentParams));
+      this.setState({ params: nextParams });
+      this.context.fetch(compileQuery(queries, params));
     }
 
     render() {
       return (
         <DecoratedComponent {...this.props}
-          queryParams={{...currentParams}}
-          setQueryParams={this.setQueryParams.bind(this)} />
+          params={this.state.params}
+          setParams={this.setParams.bind(this)} />
       );
     }
   };
