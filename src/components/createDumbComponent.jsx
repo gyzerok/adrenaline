@@ -4,23 +4,18 @@ import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
 import getDisplayName from '../utils/getDisplayName';
 import { isString } from '../utils/helpers';
-import compileQuery from '../utils/compileQuery';
 
-export default function createGraphQLContainer(DecoratedComponent: Component, specs: Object) {
-  const { params, queries, fragments } = specs;
+export default function createDumbComponent(DecoratedComponent: Component, specs: Object) {
+  const { params, fragments } = specs;
   let currentParams = { ...params };
-  const displayName = `Adrenaline(${getDisplayName(DecoratedComponent)})`;
+  const displayName = `DumbComponent(${getDisplayName(DecoratedComponent)})`;
 
   return class extends Component {
     static displayName = displayName;
     static DecoratedComponent = DecoratedComponent;
 
     static contextTypes = {
-      fetch: PropTypes.func.isRequired,
-    }
-
-    static getQuery(key: String) {
-      return compileQuery(queries[key], currentParams);
+      update: PropTypes.func.isRequired,
     }
 
     static getFragment(key: String) {
@@ -30,7 +25,7 @@ export default function createGraphQLContainer(DecoratedComponent: Component, sp
         displayName
       );
 
-      return '... on ' + fragments[key](currentParams);
+      return '... on ' + fragments[key](currentParams).trim();
     }
 
     constructor(props, context) {
@@ -39,7 +34,7 @@ export default function createGraphQLContainer(DecoratedComponent: Component, sp
     }
 
     componentWillMount() {
-      this.context.fetch(compileQuery(queries, params));
+      this.context.update();
     }
 
     setParams(updates: Object) {
@@ -49,7 +44,7 @@ export default function createGraphQLContainer(DecoratedComponent: Component, sp
       };
       currentParams = nextParams;
       this.forceUpdate();
-      this.context.fetch(compileQuery(queries, nextParams));
+      this.context.update();
     }
 
     render() {

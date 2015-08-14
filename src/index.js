@@ -1,7 +1,11 @@
 /* @flow */
 
-import createContainer from './components/createGraphQLContainer';
-import connect from './components/connectorDecorator';
+import createSmartComponent from './components/createSmartComponent';
+import createDumbComponent from './components/createDumbComponent';
 import createGraphQLStore from './utils/createGraphQLStore';
 
-export default { createContainer, connect, createGraphQLStore };
+export default {
+  createSmartComponent,
+  createDumbComponent,
+  createGraphQLStore,
+};

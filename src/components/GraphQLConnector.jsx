@@ -4,7 +4,6 @@ import React, { Component, PropTypes } from 'react';
 import createStoreShape from '../utils/createStoreShape';
 import shallowEqual from '../utils/shallowEqual';
 import isPlainObject from '../utils/isPlainObject';
-import { ACTION_TYPE } from '../constants';
 import invariant from 'invariant';
 
 export default class GraphQLConnector extends Component {
@@ -15,22 +14,10 @@ export default class GraphQLConnector extends Component {
   static propTypes = {
     chidlren: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
-    endpoint: PropTypes.string.isRequired,
   }
 
   static defaultProps = {
     select: state => state,
-    endpoint: '/graphql',
-  }
-
-  static childContextTypes = {
-    fetch: PropTypes.func.isRequired,
-  }
-
-  getChildContext() {
-    return {
-      fetch: this.onFetch.bind(this),
-    };
   }
 
   constructor(props, context) {
@@ -90,27 +77,6 @@ export default class GraphQLConnector extends Component {
     );
 
     return { slice };
-  }
-
-  onFetch(query: string) {
-    if (!query.trim().length) return;
-
-    const { dispatch } = this.context.store;
-    const { endpoint } = this.props;
-    const opts = {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query: `{ ${query} }` }),
-    };
-    // TODO: Somehow deal with errors
-    fetch(endpoint, opts)
-      .then(res => res.json())
-      .then(json => {
-        dispatch({ type: ACTION_TYPE, payload: json.data });
-      });
   }
 
   render() {

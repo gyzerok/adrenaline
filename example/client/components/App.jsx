@@ -2,12 +2,10 @@
 
 import React, { Component, PropTypes } from 'react';
 import TodoList from './TodoList';
-import { connect } from '../../../src';
+import { createSmartComponent } from '../../../src';
 
-@connect(state => state)
-export default class App extends Component {
+class App extends Component {
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
     todos: PropTypes.object.isRequired,
   }
 
@@ -23,3 +21,14 @@ export default class App extends Component {
     );
   }
 }
+
+export default createSmartComponent(App, {
+  endpoint: '/graphql',
+  query: () => `
+    query QueryNameHere {
+      ${TodoList.getFragment('todos')}
+    }
+  `,
+  mutations: {},
+  actions: {},
+});
