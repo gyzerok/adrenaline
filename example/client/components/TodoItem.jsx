@@ -18,7 +18,7 @@ class TodoItem extends Component {
 export default createContainer(TodoItem, {
   fragments: {
     todo: () => `
-      ... on Todo {
+      Todo {
         text
       }
     `,

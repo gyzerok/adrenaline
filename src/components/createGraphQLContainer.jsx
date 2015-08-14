@@ -30,7 +30,7 @@ export default function createGraphQLContainer(DecoratedComponent: Component, sp
         displayName
       );
 
-      return fragments[key](currentParams);
+      return '... on ' + fragments[key](currentParams);
     }
 
     constructor(props, context) {
