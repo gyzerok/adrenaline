@@ -29,6 +29,12 @@ export default createSmartComponent(App, {
       ${TodoList.getFragment('todos')}
     }
   `,
-  mutations: {},
-  actions: {},
+  mutations: {
+    createTodo: ({ text }) => `
+      todo: createTodo(text: ${text}) {
+        _id,
+        text
+      }
+    `,
+  },
 });

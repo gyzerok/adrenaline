@@ -15,7 +15,6 @@ const finalCreateStore = compose(
 );
 
 const store = finalCreateStore(x => x);
-//const store = applyMiddleware(thunk)(createStore)(x => x);
 
 const rootNode = document.getElementById('root');
 React.render(

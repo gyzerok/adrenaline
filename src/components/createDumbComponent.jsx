@@ -21,11 +21,11 @@ export default function createDumbComponent(DecoratedComponent: Component, specs
     static getFragment(key: String) {
       invariant(
         isString(key),
-        'You cant call getFragment() without string key in %s',
+        'You cant call getFragment(key: string) without string key in %s',
         displayName
       );
 
-      return '... on ' + fragments[key](currentParams).trim();
+      return '... on ' + fragments[key](currentParams).replace(/\s+/g, ' ').trim();
     }
 
     constructor(props, context) {
