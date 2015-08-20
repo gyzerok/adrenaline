@@ -52,12 +52,4 @@ export default createDumbComponent(TodoList, {
       }
     `,
   },
-  queries: {
-    todos: ({ count }) => `
-      todos(count: ${count}) {
-        _id,
-        ${TodoItem.getFragment('todo')}
-      }
-    `,
-  },
 });
