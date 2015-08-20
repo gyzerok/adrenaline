@@ -31,9 +31,6 @@ export default function createDumbComponent(DecoratedComponent: Component, specs
     constructor(props, context) {
       super(props, context);
       this.state = { params };
-    }
-
-    componentWillMount() {
       this.context.update();
     }
 

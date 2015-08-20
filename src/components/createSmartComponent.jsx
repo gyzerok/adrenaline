@@ -22,6 +22,11 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       update: PropTypes.func.isRequired,
     }
 
+    constructor(props, context) {
+      super(props, context);
+      this.onChildNeedUpdate();
+    }
+
     getChildContext() {
       return {
         update: this.onChildNeedUpdate.bind(this),
@@ -36,8 +41,6 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       const { query } = specs;
       const { endpoint } = specs;
       const { dispatch } = this.context.store;
-
-      console.log(query());
 
       const opts = {
         method: 'post',
