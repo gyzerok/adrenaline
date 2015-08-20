@@ -24,6 +24,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
     constructor(props, context) {
       super(props, context);
+      this.pending = null;
       this.onChildNeedUpdate();
     }
 
@@ -42,19 +43,24 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       const { endpoint } = specs;
       const { dispatch } = this.context.store;
 
+      const request = query();
+      if (request === this.pending) return;
+      this.pending = request;
+
       const opts = {
         method: 'post',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ query: query() }),
+        body: JSON.stringify({ query: request }),
       };
       // TODO: Somehow deal with errors
       fetch(endpoint, opts)
         .then(res => res.json())
         .then(json => {
           dispatch({ type: ACTION_TYPE, payload: json.data });
+          this.pending = null;
         });
     }
 
