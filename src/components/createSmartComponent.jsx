@@ -46,6 +46,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       const request = query();
       if (request === this.pending) return;
       this.pending = request;
+      console.log(request);
 
       const opts = {
         method: 'post',
@@ -60,6 +61,10 @@ export default function createSmartComponent(DecoratedComponent, specs) {
         .then(res => res.json())
         .then(json => {
           dispatch({ type: ACTION_TYPE, payload: json.data });
+          this.pending = null;
+        })
+        .catch(err => {
+          dispatch({ type: ACTION_TYPE, payload: err, error: true });
           this.pending = null;
         });
     }
