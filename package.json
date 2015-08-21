@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "deepmerge": "^0.2.10",
+    "graphql": "^0.4.2",
     "invariant": "^2.1.0",
     "lodash": "^3.10.1"
   }

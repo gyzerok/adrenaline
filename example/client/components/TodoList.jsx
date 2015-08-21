@@ -44,7 +44,7 @@ export default createDumbComponent(TodoList, {
   },
   fragments: {
     todos: ({ count }) => `
-      RootQueryType {
+      Query {
         todos(count: ${count}) {
           _id,
           ${TodoItem.getFragment('todo')}

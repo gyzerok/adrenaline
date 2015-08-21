@@ -31,7 +31,7 @@ const todoType = new GraphQLObjectType({
 
 export default new GraphQLSchema({
   query: new GraphQLObjectType({
-    name: 'RootQueryType',
+    name: 'Query',
     fields: () => ({
       todos: {
         type: new GraphQLList(todoType),
