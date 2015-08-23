@@ -10,14 +10,12 @@ class App extends Component {
   }
 
   static defaultProps = {
-    todos: {},
+    todos: [],
   }
 
   render() {
-    const todos = Object.keys(this.props.todos).map(key => this.props.todos[key]);
-
     return (
-      <TodoList todos={todos} />
+      <TodoList todos={this.props.todos} />
     );
   }
 }
