@@ -3,7 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
 import getDisplayName from '../utils/getDisplayName';
-import { isString } from '../utils/helpers';
+import { isString } from 'lodash';
 
 export default function createDumbComponent(DecoratedComponent: Component, specs: Object) {
   const { params, fragments } = specs;
