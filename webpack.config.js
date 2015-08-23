@@ -14,8 +14,8 @@ module.exports = {
   entry: path.join(__dirname, 'src'),
   output: {
     path: path.join(__dirname, 'lib'),
-    filename: 'redux-graphql.js',
-    library: 'ReduxGraphQL',
+    filename: 'adrenaline.js',
+    library: 'Adrenaline',
     libraryTarget: 'umd'
   },
   resolve: {

@@ -1,8 +1,8 @@
 {
-  "name": "redux-graphql",
-  "version": "0.1.0",
+  "name": "adrenaline",
+  "version": "0.0.0",
   "description": "Relay-like functionality for Redux-based applications",
-  "main": "./lib/redux-graphql.js",
+  "main": "./lib/adrenaline.js",
   "scripts": {
     "test": "node_modules/.bin/babel-tape-runner 'src/**/*.spec.js' | node_modules/.bin/tap-spec"
   },
