@@ -1,4 +1,4 @@
-# redux-graphql
+# Adrenaline
 
 [![Build Status](https://travis-ci.org/gyzerok/redux-graphql.svg)](https://travis-ci.org/gyzerok/redux-graphql)
 [![Code Climate](https://codeclimate.com/github/gyzerok/redux-graphql/badges/gpa.svg)](https://codeclimate.com/github/gyzerok/redux-graphql)
