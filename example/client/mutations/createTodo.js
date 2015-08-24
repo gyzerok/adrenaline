@@ -5,7 +5,7 @@ export function createTodo(text) {
     mutation createTodo(text: ${text}) {
       _id,
       text,
-      updatedAt
+      createdAt
     }
   `;
 }

@@ -1,6 +1,7 @@
 /* @flow */
 
 import {
+  //GraphQLInterfaceType,
   GraphQLObjectType,
   GraphQLInt,
   GraphQLString,
@@ -8,7 +9,18 @@ import {
   GraphQLNonNull,
   GraphQLSchema,
 } from 'graphql';
-import { find } from './data';
+import { find, create } from './data';
+
+/*const nodeInterface = new GraphQLInterfaceType({
+  name: 'Node',
+  description: 'Node interface',
+  fields: () => ({
+    _id: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+  }),
+  resolveType: node => todoType,
+});*/
 
 const todoType = new GraphQLObjectType({
   name: 'Todo',
@@ -27,6 +39,7 @@ const todoType = new GraphQLObjectType({
       description: 'Todo creation date',
     },
   }),
+  //interfaces: [nodeInterface],
 });
 
 export default new GraphQLSchema({
@@ -43,6 +56,23 @@ export default new GraphQLSchema({
         },
         resolve: (root, { count }) => {
           return find({ count });
+        },
+      },
+    }),
+  }),
+  mutation: new GraphQLObjectType({
+    name: 'Mutation',
+    fields: () => ({
+      createTodo: {
+        type: todoType,
+        args: {
+          text: {
+            name: 'text',
+            type: new GraphQLNonNull(GraphQLString),
+          },
+        },
+        resolve: (root, params) => {
+          return create(params);
         },
       },
     }),

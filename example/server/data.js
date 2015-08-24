@@ -1,6 +1,7 @@
 /* @flow */
 
-const data = {
+let idx = 4;
+let data = {
   todos: [
     {
       _id: 3,
@@ -26,4 +27,14 @@ export function findById(id) {
 
 export function find({ count }) {
   return data.todos.slice(-count);
+}
+
+export function create({ text }) {
+  const todo = {
+    _id: idx++,
+    text: text,
+    createdAt: (new Date()).toString(),
+  };
+  data = [todo].concat(data);
+  return todo;
 }
