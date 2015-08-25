@@ -8,6 +8,11 @@ module.exports = {
     path: path.join(__dirname, '.tmp'),
     filename: 'bundle.js'
   },
+  plugins: [
+    new webpack.DefinePlugin({
+			'__CLIENT__': true
+		}),
+  ],
   resolve: {
     extensions: ['', '.js', '.jsx']
   },

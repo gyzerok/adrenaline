@@ -50,7 +50,10 @@ const userType = new GraphQLObjectType({
           type: GraphQLInt,
         },
       },
-      resolve: (user, params) => {
+      resolve: (user, params, { rootValue }) => {
+        if (__CLIENT__) {
+          return user.todos.map(id => rootValue[id]);
+        }
         return findTodo(params);
       },
     },
@@ -63,7 +66,10 @@ export default new GraphQLSchema({
     fields: () => ({
       viewer: {
         type: userType,
-        resolve: () => {
+        resolve: (rootValue) => {
+          if (__CLIENT__) {
+            return rootValue['user1'];
+          }
           return findUser();
         },
       },

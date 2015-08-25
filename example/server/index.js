@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
 app.post('/graphql', (req, res) => {
   const { query, params } = req.body;
 
-  graphql(schema, query, '', params)
+  graphql(schema, query, { hello: 'world' }, params)
     .then(result => {
       if (result.errors) {
         res.status(400);

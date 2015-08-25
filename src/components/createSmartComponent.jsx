@@ -6,8 +6,9 @@ import createStoreShape from '../utils/createStoreShape';
 import shadowEqualScalar from '../utils/shadowEqualScalar';
 import getDisplayName from '../utils/getDisplayName';
 import { ACTION_TYPE } from '../constants';
+import { graphql } from 'graphql';
 
-export default function createSmartComponent(DecoratedComponent, specs) {
+export default function createSmartComponent(DecoratedComponent, specs, schema) {
   const displayName = `SmartComponent(${getDisplayName(DecoratedComponent)})`;
 
   return class extends Component {

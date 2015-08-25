@@ -5,7 +5,6 @@ import invariant from 'invariant';
 import createStoreShape from '../utils/createStoreShape';
 import shallowEqual from '../utils/shallowEqual';
 import isPlainObject from '../utils/isPlainObject';
-import { deserialize } from '../reducers/graphql';
 
 export default class GraphQLConnector extends Component {
   static contextTypes = {
@@ -66,10 +65,8 @@ export default class GraphQLConnector extends Component {
 
   selectState(props, context) {
     const { graphql, ...state } = context.store.getState();
-    const cache = deserialize(graphql);
     const slice = {
       ...props.select(state),
-      ...cache,
     };
 
     invariant(
