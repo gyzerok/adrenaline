@@ -23,37 +23,3 @@ React.render(
   </Provider>,
   rootNode
 );
-
-
-const introspection = `
-  query IntrospectionQueryTypeQuery {
-    __schema {
-      types {
-        name,
-        description
-      }
-      queryType {
-        fields {
-          name,
-          type {
-            name,
-            kind,
-            ofType {
-              name,
-              kind
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-fetch('/graphql', {
-  method: 'post',
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({ query: introspection }),
-}).then(res => res.json()).then(json => console.log(json));

@@ -1,7 +1,6 @@
 /* @flow */
 
 import {
-  //GraphQLInterfaceType,
   GraphQLObjectType,
   GraphQLInt,
   GraphQLString,
@@ -9,24 +8,13 @@ import {
   GraphQLNonNull,
   GraphQLSchema,
 } from 'graphql';
-import { find, create } from './data';
-
-/*const nodeInterface = new GraphQLInterfaceType({
-  name: 'Node',
-  description: 'Node interface',
-  fields: () => ({
-    _id: {
-      type: new GraphQLNonNull(GraphQLString),
-    },
-  }),
-  resolveType: node => todoType,
-});*/
+import { findTodo, createTodo, findUser } from './data';
 
 const todoType = new GraphQLObjectType({
   name: 'Todo',
-  description: 'Todo model',
+  description: 'Todo type',
   fields: () => ({
-    _id: {
+    id: {
       type: new GraphQLNonNull(GraphQLString),
       description: 'Todo id',
     },
@@ -39,23 +27,44 @@ const todoType = new GraphQLObjectType({
       description: 'Todo creation date',
     },
   }),
-  //interfaces: [nodeInterface],
+});
+
+const userType = new GraphQLObjectType({
+  name: 'User',
+  description: 'User type',
+  fields: () => ({
+    id: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'User id',
+    },
+    name: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'User name',
+    },
+    todos: {
+      type: new GraphQLList(todoType),
+      description: 'User todos',
+      args: {
+        count: {
+          name: 'count',
+          type: GraphQLInt,
+        },
+      },
+      resolve: (user, params) => {
+        return findTodo(params);
+      },
+    },
+  }),
 });
 
 export default new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
     fields: () => ({
-      todos: {
-        type: new GraphQLList(todoType),
-        args: {
-          count: {
-            name: 'count',
-            type: GraphQLInt,
-          },
-        },
-        resolve: (root, { count }) => {
-          return find({ count });
+      viewer: {
+        type: userType,
+        resolve: () => {
+          return findUser();
         },
       },
     }),
@@ -72,7 +81,7 @@ export default new GraphQLSchema({
           },
         },
         resolve: (root, params) => {
-          return create(params);
+          return createTodo(params);
         },
       },
     }),

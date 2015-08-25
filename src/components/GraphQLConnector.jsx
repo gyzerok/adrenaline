@@ -65,8 +65,8 @@ export default class GraphQLConnector extends Component {
   }
 
   selectState(props, context) {
-    const state = context.store.getState();
-    const cache = deserialize(state.graphql);
+    const { graphql, ...state } = context.store.getState();
+    const cache = deserialize(graphql);
     const slice = {
       ...props.select(state),
       ...cache,

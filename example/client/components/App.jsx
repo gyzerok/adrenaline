@@ -24,7 +24,7 @@ export default createSmartComponent(App, {
   endpoint: '/graphql',
   query: () => `
     query QueryNameHere {
-      ${TodoList.getFragment('todos')}
+      ${TodoList.getFragment('viewer')}
     }
   `,
 });

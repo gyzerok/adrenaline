@@ -8,11 +8,13 @@ import { createDumbComponent } from '../../../src';
 class TodoList extends Component {
   static propTypes = {
     actions: PropTypes.object,
-    todos: PropTypes.array.isRequired,
+    viewer: PropTypes.object,
+    todos: PropTypes.array,
     setParams: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
+    viewer: {},
     todos: [],
   }
 
@@ -30,7 +32,7 @@ class TodoList extends Component {
         <TodoInput createTodo={createTodo} />
         <ul>
           {this.props.todos.map(todo =>
-            <TodoItem key={todo._id} todo={todo} />
+            <TodoItem key={todo.id} todo={todo} />
           )}
         </ul>
       </div>
@@ -43,11 +45,15 @@ export default createDumbComponent(TodoList, {
     count: 2,
   },
   fragments: {
-    todos: ({ count }) => `
+    viewer: ({ count }) => `
       Query {
-        todos(count: ${count}) {
-          _id,
-          ${TodoItem.getFragment('todo')}
+        viewer {
+          id,
+          name,
+          todos(count: ${count}) {
+            id,
+            ${TodoItem.getFragment('todo')}
+          }
         }
       }
     `,
