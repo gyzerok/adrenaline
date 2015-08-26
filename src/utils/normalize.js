@@ -7,6 +7,14 @@ export default function normalize(initial, data = {}) {
   return reduce(data, (acc, node) => {
     const { edges, ...stuff } = node;
 
+    if (Array.isArray(node)) {
+      return mergeDeep(acc, {
+        ...reduce(node, (memo, value) => {
+          return { ...memo, [value.id]: value };
+        }, {});
+      });
+    }
+    
     if (!edges) {
       return mergeDeep(acc, { [node.id]: node });
     }
