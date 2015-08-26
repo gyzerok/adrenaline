@@ -8,7 +8,7 @@ export default function normalize(initial, data = {}) {
     const { edges, ...stuff } = node;
 
     if (!edges) {
-      return node;
+      return mergeDeep(acc, { [node.id]: node });
     }
 
     const normalizedNode = {
