@@ -29,6 +29,25 @@ const todoType = new GraphQLObjectType({
   }),
 });
 
+const userEdges = new GraphQLObjectType({
+  name: 'UserEdge',
+  fields: () => ({
+    todos: {
+      type: new GraphQLList(todoType),
+      description: 'User todos',
+      args: {
+        count: {
+          name: 'count',
+          type: GraphQLInt,
+        },
+      },
+      resolve: (user, params, { rootValue }) => {
+        return findTodo(params);
+      },
+    },
+  }),
+});
+
 const userType = new GraphQLObjectType({
   name: 'User',
   description: 'User type',
@@ -41,21 +60,9 @@ const userType = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLString),
       description: 'User name',
     },
-    todos: {
-      type: new GraphQLList(todoType),
-      description: 'User todos',
-      args: {
-        count: {
-          name: 'count',
-          type: GraphQLInt,
-        },
-      },
-      resolve: (user, params, { rootValue }) => {
-        if (__CLIENT__) {
-          return user.todos.map(id => rootValue[id]);
-        }
-        return findTodo(params);
-      },
+    edges: {
+      type: userEdges,
+      resolve: () => ({}),
     },
   }),
 });
@@ -66,10 +73,7 @@ export default new GraphQLSchema({
     fields: () => ({
       viewer: {
         type: userType,
-        resolve: (rootValue) => {
-          if (__CLIENT__) {
-            return rootValue['user1'];
-          }
+        resolve: () => {
           return findUser();
         },
       },

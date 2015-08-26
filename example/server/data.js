@@ -4,25 +4,25 @@ let idx = 4;
 let data = {
   users: [
     {
-      id: 'user1',
+      id: 'u-1',
       name: 'User',
     },
   ],
   todos: [
     {
-      id: 3,
+      id: 't-1',
       text: 'lets go',
       owner: 'user1',
       createdAt: (new Date()).toString(),
     },
     {
-      id: 2,
+      id: 't-2',
       text: 'ho',
       owner: 'user1',
       createdAt: (new Date()).toString(),
     },
     {
-      id: 1,
+      id: 't-3',
       text: 'hey',
       owner: 'user1',
       createdAt: (new Date()).toString(),
@@ -40,7 +40,7 @@ export function findTodo({ count }) {
 
 export function createTodo({ text, user }) {
   const todo = {
-    id: idx++,
+    id: 't-' + idx++,
     text: text,
     owner: user.id,
     createdAt: (new Date()).toString(),

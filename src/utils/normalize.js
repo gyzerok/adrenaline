@@ -3,47 +3,28 @@
 import { map, reduce } from 'lodash';
 import mergeDeep from 'deepmerge';
 
-function edgePredicate(idName) {
-  return node => {
-    if (Array.isArray(node) && node.length) {
-      return node[0].hasOwnProperty(idName);
+export default function normalize(initial, data = {}) {
+  return reduce(data, (acc, node) => {
+    const { edges, ...stuff } = node;
+
+    if (!edges) {
+      return node;
     }
-    return node.hasOwnProperty(idName);
-  };
-}
 
-export default function normalize(idName) {
-  const isEdge = edgePredicate(idName);
+    const normalizedNode = {
+      ...stuff,
+      ...reduce(edges, (memo, value, key) => {
+        if (Array.isArray(value)) {
+          return { ...memo, [key]: map(value, x => x.id) };
+        }
+        return { ...memo, [key]: value.id };
+      }, {}),
+    };
+    const normalizedEdges = normalize({}, edges);
 
-  return initial => data => {
-    return reduce(data, (acc, node) => {
-      if (!isEdge(node)) {
-        return acc;
-      }
-
-      const edges = reduce(node, (memo, value, key) => {
-        return isEdge(value) ? { ...memo, [key]: value } : memo;
-      }, {});
-      let normalizedNode = {};
-      if (!Array.isArray(node)) {
-        normalizedNode = {
-          [node[idName]]: reduce(node, (memo, value, key) => {
-            if (!edges.hasOwnProperty(key)) {
-              return { ...memo, [key]: value };
-            }
-            if (Array.isArray(value)) {
-              return { ...memo, [key]: map(value, x => x[idName]) };
-            }
-            return { ...memo, [key]: value[idName] };
-          }, {}),
-        };
-      }
-      const normalizedEdges = normalize({}, edges);
-
-      return mergeDeep(acc, {
-        ...normalizedNode,
-        ...normalizedEdges,
-      });
-    }, initial);
-  };
+    return mergeDeep(acc, {
+      [node.id]: normalizedNode,
+      ...normalizedEdges,
+    });
+  }, initial);
 }

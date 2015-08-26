@@ -50,9 +50,11 @@ export default createDumbComponent(TodoList, {
         viewer {
           id,
           name,
-          todos(count: ${count}) {
-            id,
-            ${TodoItem.getFragment('todo')}
+          edges {
+            todos(count: ${count}) {
+              id,
+              ${TodoItem.getFragment('todo')}
+            }
           }
         }
       }
