@@ -11,7 +11,7 @@ export default function normalize(initial, data = {}) {
       return mergeDeep(acc, {
         ...reduce(node, (memo, value) => {
           return { ...memo, [value.id]: value };
-        }, {});
+        }, {}),
       });
     }
     
