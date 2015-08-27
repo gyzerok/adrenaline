@@ -2,11 +2,11 @@
 
 import 'whatwg-fetch';
 import React from 'react';
-import { Provider } from 'react-redux';
-import App from './components/App';
+import App from 'client/components/App';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import { createGraphQLStore } from '../../src';
+import { Adrenaline, createGraphQLStore } from '../../../src';
+import { graphql } from 'graphql';
 
 const finalCreateStore = compose(
   applyMiddleware(thunk),
@@ -18,8 +18,8 @@ const store = finalCreateStore(x => x);
 
 const rootNode = document.getElementById('root');
 React.render(
-  <Provider store={store}>
+  <Adrenaline store={store} graphql={graphql}>
     {() => <App />}
-  </Provider>,
+  </Adrenaline>,
   rootNode
 );

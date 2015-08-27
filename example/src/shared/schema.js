@@ -64,7 +64,7 @@ const userType = new GraphQLObjectType({
     },
     edges: {
       type: userEdges,
-      resolve: () => ({}),
+      resolve: (user) => user,
     },
   }),
 });

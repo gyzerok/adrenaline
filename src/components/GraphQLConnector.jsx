@@ -6,11 +6,12 @@ import createStoreShape from '../utils/createStoreShape';
 import shallowEqual from '../utils/shallowEqual';
 import isPlainObject from '../utils/isPlainObject';
 
-import { graphql } from 'graphql';
+//import { graphql } from 'graphql';
 
 export default class GraphQLConnector extends Component {
   static contextTypes = {
     store: createStoreShape(PropTypes).isRequired,
+    graphql: PropTypes.func.isRequired,
   }
 
   static propTypes = {
@@ -75,8 +76,6 @@ export default class GraphQLConnector extends Component {
     const slice = {
       ...props.select(state),
     };
-    const { schema, query } = this.props;
-    const cacheSlice = graphql(schema, query(), cache);
 
     invariant(
       isPlainObject(slice),
@@ -84,9 +83,10 @@ export default class GraphQLConnector extends Component {
       slice
     );
 
-    return Promise.all([slice, cacheSlice])
-      .then(([slice, result]) => {
-        console.log('result', result);
+    const { graphql } = this.context;
+    const { schema, query } = this.props;
+    return graphql(schema, query(), cache)
+      .then(result => {
         return {
           slice: {
             ...slice,

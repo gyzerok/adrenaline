@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   devtool: 'eval-source-map',
-  entry: path.join(__dirname, 'client'),
+  entry: path.join(__dirname, 'src', 'client'),
   output: {
     path: path.join(__dirname, '.tmp'),
     filename: 'bundle.js'
@@ -14,7 +14,8 @@ module.exports = {
 		}),
   ],
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx'],
+    modulesDirectories: ['node_modules', 'src']
   },
   module: {
     loaders: [

@@ -1,11 +1,6 @@
 /* @flow */
 
-import createSmartComponent from './components/createSmartComponent';
-import createDumbComponent from './components/createDumbComponent';
-import createGraphQLStore from './utils/createGraphQLStore';
-
-export default {
-  createSmartComponent,
-  createDumbComponent,
-  createGraphQLStore,
-};
+export Adrenaline from './components/Adrenaline';
+export createSmartComponent from './components/createSmartComponent';
+export createDumbComponent from './components/createDumbComponent';
+export createGraphQLStore from './utils/createGraphQLStore';

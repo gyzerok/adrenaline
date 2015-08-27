@@ -8,7 +8,7 @@ import { json as jsonParser } from 'body-parser';
 
 const app = express();
 
-const publicPath = join(__dirname, '..', '.tmp');
+const publicPath = join(__dirname, '..', '..', '.tmp');
 app.use(express.static(publicPath));
 
 app.use(jsonParser());
@@ -18,7 +18,7 @@ const server = app.listen(serverPort, () => {
   const host = server.address().address;
   const port = server.address().port;
 
-  console.log('Listening at http://%s:%s', host, port);
+  console.log('Listening at http://%s:%s', host, port); // eslint-disable-line no-console
 });
 
 /********************************************/

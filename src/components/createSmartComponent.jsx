@@ -73,6 +73,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
         <GraphQLConnector
           select={state => state}
           schema={specs.schema}
+          graphql={specs.graphql}
           query={specs.query}>
           {stuff => <DecoratedComponent {...stuff} {...this.props} />}
         </GraphQLConnector>
