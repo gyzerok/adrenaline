@@ -39,7 +39,7 @@
       "vars": "local",
       "args": "after-used"
     }],
-    "no-use-before-define": 2,
+    "no-use-before-define": 0,
     "comma-dangle": [2, "always-multiline"],
     "no-cond-assign": [2, "always"],
     "no-console": 1,
@@ -61,7 +61,7 @@
     "no-sparse-arrays": 2,
     "no-unreachable": 2,
     "use-isnan": 2,
-    "block-scoped-var": 2,
+    "block-scoped-var": 0,
     "consistent-return": 2,
     "curly": [2, "multi-line"],
     "default-case": 2,

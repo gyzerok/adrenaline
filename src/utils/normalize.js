@@ -1,22 +1,22 @@
 /* @flow */
 
 import { map, reduce } from 'lodash';
-import mergeDeep from 'deepmerge';
+import merge from './merge';
 
-export default function normalize(initial, data = {}) {
+export default function normalize(initial, data) {
   return reduce(data, (acc, node) => {
     const { edges, ...stuff } = node;
 
     if (Array.isArray(node)) {
-      return mergeDeep(acc, {
+      return merge(acc, {
         ...reduce(node, (memo, value) => {
           return { ...memo, [value.id]: value };
         }, {}),
       });
     }
-    
+
     if (!edges) {
-      return mergeDeep(acc, { [node.id]: node });
+      return merge(acc, { [node.id]: node });
     }
 
     const normalizedNode = {
@@ -30,7 +30,7 @@ export default function normalize(initial, data = {}) {
     };
     const normalizedEdges = normalize({}, edges);
 
-    return mergeDeep(acc, {
+    return merge(acc, {
       [node.id]: normalizedNode,
       ...normalizedEdges,
     });

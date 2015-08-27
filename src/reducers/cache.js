@@ -3,7 +3,7 @@
 import normalize from '../utils/normalize';
 import { ACTION_TYPE } from '../constants';
 
-export default function cache(state = {}, action, deserialize = normalize) {
+export default function cache(state = {}, action) {
   const { type, payload, error } = action;
 
   if (error) {
@@ -12,7 +12,7 @@ export default function cache(state = {}, action, deserialize = normalize) {
 
   switch (type) {
     case ACTION_TYPE:
-      return deserialize(state, payload);
+      return normalize(state, payload);
     default:
       return state;
   }
