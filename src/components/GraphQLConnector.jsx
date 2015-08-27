@@ -90,7 +90,7 @@ export default class GraphQLConnector extends Component {
         return {
           slice: {
             ...slice,
-            ...result.data,
+            cache: result.data,
           },
         };
       });

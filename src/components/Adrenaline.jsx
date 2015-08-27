@@ -1,6 +1,7 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react';
+import Loading from './Loading';
 import createStoreShape from '../utils/createStoreShape';
 
 export default class Adrenaline extends Component {
@@ -13,7 +14,11 @@ export default class Adrenaline extends Component {
   static propTypes = {
     children: PropTypes.func.isRequired,
     graphql: PropTypes.func.isRequired,
-    renderLoading: PropTypes.object.isRequired,
+    renderLoading: PropTypes.object,
+  }
+
+  static defaultProps = {
+    renderLoading: Loading,
   }
 
   getChildContext() {
