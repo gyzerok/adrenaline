@@ -8,7 +8,6 @@ import {
   GraphQLNonNull,
   GraphQLSchema,
 } from 'graphql';
-import { findTodo, createTodo, findUser } from './data';
 
 const todoType = new GraphQLObjectType({
   name: 'Todo',
@@ -41,8 +40,11 @@ const userEdges = new GraphQLObjectType({
           type: GraphQLInt,
         },
       },
-      resolve: (user, params, { rootValue }) => {
-        return findTodo(params);
+      resolve: (user, params, { rootValue: root }) => {
+        if (__CLIENT__) {
+          return user.todos.map(t => root[t]);
+        }
+        return root.findTodo(params);
       },
     },
   }),
@@ -73,8 +75,11 @@ export default new GraphQLSchema({
     fields: () => ({
       viewer: {
         type: userType,
-        resolve: () => {
-          return findUser();
+        resolve: (root) => {
+          if (__CLIENT__) {
+            return root['u-1'];
+          }
+          return root.findUser();
         },
       },
     }),
@@ -91,7 +96,7 @@ export default new GraphQLSchema({
           },
         },
         resolve: (root, params) => {
-          return createTodo(params);
+          return root.createTodo(params);
         },
       },
     }),

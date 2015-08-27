@@ -25,7 +25,6 @@ class TodoList extends Component {
   }
 
   render() {
-    //const { createTodo } = this.props.actions;
     const createTodo = x => console.log(x);
     return (
       <div>

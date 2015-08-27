@@ -6,9 +6,8 @@ import createStoreShape from '../utils/createStoreShape';
 import shadowEqualScalar from '../utils/shadowEqualScalar';
 import getDisplayName from '../utils/getDisplayName';
 import { ACTION_TYPE } from '../constants';
-import { graphql } from 'graphql';
 
-export default function createSmartComponent(DecoratedComponent, specs, schema) {
+export default function createSmartComponent(DecoratedComponent, specs) {
   const displayName = `SmartComponent(${getDisplayName(DecoratedComponent)})`;
 
   return class extends Component {
@@ -25,7 +24,7 @@ export default function createSmartComponent(DecoratedComponent, specs, schema) 
 
     constructor(props, context) {
       super(props, context);
-      this.pending = null;
+      this.pending = [];
       this.onChildNeedUpdate();
     }
 
@@ -45,9 +44,8 @@ export default function createSmartComponent(DecoratedComponent, specs, schema) 
       const { dispatch } = this.context.store;
 
       const request = query();
-      if (request === this.pending) return;
-      this.pending = request;
-      console.log(request);
+      if (this.pending.indexOf(request) > -1) return;
+      this.pending = this.pending.concat(request);
 
       const opts = {
         method: 'post',
@@ -57,22 +55,25 @@ export default function createSmartComponent(DecoratedComponent, specs, schema) 
         },
         body: JSON.stringify({ query: request }),
       };
-      // TODO: Somehow deal with errors
+      // TODO: Correct remove element from pending
       fetch(endpoint, opts)
         .then(res => res.json())
         .then(json => {
           dispatch({ type: ACTION_TYPE, payload: json.data });
-          this.pending = null;
+          this.pending = [];
         })
         .catch(err => {
           dispatch({ type: ACTION_TYPE, payload: err, error: true });
-          this.pending = null;
+          this.pending = [];
         });
     }
 
     render() {
       return (
-        <GraphQLConnector select={state => state}>
+        <GraphQLConnector
+          select={state => state}
+          schema={specs.schema}
+          query={specs.query}>
           {stuff => <DecoratedComponent {...stuff} {...this.props} />}
         </GraphQLConnector>
       );

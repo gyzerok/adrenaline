@@ -3,7 +3,7 @@
 import normalize from '../utils/normalize';
 import { ACTION_TYPE } from '../constants';
 
-export default function graphql(state = {}, action, deserialize = normalize) {
+export default function cache(state = {}, action, deserialize = normalize) {
   const { type, payload, error } = action;
 
   if (error) {

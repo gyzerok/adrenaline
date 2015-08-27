@@ -1,6 +1,6 @@
 /* @flow */
 
-import graphql from '../reducers/graphql';
+import cache from '../reducers/cache';
 
 function reduceReducers(...reducers) {
   return (previous, current) =>
@@ -16,12 +16,12 @@ export default function createGraphQLStore(next) {
       reducer,
       (state, action) => ({
         ...state,
-        graphql: graphql(state.graphql, action),
+        cache: cache(state.cache, action),
       }),
     );
     return next(extendedReducer, {
       ...initialState,
-      graphql: {},
+      cache: {},
     });
   };
 }

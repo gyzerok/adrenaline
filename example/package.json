@@ -12,7 +12,7 @@
   "dependencies": {
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
-    "graphql": "^0.3.0",
+    "graphql": "^0.4.2",
     "redux": "^1.0.0-rc",
     "redux-thunk": "^0.1.0",
     "react-redux": "^0.8.2",

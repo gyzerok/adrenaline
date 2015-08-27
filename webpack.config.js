@@ -8,6 +8,11 @@ module.exports = {
       commonjs2: 'react',
       commonjs: 'react',
       amd: 'react'
+    },
+    graphql: {
+      commonjs2: 'graphql',
+      commonjs: 'graphql',
+      amd: 'graphql'
     }
   },
   target: 'node',

@@ -6,6 +6,8 @@ import createStoreShape from '../utils/createStoreShape';
 import shallowEqual from '../utils/shallowEqual';
 import isPlainObject from '../utils/isPlainObject';
 
+import { graphql } from 'graphql';
+
 export default class GraphQLConnector extends Component {
   static contextTypes = {
     store: createStoreShape(PropTypes).isRequired,
@@ -14,6 +16,8 @@ export default class GraphQLConnector extends Component {
   static propTypes = {
     children: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
+    query: PropTypes.func.isRequired,
+    schema: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
@@ -57,17 +61,22 @@ export default class GraphQLConnector extends Component {
   }
 
   handleChange(props = this.props) {
-    const nextState = this.selectState(props, this.context);
-    if (!this.isSliceEqual(this.state.slice, nextState.slice)) {
-      this.setState(nextState);
-    }
+    this.selectState(props, this.context)
+      .then(nextState => {
+        if (!this.isSliceEqual(this.state.slice, nextState.slice)) {
+          this.setState(nextState);
+        }
+      })
+      .catch(err => console.error(err));
   }
 
   selectState(props, context) {
-    const { graphql, ...state } = context.store.getState();
+    const { cache, ...state } = context.store.getState();
     const slice = {
       ...props.select(state),
     };
+    const { schema, query } = this.props;
+    const cacheSlice = graphql(schema, query(), cache);
 
     invariant(
       isPlainObject(slice),
@@ -75,7 +84,16 @@ export default class GraphQLConnector extends Component {
       slice
     );
 
-    return { slice };
+    return Promise.all([slice, cacheSlice])
+      .then(([slice, result]) => {
+        console.log('result', result);
+        return {
+          slice: {
+            ...slice,
+            ...result.data,
+          },
+        };
+      });
   }
 
   render() {

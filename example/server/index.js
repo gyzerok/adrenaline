@@ -27,7 +27,8 @@ const server = app.listen(serverPort, () => {
 
 
 import { graphql } from 'graphql';
-import schema from './schema';
+import schema from '../shared/schema';
+import * as conn from './data';
 
 app.get('/', (req, res) => {
   res.send(`
@@ -46,9 +47,9 @@ app.get('/', (req, res) => {
 });
 
 app.post('/graphql', (req, res) => {
-  const { query, params } = req.body;
+  const { query } = req.body;
 
-  graphql(schema, query, { hello: 'world' }, params)
+  graphql(schema, query, conn)
     .then(result => {
       if (result.errors) {
         res.status(400);
