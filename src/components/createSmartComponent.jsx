@@ -16,6 +16,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
     static contextTypes = {
       store: createStoreShape(PropTypes).isRequired,
+      Loading: PropTypes.func.isRequired,
     }
 
     static childContextTypes = {
@@ -68,15 +69,26 @@ export default function createSmartComponent(DecoratedComponent, specs) {
         });
     }
 
+    renderComponent({ cache = {}, ...stuff}) {
+      const keys = Object.keys(DecoratedComponent.propTypes);
+      const allProps = keys.every(key => {
+        return cache.hasOwnProperty(key) && cache[key] !== null;
+      });
+
+      const { Loading } = this.context;
+      if (!allProps) {
+        return <Loading />;
+      }
+
+      return (
+        <DecoratedComponent {...stuff} {...cache} {...this.props} />
+      );
+    }
+
     render() {
       return (
-        <GraphQLConnector
-          select={state => state}
-          schema={specs.schema}
-          query={specs.query}>
-          {({cache, ...stuff}) =>
-            <DecoratedComponent {...stuff} {...cache} {...this.props} />
-          }
+        <GraphQLConnector select={state => state} query={specs.query}>
+          {this.renderComponent.bind(this)}
         </GraphQLConnector>
       );
     }

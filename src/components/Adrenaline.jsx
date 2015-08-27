@@ -8,13 +8,14 @@ export default class Adrenaline extends Component {
   static childContextTypes = {
     store: createStoreShape(PropTypes).isRequired,
     graphql: PropTypes.func.isRequired,
-    renderLoading: PropTypes.object.isRequired,
+    Loading: PropTypes.func.isRequired,
+    schema: PropTypes.object.isRequired,
   };
 
   static propTypes = {
     children: PropTypes.func.isRequired,
     graphql: PropTypes.func.isRequired,
-    renderLoading: PropTypes.object,
+    renderLoading: PropTypes.func,
   }
 
   static defaultProps = {
@@ -25,7 +26,8 @@ export default class Adrenaline extends Component {
     return {
       store: this.state.store,
       graphql: this.props.graphql,
-      renderLoading: this.props.renderLoading,
+      Loading: this.props.renderLoading,
+      schema: this.props.schema,
     };
   }
 
