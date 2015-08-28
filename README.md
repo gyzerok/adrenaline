@@ -135,3 +135,9 @@ export default createContainer(TodoItem, {
   },
 });
 ```
+
+## Todo:
+ - query batching
+ - fieldASTs memoization to reduce overhead for query parsing
+ - move all query sending into Adrenaline component
+ - do we ever need SmartComponents?
