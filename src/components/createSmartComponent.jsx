@@ -1,6 +1,7 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react';
+import invariant from 'invariant';
 import GraphQLConnector from './GraphQLConnector';
 import createStoreShape from '../utils/createStoreShape';
 import shadowEqualScalar from '../utils/shadowEqualScalar';
@@ -70,7 +71,13 @@ export default function createSmartComponent(DecoratedComponent, specs) {
     }
 
     renderComponent({ cache = {}, ...stuff}) {
-      const keys = Object.keys(DecoratedComponent.propTypes);
+      invariant(
+        DecoratedComponent.propTypes !== undefined,
+        'You have to declare propTypes for %s',
+        displayName,
+      );
+
+      const keys = Object.keys(DecoratedComponent.propTypes || {});
       const allProps = keys.every(key => {
         return cache.hasOwnProperty(key) && cache[key] !== null;
       });
