@@ -141,3 +141,4 @@ export default createContainer(TodoItem, {
  - fieldASTs memoization to reduce overhead for query parsing
  - move all query sending into Adrenaline component
  - do we ever need SmartComponents?
+ - if no store is passed create default one (add redux as peer dep)
