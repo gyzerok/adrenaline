@@ -3,23 +3,23 @@
 import test from 'tape';
 import normalize from '../normalize';
 
-test('normalize correctly deserialize data', assert => {
+test('normalize correctly works when receives object as root', assert => {
   const denormalizedData = {
     viewer: {
-      id: 'u-1',
+      id: '#1:1',
       name: 'User',
       edges: {
         todos: [
           {
-            id: 't-1',
+            id: '#2:1',
             text: 'One'
           },
           {
-            id: 't-2',
+            id: '#2:2',
             text: 'Two'
           },
           {
-            id: 't-3',
+            id: '#2:3',
             text: 'Three'
           },
         ],
@@ -27,22 +27,75 @@ test('normalize correctly deserialize data', assert => {
     },
   };
   const normalizedData = {
-    'u-1': {
-      id: 'u-1',
+    '#1:1': {
+      id: '#1:1',
       name: 'User',
-      todos: ['t-1', 't-2', 't-3'],
+      todos: ['#2:1', '#2:2', '#2:3'],
     },
-    't-1': {
-      id: 't-1',
+    '#2:1': {
+      id: '#2:1',
       text: 'One',
     },
-    't-2': {
-      id: 't-2',
+    '#2:2': {
+      id: '#2:2',
       text: 'Two',
     },
-    't-3': {
-      id: 't-3',
+    '#2:3': {
+      id: '#2:3',
       text: 'Three',
+    },
+  };
+
+  assert.deepEqual(normalize({}, denormalizedData), normalizedData);
+
+  assert.end();
+});
+
+test('normalize correctly works when receives array as root', assert => {
+  const denormalizedData = {
+    todos: [
+      {
+        id: '#2:1',
+        text: 'One',
+        edges: {
+          user: { id: '#1:1', name: 'User' }
+        },
+      },
+      {
+        id: '#2:2',
+        text: 'Two',
+        edges: {
+          user: { id: '#1:1', name: 'User' }
+        },
+      },
+      {
+        id: '#2:3',
+        text: 'Three',
+        edges: {
+          user: { id: '#1:1', name: 'User' }
+        },
+      },
+    ],
+  };
+  const normalizedData = {
+    '#1:1': {
+      id: '#1:1',
+      name: 'User',
+    },
+    '#2:1': {
+      id: '#2:1',
+      text: 'One',
+      user: '#1:1',
+    },
+    '#2:2': {
+      id: '#2:2',
+      text: 'Two',
+      user: '#1:1',
+    },
+    '#2:3': {
+      id: '#2:3',
+      text: 'Three',
+      user: '#1:1',
     },
   };
 
