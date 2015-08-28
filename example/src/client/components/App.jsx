@@ -2,26 +2,18 @@
 
 import React, { Component, PropTypes } from 'react';
 import TodoList from 'client/components/TodoList';
-import { createSmartComponent, bindMutations } from '../../../../src';
-import * as mutations from 'client/mutations/todo'
+import { createSmartComponent } from '../../../../src';
 
 class App extends Component {
   static propTypes = {
     viewer: PropTypes.object,
   }
 
-  static defaultProps = {
-    viewer: {
-      edges: {},
-    },
-  }
-
   render() {
-    const { dispatch } = this.props;
     const { todos } = this.props.viewer.edges;
-    
+
     return (
-      <TodoList todos={todos} mutations={bindMutations(mutations, dispatch)} />
+      <TodoList todos={todos} />
     );
   }
 }
