@@ -9,10 +9,6 @@ import { Adrenaline, createGraphQLStore } from '../../../src';
 import { graphql } from 'graphql';
 import schema from 'shared/schema';
 
-console.log(schema);
-console.log(schema.getTypeMap());
-console.log(schema.getQueryType());
-
 const finalCreateStore = compose(
   applyMiddleware(thunk),
   createGraphQLStore,
@@ -28,6 +24,3 @@ React.render(
   </Adrenaline>,
   rootNode
 );
-
-import { parseSchema, parseType } from './utils';
-console.log('utils', parseSchema(schema));

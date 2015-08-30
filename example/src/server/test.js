@@ -6,8 +6,8 @@ import {
   GraphQLObjectType,
   GraphQLList,
 } from 'graphql';
-import normalize from '../normalize';
-import parseSchema from '../parseSchema'
+import normalize from '../../../src/utils/normalize';
+import parseSchema from '../../../src/utils/parseSchema';
 
 const todoType = new GraphQLObjectType({
   name: 'Todo',
@@ -28,7 +28,7 @@ const userType = new GraphQLObjectType({
       type: GraphQLString,
     },
     name: {
-      type: GraphQLString
+      type: GraphQLString,
     },
     todos: {
       type: new GraphQLList(todoType),
@@ -53,47 +53,43 @@ const schema = new GraphQLSchema({
   }),
 });
 
-test('normalize', assert => {
-  const data = {
-    User: {
-      'u-1': {
-        id: 'u-1',
-        name: 'User1',
-        todos: ['t-1', 't-2'],
-      }
+const data = {
+  User: {
+    'u-1': {
+      id: 'u-1',
+      name: 'User1',
+      todos: ['t-1', 't-2'],
     },
-    Todo: {
-      't-1': {
-        id: 't-1',
-        text: 'Hello',
-      },
-      't-2': {
-        id: 't-2',
-        text: 'World',
-      },
+  },
+  Todo: {
+    't-1': {
+      id: 't-1',
+      text: 'Hello',
     },
-  };
+    't-2': {
+      id: 't-2',
+      text: 'World',
+    },
+  },
+};
 
-  const parsedSchema = parseSchema(schema);
-  const query = `
-    query Test {
-      viewer {
+const parsedSchema = parseSchema(schema);
+const query = `
+  query Test {
+    viewer {
+      id,
+      name,
+      todos {
         id,
-        name,
-        todos {
-          id,
-          text
-        }
+        text
       }
     }
-  `;
+  }
+`;
 
-  graphql(schema, query, data)
-    .then(res => {
-      const normalized = normalize(parsedSchema, res.data);
-      assert.deepEqual(normalized, data);
-
-      assert.end();
-    })
-    .catch(err => assert.end(err));
-});
+graphql(schema, query, data)
+  .then(res => {
+    const normalized = normalize(parsedSchema, res.data);
+    console.log(normalized);
+  })
+  .catch(err => console.error(err, err.stack));

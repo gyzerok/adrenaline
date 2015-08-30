@@ -2,9 +2,8 @@
 
 import { reduce } from 'lodash';
 import { GraphQLList, GraphQLObjectType, GraphQLScalarType } from 'graphql';
-import isDefinedType from './isDefinedType';
 
-export function parseSchema(schema) {
+export default function parseSchema(schema) {
   const typeMap = schema.getTypeMap();
   const userTypes = reduce(typeMap, (acc, val, key) => {
     if (!isDefinedType(key)) return acc;
@@ -12,8 +11,8 @@ export function parseSchema(schema) {
       ...acc,
       [key]: {
         ...reduce(val.getFields(), (memo, field, name) => {
-          const typename = parseType(field.type);
-          return typename !== 'Scalar' ? { ...memo, [name]: typename } : memo;
+          const typename = parseType(field.type, isDefinedType);
+          return typename !== undefined ? { ...memo, [name]: typename } : memo;
         }, {}),
       },
     };
@@ -30,7 +29,25 @@ function parseType(type) {
   if (!complexType) return parseType(type.ofType);
   if (type instanceof GraphQLList) {
     const typename = type.ofType.name;
-    return isDefinedType(typename) ? ([typename]) : 'Scalar';
+    return isDefinedType(typename) ? ([typename]) : undefined;
   }
-  return isDefinedType(type.name) ? type.name : 'Scalar';
+  return isDefinedType(type.name) ? type.name : undefined;
+}
+
+function isDefinedType(typename) {
+  return !isIntrospectionType(typename) && !isBuiltInScalar(typename);
+}
+
+function isIntrospectionType(typename) {
+  return typename.indexOf('__') === 0;
+}
+
+function isBuiltInScalar(typename) {
+  return (
+    typename === 'String' ||
+    typename === 'Boolean' ||
+    typename === 'Int' ||
+    typename === 'Float' ||
+    typename === 'ID'
+  );
 }

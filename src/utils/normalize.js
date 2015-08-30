@@ -1,33 +1,35 @@
 /* @flow */
 
-import { map, reduce } from 'lodash';
-import merge from './merge';
+//import merge from './merge';
+import { isArray, isEqual } from 'lodash';
 
-export function normalize(parsedSchema, initial, data) {
-  let bag = { ...initial };
+export default function normalize(parsedSchema, data) {
+  let bag = {};
   normalizeAny(parsedSchema, 'Query', bag, data);
-
   return bag;
 }
 
 function normalizeAny(parsedSchema, typename, bag, data) {
-  if (!isDefinedType(typename)) {
+  if (typename === undefined) {
     return data;
   }
 
-  if (Array.isArray(typename)) {
+  if (isArray(typename)) {
     return normalizeArray(parsedSchema, typename[0], bag, data);
+  }
+
+  if (!data.hasOwnProperty('id')) {
+    return normalizeObject(parsedSchema, typename, bag, data);
   }
 
   return normalizeType(parsedSchema, typename, bag, data);
 }
 
 function normalizeArray(parsedSchema, typename, bag, data) {
-  const itemSchema = parsedSchema[typename];
-  return data.map(item => normalizeAny(parsedSchema, itemSchema, bag, item));
+  return data.map(item => normalizeAny(parsedSchema, typename, bag, item));
 }
 
-function normalizeObject(parsedSchema, typename, data, bag) {
+function normalizeObject(parsedSchema, typename, bag, data) {
   const itemSchema = parsedSchema[typename];
   let normalized = {};
   for (const key in data) {
@@ -52,7 +54,16 @@ function normalizeType(parsedSchema, typename, bag, data) {
 
   let stored = bag[typename][id];
   const normalized = normalizeObject(parsedSchema, typename, bag, data);
-  merge(stored, normalized); // swap with my merge
+  merge(stored, normalized);
 
   return id;
+}
+
+function merge(entityA, entityB) {
+  for (const key in entityB) {
+    if (!entityB.hasOwnProperty(key) || isEqual(entityA[key], entityB[key])) {
+      continue;
+    }
+    entityA[key] = entityB[key];
+  }
 }

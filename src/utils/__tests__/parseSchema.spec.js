@@ -4,21 +4,26 @@ import {
   GraphQLSchema,
   GraphQLString,
   GraphQLObjectType,
+  GraphQLList,
 } from 'graphql';
-import normalizeGraphQL from '../normalizeGraphQL';
+import parseSchema from '../parseSchema'
 
 const data = {
   User: {
     'u-1': {
       id: 'u-1',
       name: 'User1',
-      todo: 't-1',
+      todos: ['t-1', 't-2'],
     }
   },
   Todo: {
     't-1': {
       id: 't-1',
       text: 'Hello',
+    },
+    't-2': {
+      id: 't-1',
+      text: 'World',
     }
   }
 }
@@ -44,9 +49,9 @@ const userType = new GraphQLObjectType({
     name: {
       type: GraphQLString
     },
-    todo: {
-      type: todoType,
-      resolve: (user) => data.Todo[user.todo],
+    todos: {
+      type: new GraphQLList(todoType),
+      resolve: (user) => user.todos.map(id => data.Todo[id]),
     }
   })
 });
@@ -65,22 +70,16 @@ const schema = new GraphQLSchema({
   }),
 });
 
-test('normalizeGraphQL', assert => {
-  const query = `
-    query Test {
-      viewer {
-        id,
-        name,
-        todo {
-          id,
-          text
-        }
-      }
-    }
-  `;
-  graphql(schema, query, data).then(res => {
-    assert.deepEqual(normalizeGraphQL(res.data), data);
-
-    assert.end();
-  });
+test('parseSchema', assert => {
+  const expected = {
+    Query: {
+      viewer: 'User',
+    },
+    User: {
+      todos: ['Todo'],
+    },
+    Todo: {},
+  }
+  assert.deepEqual(parseSchema(schema), expected);
+  assert.end();
 });
