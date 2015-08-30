@@ -46,6 +46,9 @@ const userEdges = new GraphQLObjectType({
         }
         return root.findTodo(params);
       },
+      normalize: (todos) => {
+        return todos.map(todo => todo.id);
+      },
     },
   }),
 });

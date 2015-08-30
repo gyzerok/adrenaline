@@ -1,7 +1,7 @@
 /* @flow */
 
-import { map, reduce } from 'lodash';
-import merge from './merge';
+import { reduce, mapValues } from 'lodash';
+const merge = () => null;
 
 export function normalize(parsedSchema, initial, data) {
   let bag = { ...initial };
