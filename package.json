@@ -1,6 +1,6 @@
 {
   "name": "adrenaline",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Relay-like functionality for Redux-based applications",
   "main": "./lib/adrenaline.js",
   "scripts": {
