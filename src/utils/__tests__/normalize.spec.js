@@ -5,6 +5,8 @@ import {
   GraphQLString,
   GraphQLObjectType,
   GraphQLList,
+  GraphQLNonNull,
+  GraphQLID,
 } from 'graphql';
 import normalize from '../normalize';
 import parseSchema from '../parseSchema'
@@ -13,7 +15,7 @@ const todoType = new GraphQLObjectType({
   name: 'Todo',
   fields: () => ({
     id: {
-      type: GraphQLString,
+      type: new GraphQLNonNull(GraphQLID),
     },
     text: {
       type: GraphQLString,
@@ -25,7 +27,7 @@ const userType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
     id: {
-      type: GraphQLString,
+      type: new GraphQLNonNull(GraphQLID),
     },
     name: {
       type: GraphQLString
