@@ -9,8 +9,12 @@ This was started as a pack of tools for Redux to work with GraphQL (before Relay
 
 Currently I'm working hard for the 1.0 release which gonna be public. If anyone want to help please note me in issues.
 
-## Todo
- - query batching
- - fieldASTs memoization to reduce overhead for query parsing
- - move all query sending into Adrenaline component
- - do we ever need SmartComponents?
+## Way to 1.0
+ - Mutations
+ - Queryies batching
+ - Default middlware for express
+ - Isomorphism
+ - Memoize fieldASTs to reduce overhead for query parsing
+ - Move all to Redux as a deps to prevent implementing same things
+ - Move all query sending into Adrenaline component?
+ - Somehow solve nessesity of implementing cache resolve in the GraphQL schema
