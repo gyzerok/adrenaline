@@ -8,7 +8,6 @@ import { createDumbComponent } from '../../../../src';
 class TodoList extends Component {
   static propTypes = {
     actions: PropTypes.object,
-    viewer: PropTypes.object,
     todos: PropTypes.array,
     setParams: PropTypes.func.isRequired,
   }

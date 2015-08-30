@@ -70,26 +70,15 @@ export default class GraphQLConnector extends Component {
   }
 
   selectState(props, context) {
-    const { cache, ...state } = context.store.getState();
-    const slice = {
-      ...props.select(state),
-    };
-
-    invariant(
-      isPlainObject(slice),
-      'The return value of `select` prop must be an object. Instead received %s.',
-      slice
-    );
+    const state = context.store.getState();
 
     const { graphql, schema } = this.context;
     const { query } = this.props;
-    return graphql(schema, query(), cache)
+
+    return graphql(schema, query(), state)
       .then(result => {
         return {
-          slice: {
-            ...slice,
-            cache: result.data,
-          },
+          slice: result.data,
         };
       });
   }

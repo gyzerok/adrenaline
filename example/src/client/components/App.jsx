@@ -10,7 +10,7 @@ class App extends Component {
   }
 
   render() {
-    const { todos } = this.props.viewer.edges;
+    const { todos } = this.props.viewer;
 
     return (
       <TodoList todos={todos} />

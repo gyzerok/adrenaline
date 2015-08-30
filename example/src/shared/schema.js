@@ -51,7 +51,7 @@ const userType = new GraphQLObjectType({
       },
       resolve: (user, params, { rootValue: root }) => {
         if (__CLIENT__) {
-          return user.todos.map(t => root[t]);
+          return user.todos.map(t => root.Todo[t]);
         }
         return root.findTodo(params);
       },
@@ -67,7 +67,7 @@ export default new GraphQLSchema({
         type: userType,
         resolve: (root) => {
           if (__CLIENT__) {
-            return root['u-1'];
+            return root.User['u-1'];
           }
           return root.findUser();
         },

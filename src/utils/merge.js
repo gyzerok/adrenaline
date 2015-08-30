@@ -2,8 +2,7 @@
 
 import { reduce } from 'lodash';
 
-export default function mergeCache(objA, objB) {
-  return reduce
+export default function merge(objA, objB) {
   let dst = { ...objA };
   for (const key in objB) {
     if (objB.hasOwnProperty(key)) {

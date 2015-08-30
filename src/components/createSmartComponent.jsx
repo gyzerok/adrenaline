@@ -75,7 +75,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
         });
     }
 
-    renderComponent({ cache = {}, ...stuff}) {
+    renderComponent(state) {
       invariant(
         DecoratedComponent.propTypes !== undefined,
         'You have to declare propTypes for %s',
@@ -84,7 +84,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
       const keys = Object.keys(DecoratedComponent.propTypes || {});
       const allProps = keys.every(key => {
-        return cache.hasOwnProperty(key) && cache[key] !== null;
+        return state.hasOwnProperty(key) && state[key] !== null;
       });
 
       const { Loading } = this.context;
@@ -93,7 +93,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       }
 
       return (
-        <DecoratedComponent {...stuff} {...cache} {...this.props} />
+        <DecoratedComponent {...state} {...this.props} />
       );
     }
 
