@@ -33,7 +33,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       this.pending = [];
       this.mutations = bindMutations(
         specs.endpoint,
-        specs.mutations,
+        specs.mutations || {},
         this.props.dispatch
       );
       this.onChildNeedUpdate();

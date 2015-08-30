@@ -8,7 +8,7 @@ import { createSmartComponent } from '../../../../src';
 class App extends Component {
   static propTypes = {
     viewer: PropTypes.object,
-    mutations: PropTypes.object,
+    mutations: PropTypes.object.isRequired,
   }
 
   render() {
