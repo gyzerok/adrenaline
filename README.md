@@ -11,7 +11,7 @@ Currently I'm working hard for the 1.0 release which gonna be public. If anyone 
 
 ## Way to 1.0
  - Mutations
- - Queryies batching
+ - Queries batching
  - Default middlware for express
  - Isomorphism
  - Memoize fieldASTs to reduce overhead for query parsing
