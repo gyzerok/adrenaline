@@ -23,7 +23,7 @@ class TodoList extends Component {
   }
 
   render() {
-    const createTodo = x => console.log(x);
+    const { createTodo } = this.props.mutations;
     return (
       <div>
         <TodoInput createTodo={createTodo} />

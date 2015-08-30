@@ -76,11 +76,7 @@ export default class GraphQLConnector extends Component {
     const { query } = this.props;
 
     return graphql(schema, query(), state)
-      .then(result => {
-        return {
-          slice: result.data,
-        };
-      });
+      .then(({ data: slice }) => ({ slice }));
   }
 
   render() {

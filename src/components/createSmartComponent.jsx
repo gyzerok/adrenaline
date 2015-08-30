@@ -7,6 +7,8 @@ import createStoreShape from '../utils/createStoreShape';
 import shadowEqualScalar from '../utils/shadowEqualScalar';
 import getDisplayName from '../utils/getDisplayName';
 import normalize from '../utils/normalize';
+import request from '../utils/request';
+import bindMutations from '../utils/bindMutations';
 import { ACTION_TYPE } from '../constants';
 
 export default function createSmartComponent(DecoratedComponent, specs) {
@@ -29,6 +31,11 @@ export default function createSmartComponent(DecoratedComponent, specs) {
     constructor(props, context) {
       super(props, context);
       this.pending = [];
+      this.mutations = bindMutations(
+        specs.endpoint,
+        specs.mutations,
+        this.props.dispatch
+      );
       this.onChildNeedUpdate();
     }
 
@@ -43,25 +50,15 @@ export default function createSmartComponent(DecoratedComponent, specs) {
     }
 
     onChildNeedUpdate() {
-      const { query } = specs;
-      const { endpoint } = specs;
       const { store: { dispatch }, parsedSchema } = this.context;
 
-      const request = query();
-      if (this.pending.indexOf(request) > -1) return;
-      this.pending = this.pending.concat(request);
+      const query = specs.query();
+      if (this.pending.indexOf(query) > -1) return;
+      this.pending = this.pending.concat(query);
 
-      const opts = {
-        method: 'post',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query: request }),
-      };
+
       // TODO: Correct remove element from pending
-      fetch(endpoint, opts)
-        .then(res => res.json())
+      request(specs.endpoint, { query })
         .then(json => {
           dispatch({
             type: ACTION_TYPE,
@@ -83,17 +80,21 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       );
 
       const keys = Object.keys(DecoratedComponent.propTypes || {});
-      const allProps = keys.every(key => {
+      const dataLoaded = keys.every(key => {
+        if (key === 'mutations') {
+          return true;
+        }
         return state.hasOwnProperty(key) && state[key] !== null;
       });
 
       const { Loading } = this.context;
-      if (!allProps) {
+      if (!dataLoaded) {
         return <Loading />;
       }
 
       return (
-        <DecoratedComponent {...state} {...this.props} />
+        <DecoratedComponent {...this.props} {...state}
+          mutations={this.mutations} />
       );
     }
 

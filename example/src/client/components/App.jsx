@@ -2,18 +2,20 @@
 
 import React, { Component, PropTypes } from 'react';
 import TodoList from 'client/components/TodoList';
+import * as todoMutations from '../mutations/todo';
 import { createSmartComponent } from '../../../../src';
 
 class App extends Component {
   static propTypes = {
     viewer: PropTypes.object,
+    mutations: PropTypes.object,
   }
 
   render() {
-    const { todos } = this.props.viewer;
+    const { viewer, mutations } = this.props;
 
     return (
-      <TodoList todos={todos} />
+      <TodoList todos={viewer.todos} mutations={mutations} />
     );
   }
 }
@@ -25,4 +27,5 @@ export default createSmartComponent(App, {
       ${TodoList.getFragment('viewer')}
     }
   `,
+  mutations: todoMutations,
 });
