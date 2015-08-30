@@ -6,6 +6,7 @@ import GraphQLConnector from './GraphQLConnector';
 import createStoreShape from '../utils/createStoreShape';
 import shadowEqualScalar from '../utils/shadowEqualScalar';
 import getDisplayName from '../utils/getDisplayName';
+import normalize from '../utils/normalize';
 import { ACTION_TYPE } from '../constants';
 
 export default function createSmartComponent(DecoratedComponent, specs) {
@@ -17,6 +18,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
     static contextTypes = {
       store: createStoreShape(PropTypes).isRequired,
+      parsedSchema: PropTypes.object.isRequired,
       Loading: PropTypes.func.isRequired,
     }
 
@@ -43,7 +45,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
     onChildNeedUpdate() {
       const { query } = specs;
       const { endpoint } = specs;
-      const { dispatch } = this.context.store;
+      const { store: { dispatch }, parsedSchema } = this.context;
 
       const request = query();
       if (this.pending.indexOf(request) > -1) return;
@@ -61,7 +63,10 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       fetch(endpoint, opts)
         .then(res => res.json())
         .then(json => {
-          dispatch({ type: ACTION_TYPE, payload: json.data });
+          dispatch({
+            type: ACTION_TYPE,
+            payload: normalize(parsedSchema, json.data),
+          });
           this.pending = [];
         })
         .catch(err => {

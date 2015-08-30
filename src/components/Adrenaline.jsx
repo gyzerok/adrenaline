@@ -3,6 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import Loading from './Loading';
 import createStoreShape from '../utils/createStoreShape';
+import parseSchema from '../utils/parseSchema';
 
 export default class Adrenaline extends Component {
   static childContextTypes = {
@@ -10,6 +11,7 @@ export default class Adrenaline extends Component {
     graphql: PropTypes.func.isRequired,
     Loading: PropTypes.func.isRequired,
     schema: PropTypes.object.isRequired,
+    parsedSchema: PropTypes.object.isRequired,
   };
 
   static propTypes = {
@@ -28,6 +30,7 @@ export default class Adrenaline extends Component {
       graphql: this.props.graphql,
       Loading: this.props.renderLoading,
       schema: this.props.schema,
+      parsedSchema: parseSchema(this.props.schema),
     };
   }
 

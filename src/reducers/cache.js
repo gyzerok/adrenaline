@@ -1,6 +1,6 @@
 /* @flow */
 
-import normalize from '../utils/normalize';
+import merge from '../utils/merge';
 import { ACTION_TYPE } from '../constants';
 
 export default function cache(state = {}, action) {
@@ -12,7 +12,7 @@ export default function cache(state = {}, action) {
 
   switch (type) {
     case ACTION_TYPE:
-      return normalize(state, payload);
+      return merge(state, payload);
     default:
       return state;
   }

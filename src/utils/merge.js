@@ -1,6 +1,9 @@
 /* @flow */
 
-export default function merge(objA, objB) {
+import { reduce } from 'lodash';
+
+export default function mergeCache(objA, objB) {
+  return reduce
   let dst = { ...objA };
   for (const key in objB) {
     if (objB.hasOwnProperty(key)) {

@@ -86,6 +86,7 @@ const query = `
     }
   }
 `;
+console.log(parsedSchema);
 
 graphql(schema, query, data)
   .then(res => {
