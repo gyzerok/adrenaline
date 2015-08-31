@@ -7,7 +7,7 @@ import { createDumbComponent } from '../../../../src';
 
 class TodoList extends Component {
   static propTypes = {
-    actions: PropTypes.object,
+    mutations: PropTypes.object,
     todos: PropTypes.array,
     setParams: PropTypes.func.isRequired,
   }
@@ -18,7 +18,7 @@ class TodoList extends Component {
 
   componentDidMount() {
     setTimeout(() => {
-      this.props.setParams({ count: 3 });
+      this.props.setParams({ count: 10 });
     }, 2000);
   }
 
@@ -42,15 +42,11 @@ export default createDumbComponent(TodoList, {
     count: 2,
   },
   fragments: {
-    viewer: ({ count }) => `
+    todos: ({ count }) => `
       Query {
-        viewer {
+        todos(count: ${count}) {
           id,
-          name,
-          todos(count: ${count}) {
-            id,
-            ${TodoItem.getFragment('todo')}
-          }
+          ${TodoItem.getFragment('todo')}
         }
       }
     `,

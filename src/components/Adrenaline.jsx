@@ -4,7 +4,7 @@ import React, { Component, PropTypes } from 'react';
 import Loading from './Loading';
 import createStoreShape from '../utils/createStoreShape';
 import parseSchema from '../utils/parseSchema';
-import createStore from '../utils/createStore';
+import createCache from '../utils/createCache';
 
 export default class Adrenaline extends Component {
   static childContextTypes = {
@@ -31,7 +31,7 @@ export default class Adrenaline extends Component {
   getChildContext() {
     const parsedSchema = parseSchema(this.props.schema);
     return {
-      store: createStore(parsedSchema),
+      store: createCache(parsedSchema),
       graphql: this.props.graphql,
       Loading: this.props.renderLoading,
       schema: this.props.schema,

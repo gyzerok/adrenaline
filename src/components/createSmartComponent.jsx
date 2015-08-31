@@ -33,9 +33,10 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       super(props, context);
       this.pending = [];
       this.mutations = bindMutations(
-        specs.endpoint,
+        context.endpoint,
+        context.parsedSchema,
         specs.mutations || {},
-        this.props.dispatch
+        context.store.dispatch
       );
       this.onChildNeedUpdate();
     }
@@ -64,11 +65,10 @@ export default function createSmartComponent(DecoratedComponent, specs) {
             type: ACTION_TYPE,
             payload: normalize(parsedSchema, json.data),
           });
+          this.pending = this.pending.filter(p => p === request);
         })
         .catch(err => {
           dispatch({ type: ACTION_TYPE, payload: err, error: true });
-        })
-        .finally(() => {
           this.pending = this.pending.filter(p => p === request);
         });
     }

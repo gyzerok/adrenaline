@@ -3,12 +3,35 @@
 import { isArray, isEqual } from 'lodash';
 
 export default function normalize(parsedSchema, data) {
+  const keys = Object.keys(data);
+  const isQuery = (
+    parsedSchema.hasOwnProperty('Query') &&
+    keys.every(key => parsedSchema.Query.hasOwnProperty(key))
+  );
+  const isMutation = (
+    parsedSchema.hasOwnProperty('Mutation') &&
+    keys.every(key => parsedSchema.Mutation.hasOwnProperty(key))
+  );
+
   let bag = {};
-  normalizeAny(parsedSchema, 'Query', bag, data);
+  if (isQuery) {
+    normalizeAny(parsedSchema, 'Query', bag, data);
+  }
+  else if (isMutation) {
+    normalizeAny(parsedSchema, 'Mutation', bag, data);
+  }
+  else {
+    throw new Error('Unrecognized GraphQL result');
+  }
+
   return bag;
 }
 
 function normalizeAny(parsedSchema, typename, bag, data) {
+  if (data === null || data === undefined) {
+    return null;
+  }
+
   if (typename === undefined) {
     return data;
   }

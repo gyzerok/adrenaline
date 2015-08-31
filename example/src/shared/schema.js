@@ -2,8 +2,8 @@
 
 import {
   GraphQLObjectType,
-  GraphQLInt,
   GraphQLString,
+  GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLSchema,
@@ -28,48 +28,23 @@ const todoType = new GraphQLObjectType({
   }),
 });
 
-const userType = new GraphQLObjectType({
-  name: 'User',
-  description: 'User type',
-  fields: () => ({
-    id: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'User id',
-    },
-    name: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'User name',
-    },
-    todos: {
-      type: new GraphQLList(todoType),
-      description: 'User todos',
-      args: {
-        count: {
-          name: 'count',
-          type: GraphQLInt,
-        },
-      },
-      resolve: (user, params, { rootValue: root }) => {
-        if (__CLIENT__) {
-          return user.todos.map(t => root.Todo[t]);
-        }
-        return root.findTodo(params);
-      },
-    },
-  }),
-});
-
 export default new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
     fields: () => ({
-      viewer: {
-        type: userType,
-        resolve: (root) => {
+      todos: {
+        type: new GraphQLList(todoType),
+        args: {
+          count: {
+            name: 'count',
+            type: GraphQLInt,
+          },
+        },
+        resolve: (root, args) => {
           if (__CLIENT__) {
-            return root.User['u-1'];
+            return Object.values(root.Todo).slice(0, args.count);
           }
-          return root.findUser();
+          return root.findTodo(args);
         },
       },
     }),

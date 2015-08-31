@@ -53,9 +53,33 @@ const schema = new GraphQLSchema({
       },
     }),
   }),
+  mutation: new GraphQLObjectType({
+    name: 'Mutation',
+    fields: () => ({
+      updateTodo: {
+        type: todoType,
+        args: {
+          id: {
+            name: 'id',
+            type: new GraphQLNonNull(GraphQLID),
+          },
+          text: {
+            name: 'text',
+            type: GraphQLString
+          }
+        },
+        resolve: (root, { id, text }) => {
+          root.Todo[id].text = text;
+          return root.Todo[id];
+        },
+      },
+    }),
+  }),
 });
 
-test('normalize', assert => {
+const parsedSchema = parseSchema(schema);
+
+test('normalize for queries', assert => {
   const data = {
     User: {
       'u-1': {
@@ -75,10 +99,8 @@ test('normalize', assert => {
       },
     },
   };
-
-  const parsedSchema = parseSchema(schema);
   const query = `
-    query Test {
+    query TestQuery {
       viewer {
         id,
         name,
@@ -93,7 +115,54 @@ test('normalize', assert => {
   graphql(schema, query, data)
     .then(res => {
       const normalized = normalize(parsedSchema, res.data);
-      assert.deepEqual(normalized, data);
+      assert.deepEqual(normalized, data, 'should correctly normalize queries');
+
+      assert.end();
+    })
+    .catch(err => assert.end(err));
+});
+
+test('normalize for mutations', assert => {
+  const data = {
+    User: {
+      'u-1': {
+        id: 'u-1',
+        name: 'User1',
+        todos: ['t-1', 't-2'],
+      }
+    },
+    Todo: {
+      't-1': {
+        id: 't-1',
+        text: 'Hello',
+      },
+      't-2': {
+        id: 't-2',
+        text: 'World',
+      },
+    },
+  };
+  const expected = {
+    Todo: {
+      't-1': {
+        id: 't-1',
+        text: 'updated text',
+      },
+    },
+  };
+  const mutation = `
+    mutation TestMutation {
+      updateTodo(id: "t-1", text: "updated text") {
+        id,
+        text
+      }
+    }
+  `;
+
+  graphql(schema, mutation, data)
+    .then(res => {
+      const normalized = normalize(parsedSchema, res.data);
+      assert.deepEqual(normalized, expected, 'should correctly normalize mutations');
 
       assert.end();
     })

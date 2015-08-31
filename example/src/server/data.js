@@ -2,12 +2,6 @@
 
 let idx = 4;
 let data = {
-  users: [
-    {
-      id: 'u-1',
-      name: 'User',
-    },
-  ],
   todos: [
     {
       id: 't-1',
@@ -35,17 +29,16 @@ export function findTodoById(id) {
 }
 
 export function findTodo({ count }) {
-  return count ? data.todos.slice(-count) : data.todos;
+  return count ? data.todos.slice(0, count) : data.todos;
 }
 
-export function createTodo({ text, user }) {
+export function createTodo({ text }) {
   const todo = {
     id: 't-' + idx++,
     text: text,
-    owner: user.id,
     createdAt: (new Date()).toString(),
   };
-  data = [todo].concat(data);
+  data.todos = [todo].concat(data.todos);
   return todo;
 }
 

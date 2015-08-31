@@ -62,6 +62,7 @@ export default class GraphQLConnector extends Component {
   handleChange(props = this.props) {
     this.selectState(props, this.context)
       .then(nextState => {
+        console.log(nextState);
         if (!this.isSliceEqual(this.state.slice, nextState.slice)) {
           this.setState(nextState);
         }
