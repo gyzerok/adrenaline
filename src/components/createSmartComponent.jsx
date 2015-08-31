@@ -58,18 +58,18 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       if (this.pending.indexOf(query) > -1) return;
       this.pending = this.pending.concat(query);
 
-      // TODO: Correct remove element from pending
       request(endpoint, { query })
         .then(json => {
           dispatch({
             type: ACTION_TYPE,
             payload: normalize(parsedSchema, json.data),
           });
-          this.pending = [];
         })
         .catch(err => {
           dispatch({ type: ACTION_TYPE, payload: err, error: true });
-          this.pending = [];
+        })
+        .finally(() => {
+          this.pending = this.pending.filter(p => p === request);
         });
     }
 
