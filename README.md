@@ -1,7 +1,8 @@
 # Adrenaline
 
-[![Build Status](https://travis-ci.org/gyzerok/adrenaline.svg?branch=master)](https://travis-ci.org/gyzerok/adrenaline)
-[![Code Climate](https://codeclimate.com/github/gyzerok/redux-graphql/badges/gpa.svg)](https://codeclimate.com/github/gyzerok/redux-graphql)
+[![build status](https://img.shields.io/travis/gyzerok/adrenaline/master.svg?style=flat-square)](https://travis-ci.org/gyzerok/adrenaline)
+[![npm version](https://img.shields.io/npm/v/adrenaline.svg?style=flat-square)](https://www.npmjs.com/package/adrenaline)
+[![npm downloads](https://img.shields.io/npm/dm/adrenaline.svg?style=flat-square)](https://www.npmjs.com/package/adrenaline)
 
 This was started as a pack of tools for Redux to work with GraphQL (before Relay release) but have transformed into a Relay-like framework. Motivation: I do not like Relay in most cases and want to share the same idea with different more clean API.
 
