@@ -10,26 +10,6 @@ import {
 } from 'graphql';
 import parseSchema from '../parseSchema'
 
-const data = {
-  User: {
-    'u-1': {
-      id: 'u-1',
-      name: 'User1',
-      todos: ['t-1', 't-2'],
-    }
-  },
-  Todo: {
-    't-1': {
-      id: 't-1',
-      text: 'Hello',
-    },
-    't-2': {
-      id: 't-1',
-      text: 'World',
-    }
-  }
-}
-
 const todoType = new GraphQLObjectType({
   name: 'Todo',
   fields: () => ({
@@ -53,7 +33,6 @@ const userType = new GraphQLObjectType({
     },
     todos: {
       type: new GraphQLList(todoType),
-      resolve: (user) => user.todos.map(id => data.Todo[id]),
     }
   })
 });
@@ -64,9 +43,6 @@ const schema = new GraphQLSchema({
     fields: () => ({
       viewer: {
         type: userType,
-        resolve: (root) => {
-          return root.User['u-1'];
-        },
       }
     }),
   }),
