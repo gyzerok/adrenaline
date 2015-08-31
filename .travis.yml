@@ -1,9 +1,11 @@
 language: node_js
 node_js:
-- '0.12'
-- iojs-v2
-- iojs
-before_deploy: "npm run build"
+  - '0.12'
+  - iojs-v2
+  - iojs
+before_deploy:
+  - npm test
+  - npm run build
 deploy:
   provider: npm
   email: gyzerok@gmail.com
