@@ -4,7 +4,8 @@
   "description": "Relay-like functionality for Redux-based applications",
   "main": "./lib/adrenaline.js",
   "scripts": {
-    "test": "node_modules/.bin/babel-tape-runner 'src/**/*.spec.js' | node_modules/.bin/tap-spec"
+    "test": "node_modules/.bin/babel-tape-runner 'src/**/*.spec.js' | node_modules/.bin/tap-spec",
+    "build": "node_modules/.bin/webpack"
   },
   "author": "Fedor Nezhivoi <gyzerok@gmail.com>",
   "license": "MIT",
