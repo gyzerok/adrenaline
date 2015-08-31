@@ -9,8 +9,10 @@ class TodoItem extends Component {
   }
 
   render() {
+    const { todo } = this.props;
+
     return (
-      <li>{this.props.todo.text}</li>
+      <li>{todo.text}</li>
     );
   }
 }
