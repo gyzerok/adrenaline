@@ -13,16 +13,19 @@ export default class Adrenaline extends Component {
     Loading: PropTypes.func.isRequired,
     schema: PropTypes.object.isRequired,
     parsedSchema: PropTypes.object.isRequired,
+    endpoint: PropTypes.string.isRequired,
   };
 
   static propTypes = {
     children: PropTypes.func.isRequired,
     graphql: PropTypes.func.isRequired,
+    endpoint: PropTypes.string,
     renderLoading: PropTypes.func,
   }
 
   static defaultProps = {
     renderLoading: Loading,
+    endpoint: '/graphql',
   }
 
   getChildContext() {
@@ -33,6 +36,7 @@ export default class Adrenaline extends Component {
       Loading: this.props.renderLoading,
       schema: this.props.schema,
       parsedSchema: parsedSchema,
+      endpoint: this.props.endpoint,
     };
   }
 

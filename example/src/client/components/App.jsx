@@ -21,7 +21,6 @@ class App extends Component {
 }
 
 export default createSmartComponent(App, {
-  endpoint: '/graphql',
   query: () => `
     query AppQuery {
       ${TodoList.getFragment('viewer')}

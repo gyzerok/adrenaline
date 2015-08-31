@@ -22,6 +22,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       store: createStoreShape(PropTypes).isRequired,
       parsedSchema: PropTypes.object.isRequired,
       Loading: PropTypes.func.isRequired,
+      endpoint: PropTypes.string.isRequired,
     }
 
     static childContextTypes = {
@@ -50,15 +51,15 @@ export default function createSmartComponent(DecoratedComponent, specs) {
     }
 
     onChildNeedUpdate() {
-      const { store: { dispatch }, parsedSchema } = this.context;
+      const { parsedSchema, endpoint, store } = this.context;
+      const { dispatch } = store;
 
       const query = specs.query();
       if (this.pending.indexOf(query) > -1) return;
       this.pending = this.pending.concat(query);
 
-
       // TODO: Correct remove element from pending
-      request(specs.endpoint, { query })
+      request(endpoint, { query })
         .then(json => {
           dispatch({
             type: ACTION_TYPE,

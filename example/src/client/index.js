@@ -9,7 +9,7 @@ import schema from 'shared/schema';
 
 const rootNode = document.getElementById('root');
 React.render(
-  <Adrenaline graphql={graphql} schema={schema}>
+  <Adrenaline graphql={graphql} schema={schema} endpoint="/graphql">
     {() => <App />}
   </Adrenaline>,
   rootNode
