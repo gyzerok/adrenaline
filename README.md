@@ -14,6 +14,7 @@ Currently I'm working hard for the 1.0 release which gonna be public. If anyone 
  - Queries batching
  - Default middlware for express
  - Isomorphism
+ - Allow to specify starting params for component via props
  - Memoize fieldASTs to reduce overhead for query parsing
  - Move all to Redux as a deps to prevent implementing same things
  - Move all query sending into Adrenaline component?
