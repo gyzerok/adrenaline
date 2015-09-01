@@ -29,30 +29,20 @@ export default class Adrenaline extends Component {
   }
 
   getChildContext() {
-    const parsedSchema = parseSchema(this.props.schema);
     return {
-      store: createCache(parsedSchema),
+      store: this.store,
       graphql: this.props.graphql,
       Loading: this.props.renderLoading,
       schema: this.props.schema,
-      parsedSchema: parsedSchema,
+      parsedSchema: this.parsedSchema,
       endpoint: this.props.endpoint,
     };
   }
 
   constructor(props, context) {
     super(props, context);
-    this.state = { store: props.store };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { store } = this.state;
-    const { store: nextStore } = nextProps;
-
-    if (store !== nextStore) {
-      const nextReducer = nextStore.getReducer();
-      store.replaceReducer(nextReducer);
-    }
+    this.parsedSchema = parseSchema(props.schema);
+    this.store = createCache(this.parsedSchema);
   }
 
   render() {

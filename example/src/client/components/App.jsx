@@ -1,30 +1,14 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react';
-import TodoList from 'client/components/TodoList';
-import * as todoMutations from '../mutations/todo';
-import { createSmartComponent } from '../../../../src';
 
-class App extends Component {
-  static propTypes = {
-    todos: PropTypes.object,
-    mutations: PropTypes.object.isRequired,
-  }
-
+export default class App extends Component {
   render() {
-    const { todos, mutations } = this.props;
-
     return (
-      <TodoList todos={todos} mutations={mutations} />
+      <div>
+        <h1>Header</h1>
+        {this.props.children}
+      </div>
     );
   }
 }
-
-export default createSmartComponent(App, {
-  query: () => `
-    query AppQuery {
-      ${TodoList.getFragment('todos')}
-    }
-  `,
-  mutations: todoMutations,
-});
