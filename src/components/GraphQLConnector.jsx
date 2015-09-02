@@ -1,10 +1,8 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react';
-import invariant from 'invariant';
 import createStoreShape from '../utils/createStoreShape';
 import shallowEqual from '../utils/shallowEqual';
-import isPlainObject from '../utils/isPlainObject';
 
 export default class GraphQLConnector extends Component {
   static contextTypes = {
