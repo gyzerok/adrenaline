@@ -1,16 +1,14 @@
 /* @flow */
 
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
-import thunk from 'redux-thunk';
 import merge from './merge';
 import { UPDATE_CACHE, UPDATE_CACHE_BY_ID } from '../constants';
 
-const composedStore = compose(
-  applyMiddleware(thunk),
-  createStore
-);
-
-export default function createCache(parsedSchema) {
+export default function createCache(parsedSchema, middlewares = []) {
+  const composedStore = (
+    !middlewares.length ? createStore :
+    compose(applyMiddleware(...middlewares), createStore)
+  );
   const reducer = combineReducers(
     Object.keys(parsedSchema).reduce((acc, key) => {
       return {
