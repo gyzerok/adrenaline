@@ -3,7 +3,7 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import merge from './merge';
-import { ACTION_TYPE } from '../constants';
+import { UPDATE_CACHE, UPDATE_CACHE_BY_ID } from '../constants';
 
 const composedStore = compose(
   applyMiddleware(thunk),
@@ -30,11 +30,14 @@ function createReducer(key) {
       return state;
     }
 
-    switch (type) {
-      case ACTION_TYPE:
-        return merge(state, payload[key] || {});
-      default:
-        return state;
+    if (type === UPDATE_CACHE) {
+      return merge(state, payload[key] || {});
     }
+
+    if (type === UPDATE_CACHE_BY_ID) {
+      return state; // TODO: implement it
+    }
+
+    return state;
   };
 }

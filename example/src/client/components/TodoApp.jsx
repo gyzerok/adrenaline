@@ -7,15 +7,15 @@ import { createSmartComponent } from '../../../../src';
 
 class TodoApp extends Component {
   static propTypes = {
-    todos: PropTypes.object,
+    viewer: PropTypes.object,
     mutations: PropTypes.object.isRequired,
   }
 
   render() {
-    const { todos, mutations } = this.props;
+    const { viewer, mutations } = this.props;
 
     return (
-      <TodoList todos={todos} mutations={mutations} />
+      <TodoList todos={viewer.todos} mutations={mutations} />
     );
   }
 }
@@ -23,7 +23,10 @@ class TodoApp extends Component {
 export default createSmartComponent(TodoApp, {
   query: () => `
     query AppQuery {
-      ${TodoList.getFragment('todos')}
+      viewer {
+        id,
+        ${TodoList.getFragment('todos')}
+      }
     }
   `,
   mutations: todoMutations,

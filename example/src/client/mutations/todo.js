@@ -1,40 +1,50 @@
 /* @flow */
 
-export const createTodo = (text) => `
-  mutation AppMutation {
-    createTodo(text: "${text}") {
-      id,
-      text,
-      createdAt
-    }
-  }
-`;
-
-export const test = {
+export const createTodo = {
   mutation: ({ text }) => `
     mutation AppMutation {
       createTodo(text: "${text}") {
         id,
         text,
-        createdAt
+        createdAt,
+        owner {
+          id
+        }
       }
     }
   `,
-  collisionKey: () => 'hello',
-  resolve: (todo) => ({
-    type: 'ADD',
-    strategy: 'APPEND',
-    id: todo.id,
-    parentId: todo.user.id,
-  }),
+  collisionKey: ({ id }) => `todo_${id}`,
+  updateCache: [
+    (todo) => ({
+      parentId: todo.owner.id,
+      resolve: (parent) => {
+        return {
+          ...parent,
+          todos: parent.todos.concat(todo.id),
+        };
+      },
+    }),
+  ],
 };
 
-export const removeTodo = (id) => `
-  mutation AppMutation {
-    removeTodo(id: ${id}) {
-      id,
-      text,
-      createdAt
+export const removeTodo = {
+  mutation: ({ id }) => `
+    mutation AppMutation {
+      removeTodo(id: ${id}) {
+        id,
+        text,
+        createdAt,
+        owner {
+          id
+        }
+      }
     }
-  }
-`;
+  `,
+  collisionKey: ({ id }) => `todo_${id}`,
+  updateCache: [
+    (todo) => ({
+      parentId: todo.owner.id,
+      resolve: (parent) => parent,
+    }),
+  ],
+};

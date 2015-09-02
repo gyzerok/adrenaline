@@ -16,12 +16,6 @@ class TodoList extends Component {
     todos: [],
   }
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.props.setParams({ count: 10 });
-    }, 2000);
-  }
-
   render() {
     const { createTodo } = this.props.mutations;
     return (
@@ -29,7 +23,7 @@ class TodoList extends Component {
         <TodoInput createTodo={createTodo} />
         <ul>
           {this.props.todos.map(todo =>
-            <TodoItem key={todo.id} todo={todo} />
+            <TodoItem todo={todo} />
           )}
         </ul>
       </div>
@@ -38,13 +32,10 @@ class TodoList extends Component {
 }
 
 export default createDumbComponent(TodoList, {
-  params: {
-    count: 2,
-  },
   fragments: {
-    todos: ({ count }) => `
-      Query {
-        todos(count: ${count}) {
+    todos: () => `
+      User {
+        todos {
           id,
           ${TodoItem.getFragment('todo')}
         }

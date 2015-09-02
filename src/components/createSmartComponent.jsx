@@ -9,7 +9,7 @@ import getDisplayName from '../utils/getDisplayName';
 import normalize from '../utils/normalize';
 import request from '../utils/request';
 import bindMutations from '../utils/bindMutations';
-import { ACTION_TYPE } from '../constants';
+import { UPDATE_CACHE } from '../constants';
 
 export default function createSmartComponent(DecoratedComponent, specs) {
   const displayName = `SmartComponent(${getDisplayName(DecoratedComponent)})`;
@@ -62,13 +62,13 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       request(endpoint, { query })
         .then(json => {
           dispatch({
-            type: ACTION_TYPE,
+            type: UPDATE_CACHE,
             payload: normalize(parsedSchema, json.data),
           });
           this.pending = this.pending.filter(p => p === request);
         })
         .catch(err => {
-          dispatch({ type: ACTION_TYPE, payload: err, error: true });
+          dispatch({ type: UPDATE_CACHE, payload: err, error: true });
           this.pending = this.pending.filter(p => p === request);
         });
     }

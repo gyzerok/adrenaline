@@ -10,8 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "babel-loader": "^5.3.2",
-    "babel-runtime": "^5.8.20",
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
     "graphql": "^0.4.2",

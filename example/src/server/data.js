@@ -2,23 +2,30 @@
 
 let idx = 4;
 let data = {
+  users: [
+    {
+      id: 'u-1',
+      name: 'User1',
+      todos: ['t-1', 't-2', 't-3'],
+    },
+  ],
   todos: [
     {
       id: 't-1',
       text: 'lets go',
-      owner: 'user1',
+      owner: 'u-1',
       createdAt: (new Date()).toString(),
     },
     {
       id: 't-2',
       text: 'ho',
-      owner: 'user1',
+      owner: 'u-1',
       createdAt: (new Date()).toString(),
     },
     {
       id: 't-3',
       text: 'hey',
-      owner: 'user1',
+      owner: 'u-1',
       createdAt: (new Date()).toString(),
     },
   ],

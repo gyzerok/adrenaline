@@ -2,8 +2,8 @@
 
 import {
   GraphQLObjectType,
+  GraphQLID,
   GraphQLString,
-  GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLSchema,
@@ -14,12 +14,21 @@ const todoType = new GraphQLObjectType({
   description: 'Todo type',
   fields: () => ({
     id: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLID),
       description: 'Todo id',
     },
     text: {
       type: new GraphQLNonNull(GraphQLString),
       description: 'Todo text',
+    },
+    owner: {
+      type: userType,
+      resolve: (todo, _, { rootValue: root }) => {
+        if (__CLIENT__) {
+          return root.User[todo.owner.id];
+        }
+        return root.findUser();
+      },
     },
     createdAt: {
       type: new GraphQLNonNull(GraphQLString),
@@ -28,23 +37,38 @@ const todoType = new GraphQLObjectType({
   }),
 });
 
+const userType = new GraphQLObjectType({
+  name: 'User',
+  fields: () => ({
+    id: {
+      type: new GraphQLNonNull(GraphQLID),
+    },
+    name: {
+      type: GraphQLString,
+    },
+    todos: {
+      type: new GraphQLList(todoType),
+      resolve: (user, params, { rootValue: root }) => {
+        if (__CLIENT__) {
+          return user.todos.map(id => root.Todo[id]);
+        }
+        return user.todos.map(id => root.findTodoById(id));
+      },
+    },
+  }),
+});
+
 export default new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
     fields: () => ({
-      todos: {
-        type: new GraphQLList(todoType),
-        args: {
-          count: {
-            name: 'count',
-            type: GraphQLInt,
-          },
-        },
-        resolve: (root, args) => {
+      viewer: {
+        type: userType,
+        resolve: (root) => {
           if (__CLIENT__) {
-            return Object.values(root.Todo).slice(0, args.count);
+            return root.User['u-1'];
           }
-          return root.findTodo(args);
+          return root.findUser();
         },
       },
     }),
@@ -57,7 +81,7 @@ export default new GraphQLSchema({
         args: {
           text: {
             name: 'text',
-            type: new GraphQLNonNull(GraphQLString),
+            type: GraphQLString,
           },
         },
         resolve: (root, params) => {

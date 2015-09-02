@@ -9,6 +9,8 @@ import { Adrenaline } from '../../../src';
 import { graphql } from 'graphql';
 import schema from 'shared/schema';
 
+console.log(schema);
+
 const rootNode = document.getElementById('root');
 React.render(
   <Adrenaline graphql={graphql} schema={schema} endpoint="/graphql">
