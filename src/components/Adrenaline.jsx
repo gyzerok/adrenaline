@@ -3,12 +3,12 @@
 import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
 import Loading from './Loading';
-import createStoreShape from '../utils/createStoreShape';
 import parseSchema from '../utils/parseSchema';
-import createCache from '../utils/createCache';
+import createStoreShape from '../store/createStoreShape';
+import createCacheSore from '../store/createCacheStore';
 import request from '../network/request';
 import normalize from '../utils/normalize';
-import { UPDATE_CACHE, UPDATE_CACHE_BY_ID } from '../constants';
+import { UPDATE_CACHE } from '../constants';
 
 export default class Adrenaline extends Component {
   static childContextTypes = {
@@ -50,7 +50,7 @@ export default class Adrenaline extends Component {
     this.pendingQueries = [];
     this.pendingMutations = [];
     this.parsedSchema = parseSchema(props.schema);
-    this.store = createCache(this.parsedSchema, props.middlewares);
+    this.store = createCacheSore(this.parsedSchema, props.middlewares);
   }
 
   performQuery(query) {

@@ -1,7 +1,7 @@
 /* @flow */
 
 import { createStore, applyMiddleware, combineReducers } from 'redux';
-import merge from './merge';
+import merge from '../utils/merge';
 import { UPDATE_CACHE } from '../constants';
 
 export default function createCache(parsedSchema, middlewares = []) {

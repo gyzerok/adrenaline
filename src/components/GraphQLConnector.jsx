@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react';
-import createStoreShape from '../utils/createStoreShape';
+import createStoreShape from '../store/createStoreShape';
 import shallowEqual from '../utils/shallowEqual';
 
 export default class GraphQLConnector extends Component {
@@ -15,7 +15,7 @@ export default class GraphQLConnector extends Component {
     children: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
     query: PropTypes.func.isRequired,
-    args: PropTypes.object.isRequired,
+    queryArgs: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
