@@ -2,6 +2,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
+import { Provider } from 'react-redux';
 import Loading from './Loading';
 import createStoreShape from '../utils/createStoreShape';
 import parseSchema from '../utils/parseSchema';
@@ -105,6 +106,10 @@ export default class Adrenaline extends Component {
 
   render() {
     const { children } = this.props;
-    return children();
+    return (
+      <Provider store={this.store}>
+        {children}
+      </Provider>
+    );
   }
 }
