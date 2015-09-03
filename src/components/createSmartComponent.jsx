@@ -2,7 +2,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
-import { mapValues } from 'lodash';
+import { mapValues, reduce } from 'lodash';
 import GraphQLConnector from './GraphQLConnector';
 import createStoreShape from '../utils/createStoreShape';
 import shadowEqualScalar from '../utils/shadowEqualScalar';
@@ -56,8 +56,14 @@ export default function createSmartComponent(DecoratedComponent, specs) {
         displayName,
       );
 
-      const keys = Object.keys(DecoratedComponent.propTypes || {});
-      const dataLoaded = keys.every(key => {
+      const { propTypes } = DecoratedComponent;
+      const requiredPropTypes = reduce(propTypes, (memo, val, key) => {
+        if (!val.hasOwnProperty('isRequired')) {
+          return [...memo, key];
+        }
+        return memo;
+      }, []);
+      const dataLoaded = requiredPropTypes.every(key => {
         if (key === 'mutations') {
           return true;
         }

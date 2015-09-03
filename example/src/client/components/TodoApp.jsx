@@ -7,7 +7,7 @@ import { createSmartComponent } from '../../../../src';
 
 class TodoApp extends Component {
   static propTypes = {
-    viewer: PropTypes.object,
+    viewer: PropTypes.object.isRequired,
     mutations: PropTypes.object.isRequired,
   }
 
