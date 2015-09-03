@@ -17,6 +17,7 @@ export const createTodo = {
   updateCache: [
     (todo) => ({
       parentId: todo.owner.id,
+      parentName: 'User',
       resolve: (parent) => {
         return {
           ...parent,

@@ -2,6 +2,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
+import { mapValues } from 'lodash';
 import GraphQLConnector from './GraphQLConnector';
 import createStoreShape from '../utils/createStoreShape';
 import shadowEqualScalar from '../utils/shadowEqualScalar';
@@ -18,6 +19,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       store: createStoreShape(PropTypes).isRequired,
       Loading: PropTypes.func.isRequired,
       performQuery: PropTypes.func.isRequired,
+      performMutation: PropTypes.func.isRequired,
     }
 
     static childContextTypes = {
@@ -27,7 +29,9 @@ export default function createSmartComponent(DecoratedComponent, specs) {
     constructor(props, context) {
       super(props, context);
       this.pending = [];
-      this.mutations = {}
+      this.mutations = mapValues(specs.mutations, m => {
+        return (...args) => this.context.performMutation(m, ...args);
+      });
       this.onChildNeedUpdate();
     }
 

@@ -13,7 +13,7 @@ export default class TodoInput extends Component {
     const input = findDOMNode(this.refs.input);
     if (!input.value.length) return;
     if (e.keyCode === ENTER_KEY_CODE) {
-      this.props.createTodo(input.value);
+      this.props.createTodo({ text: input.value });
       input.value = '';
     }
   }

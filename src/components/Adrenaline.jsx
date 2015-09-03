@@ -17,6 +17,7 @@ export default class Adrenaline extends Component {
     Loading: PropTypes.func.isRequired,
     schema: PropTypes.object.isRequired,
     performQuery: PropTypes.func.isRequired,
+    performMutation: PropTypes.func.isRequired,
   };
 
   static propTypes = {
@@ -39,6 +40,7 @@ export default class Adrenaline extends Component {
       Loading: this.props.renderLoading,
       schema: this.props.schema,
       performQuery: this.performQuery.bind(this),
+      performMutation: this.performMutation.bind(this),
     };
   }
 
@@ -89,12 +91,17 @@ export default class Adrenaline extends Component {
         dispatch({ type: UPDATE_CACHE, payload });
 
         const state = store.getState();
-        updateCache.forEach(({ parentId, parentName, resolve }) => {
+        updateCache.forEach((fn) => {
+          const { parentId, parentName, resolve } = fn(Object.values(json.data)[0]);
           const parent = state[parentName][parentId];
           if (!parent) return;
           dispatch({
-            type: UPDATE_CACHE_BY_ID,
-            payload: resolve(parent),
+            type: UPDATE_CACHE,
+            payload: {
+              [parentName]: {
+                [parent.id]: resolve(parent),
+              },
+            },
           });
         });
       })

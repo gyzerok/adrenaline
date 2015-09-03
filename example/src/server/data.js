@@ -45,7 +45,7 @@ export function createTodo({ text }) {
     text: text,
     createdAt: (new Date()).toString(),
   };
-  data.todos = [todo].concat(data.todos);
+  data.todos = [data.todos].concat(todo);
   return todo;
 }
 

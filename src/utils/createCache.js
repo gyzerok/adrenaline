@@ -32,10 +32,6 @@ function createReducer(key) {
       return merge(state, payload[key] || {});
     }
 
-    if (type === UPDATE_CACHE_BY_ID) {
-      return state; // TODO: implement it
-    }
-
     return state;
   };
 }
