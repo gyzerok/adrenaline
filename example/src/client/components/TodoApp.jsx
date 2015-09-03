@@ -11,21 +11,30 @@ class TodoApp extends Component {
     mutations: PropTypes.object.isRequired,
   }
 
+  componentDidMount() {
+    setTimeout(() => {
+      this.setArgs({ count: 3 });
+    }, 2000);
+  }
+
   render() {
     const { viewer, mutations } = this.props;
 
     return (
-      <TodoList todos={viewer.todos} mutations={mutations} count={1} />
+      <TodoList todos={viewer.todos} mutations={mutations} />
     );
   }
 }
 
 export default createSmartComponent(TodoApp, {
-  query: () => `
-    query AppQuery {
+  initialArgs: () => ({
+    count: 2,
+  }),
+  query: (args) => `
+    query TodoApp {
       viewer {
         id,
-        ${TodoList.getFragment('todos')}
+        ${TodoList.getFragment('todos', args)}
       }
     }
   `,

@@ -1,61 +1,51 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import invariant from 'invariant';
 import getDisplayName from '../utils/getDisplayName';
-import { isString } from 'lodash';
+import { isString, isObject } from 'lodash';
 
-export default function createDumbComponent(DecoratedComponent: Component, specs: Object) {
-  const { initialArgs, fragments } = specs;
-  let currentArgs = { ...initialArgs };
+export default function createDumbComponent(DecoratedComponent, specs) {
   const displayName = `DumbComponent(${getDisplayName(DecoratedComponent)})`;
+
+  invariant(
+    specs.hasOwnProperty('fragments'),
+    '%s have not fragments declared',
+    displayName
+  );
+
+  const { fragments } = specs;
+
+  invariant(
+    isObject(fragments),
+    'Fragments have to be declared as object in %s',
+    displayName
+  );
 
   return class extends Component {
     static displayName = displayName;
     static DecoratedComponent = DecoratedComponent;
 
-    static contextTypes = {
-      update: PropTypes.func.isRequired,
-    }
-
-    static getFragment(key) {
+    static getFragment(key, args = {}) {
       invariant(
         isString(key),
         'You cant call getFragment(key: string) without string key in %s',
         displayName
       );
 
-      return '... on ' + fragments[key](currentArgs).replace(/\s+/g, ' ').trim();
-    }
+      invariant(
+        fragments.hasOwnProperty(key),
+        'Component %s has no fragment %s',
+        displayName,
+        key
+      );
 
-    constructor(props, context) {
-      super(props, context);
-      this.state = {
-        args: currentArgs,
-      };
-      currentArgs = this.state.args;
-      //this.context.update();
-    }
-
-    componentDidMount() {
-      console.log('child mount');
-    }
-
-    setArgs(nextArgsSlice) {
-      currentArgs = {
-        ...currentArgs,
-        ...nextArgsSlice,
-      };
-      console.log(nextArgsSlice);
-      this.setState({ args: nextArgsSlice });
-      this.context.update();
+      return '... on ' + fragments[key](args).replace(/\s+/g, ' ').trim();
     }
 
     render() {
       return (
-        <DecoratedComponent {...this.props}
-          args={this.state.args}
-          setArgs={this.setArgs.bind(this)} />
+        <DecoratedComponent {...this.props} />
       );
     }
   };

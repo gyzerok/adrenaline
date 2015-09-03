@@ -2,7 +2,7 @@
 
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import merge from './merge';
-import { UPDATE_CACHE, UPDATE_CACHE_BY_ID } from '../constants';
+import { UPDATE_CACHE } from '../constants';
 
 export default function createCache(parsedSchema, middlewares = []) {
   const composedStore = (

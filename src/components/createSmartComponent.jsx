@@ -4,7 +4,6 @@ import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
 import { mapValues, reduce } from 'lodash';
 import GraphQLConnector from './GraphQLConnector';
-import createStoreShape from '../utils/createStoreShape';
 import shadowEqualScalar from '../utils/shadowEqualScalar';
 import getDisplayName from '../utils/getDisplayName';
 
@@ -16,42 +15,39 @@ export default function createSmartComponent(DecoratedComponent, specs) {
     static DecoratedComponent = DecoratedComponent
 
     static contextTypes = {
-      store: createStoreShape(PropTypes).isRequired,
       Loading: PropTypes.func.isRequired,
       performQuery: PropTypes.func.isRequired,
       performMutation: PropTypes.func.isRequired,
     }
 
-    static childContextTypes = {
-      update: PropTypes.func.isRequired,
-    }
-
     constructor(props, context) {
       super(props, context);
-      this.pending = [];
+      this.args = specs.initialArgs(props) || {};
+
+      DecoratedComponent.prototype.setArgs = (nextArgs) => {
+        this.args = {
+          ...this.args,
+          ...nextArgs,
+        };
+        this.fetch();
+      };
+
       this.mutations = mapValues(specs.mutations, m => {
         return (...args) => this.context.performMutation(m, ...args);
       });
-      console.log('parent create');
-    }
 
-    componentDidMount() {
-      console.log('parent mount');
-      this.onChildNeedUpdate();
-    }
-
-    getChildContext() {
-      return {
-        update: this.onChildNeedUpdate.bind(this),
-      };
+      this.fetch();
     }
 
     shouldComponentUpdate(nextProps) {
       return !shadowEqualScalar(this.props, nextProps);
     }
 
-    onChildNeedUpdate() {
-      this.context.performQuery(specs.query());
+    fetch(args = this.args) {
+      const { performQuery } = this.context;
+      const { query } = specs;
+
+      performQuery(query(args));
     }
 
     renderComponent(state) {
@@ -82,13 +78,14 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
       return (
         <DecoratedComponent {...this.props} {...state}
+          args={this.args}
           mutations={this.mutations} />
       );
     }
 
     render() {
       return (
-        <GraphQLConnector select={state => state} query={specs.query}>
+        <GraphQLConnector query={specs.query} queryArgs={this.args}>
           {this.renderComponent.bind(this)}
         </GraphQLConnector>
       );
