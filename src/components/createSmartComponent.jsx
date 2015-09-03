@@ -22,7 +22,8 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
     constructor(props, context) {
       super(props, context);
-      this.args = specs.initialArgs(props) || {};
+      const initialArgs = specs.initialArgs || () => {};
+      this.args = initialArgs(props);
 
       DecoratedComponent.prototype.setArgs = (nextArgs) => {
         this.args = {
