@@ -6,8 +6,8 @@ import getDisplayName from '../utils/getDisplayName';
 import { isString } from 'lodash';
 
 export default function createDumbComponent(DecoratedComponent: Component, specs: Object) {
-  const { params, fragments } = specs;
-  let currentParams = { ...params };
+  const { initialArgs, fragments } = specs;
+  let currentArgs = { ...initialArgs };
   const displayName = `DumbComponent(${getDisplayName(DecoratedComponent)})`;
 
   return class extends Component {
@@ -18,37 +18,44 @@ export default function createDumbComponent(DecoratedComponent: Component, specs
       update: PropTypes.func.isRequired,
     }
 
-    static getFragment(key: String) {
+    static getFragment(key) {
       invariant(
         isString(key),
         'You cant call getFragment(key: string) without string key in %s',
         displayName
       );
 
-      return '... on ' + fragments[key](currentParams).replace(/\s+/g, ' ').trim();
+      return '... on ' + fragments[key](currentArgs).replace(/\s+/g, ' ').trim();
     }
 
     constructor(props, context) {
       super(props, context);
-      this.state = { params };
+      this.state = {
+        args: currentArgs,
+      };
+      currentArgs = this.state.args;
       //this.context.update();
     }
 
-    setParams(updates: Object) {
-      const nextParams = {
-        ...currentParams,
-        ...updates,
+    componentDidMount() {
+      console.log('child mount');
+    }
+
+    setArgs(nextArgsSlice) {
+      currentArgs = {
+        ...currentArgs,
+        ...nextArgsSlice,
       };
-      currentParams = nextParams;
-      this.forceUpdate();
+      console.log(nextArgsSlice);
+      this.setState({ args: nextArgsSlice });
       this.context.update();
     }
 
     render() {
       return (
         <DecoratedComponent {...this.props}
-          params={this.state.params}
-          setParams={this.setParams.bind(this)} />
+          args={this.state.args}
+          setArgs={this.setArgs.bind(this)} />
       );
     }
   };

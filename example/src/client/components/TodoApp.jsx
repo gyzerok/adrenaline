@@ -15,7 +15,7 @@ class TodoApp extends Component {
     const { viewer, mutations } = this.props;
 
     return (
-      <TodoList todos={viewer.todos} mutations={mutations} />
+      <TodoList todos={viewer.todos} mutations={mutations} count={1} />
     );
   }
 }

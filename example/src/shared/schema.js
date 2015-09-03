@@ -4,6 +4,7 @@ import {
   GraphQLObjectType,
   GraphQLID,
   GraphQLString,
+  GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLSchema,
@@ -48,11 +49,17 @@ const userType = new GraphQLObjectType({
     },
     todos: {
       type: new GraphQLList(todoType),
+      args: {
+        count: {
+          name: 'count',
+          type: GraphQLInt,
+        },
+      },
       resolve: (user, params, { rootValue: root }) => {
         if (__CLIENT__) {
           return user.todos.map(id => root.Todo[id]);
         }
-        return user.todos.map(id => root.findTodoById(id));
+        return root.findTodo(params);
       },
     },
   }),

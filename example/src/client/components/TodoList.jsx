@@ -9,15 +9,21 @@ class TodoList extends Component {
   static propTypes = {
     mutations: PropTypes.object,
     todos: PropTypes.array,
-    setParams: PropTypes.func.isRequired,
+    args: PropTypes.object.isRequired,
+    setArgs: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
     todos: [],
   }
 
+  componentDidMount() {
+    setTimeout(() => {
+      this.props.setArgs({ count: this.props.args.count + 2 });
+    }, 2000);
+  }
+
   render() {
-    console.log(this.props.todos);
     const { createTodo } = this.props.mutations;
     return (
       <div>
@@ -33,10 +39,13 @@ class TodoList extends Component {
 }
 
 export default createDumbComponent(TodoList, {
+  initialArgs: {
+    count: 1,
+  },
   fragments: {
-    todos: () => `
+    todos: ({ count }) => `
       User {
-        todos {
+        todos(count: ${count}) {
           id,
           ${TodoItem.getFragment('todo')}
         }

@@ -32,6 +32,11 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       this.mutations = mapValues(specs.mutations, m => {
         return (...args) => this.context.performMutation(m, ...args);
       });
+      console.log('parent create');
+    }
+
+    componentDidMount() {
+      console.log('parent mount');
       this.onChildNeedUpdate();
     }
 
