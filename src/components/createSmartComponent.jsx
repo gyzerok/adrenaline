@@ -6,10 +6,6 @@ import GraphQLConnector from './GraphQLConnector';
 import createStoreShape from '../utils/createStoreShape';
 import shadowEqualScalar from '../utils/shadowEqualScalar';
 import getDisplayName from '../utils/getDisplayName';
-import normalize from '../utils/normalize';
-import request from '../utils/request';
-import bindMutations from '../utils/bindMutations';
-import { UPDATE_CACHE } from '../constants';
 
 export default function createSmartComponent(DecoratedComponent, specs) {
   const displayName = `SmartComponent(${getDisplayName(DecoratedComponent)})`;
@@ -20,9 +16,8 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
     static contextTypes = {
       store: createStoreShape(PropTypes).isRequired,
-      parsedSchema: PropTypes.object.isRequired,
       Loading: PropTypes.func.isRequired,
-      endpoint: PropTypes.string.isRequired,
+      performQuery: PropTypes.func.isRequired,
     }
 
     static childContextTypes = {
@@ -32,12 +27,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
     constructor(props, context) {
       super(props, context);
       this.pending = [];
-      this.mutations = bindMutations(
-        context.endpoint,
-        context.parsedSchema,
-        specs.mutations || {},
-        context.store.dispatch
-      );
+      this.mutations = {}
       this.onChildNeedUpdate();
     }
 
@@ -52,25 +42,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
     }
 
     onChildNeedUpdate() {
-      const { parsedSchema, endpoint, store } = this.context;
-      const { dispatch } = store;
-
-      const query = specs.query();
-      if (this.pending.indexOf(query) > -1) return;
-      this.pending = this.pending.concat(query);
-
-      request(endpoint, { query })
-        .then(json => {
-          dispatch({
-            type: UPDATE_CACHE,
-            payload: normalize(parsedSchema, json.data),
-          });
-          this.pending = this.pending.filter(p => p === request);
-        })
-        .catch(err => {
-          dispatch({ type: UPDATE_CACHE, payload: err, error: true });
-          this.pending = this.pending.filter(p => p === request);
-        });
+      this.context.performQuery(specs.query());
     }
 
     renderComponent(state) {

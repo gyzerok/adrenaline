@@ -6,9 +6,9 @@ import Loading from './Loading';
 import createStoreShape from '../utils/createStoreShape';
 import parseSchema from '../utils/parseSchema';
 import createCache from '../utils/createCache';
-import request from '../utils/request';
+import request from '../network/request';
 import normalize from '../utils/normalize';
-import { UPDATE_CACHE, UPDATE_CACHE_BY_ID } from './contants';
+import { UPDATE_CACHE, UPDATE_CACHE_BY_ID } from '../constants';
 
 export default class Adrenaline extends Component {
   static childContextTypes = {
@@ -16,8 +16,7 @@ export default class Adrenaline extends Component {
     graphql: PropTypes.func.isRequired,
     Loading: PropTypes.func.isRequired,
     schema: PropTypes.object.isRequired,
-    parsedSchema: PropTypes.object.isRequired,
-    endpoint: PropTypes.string.isRequired,
+    performQuery: PropTypes.func.isRequired,
   };
 
   static propTypes = {
@@ -39,8 +38,7 @@ export default class Adrenaline extends Component {
       graphql: this.props.graphql,
       Loading: this.props.renderLoading,
       schema: this.props.schema,
-      parsedSchema: this.parsedSchema,
-      endpoint: this.props.endpoint,
+      performQuery: this.performQuery.bind(this),
     };
   }
 
