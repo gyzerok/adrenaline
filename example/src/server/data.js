@@ -12,7 +12,7 @@ let data = {
   todos: [
     {
       id: 't-1',
-      text: 'lets go',
+      text: 'hey',
       owner: 'u-1',
       createdAt: (new Date()).toString(),
     },
@@ -24,7 +24,7 @@ let data = {
     },
     {
       id: 't-3',
-      text: 'hey',
+      text: 'lets go',
       owner: 'u-1',
       createdAt: (new Date()).toString(),
     },
@@ -43,9 +43,10 @@ export function createTodo({ text }) {
   const todo = {
     id: 't-' + idx++,
     text: text,
+    owner: 'u-1',
     createdAt: (new Date()).toString(),
   };
-  data.todos = [data.todos].concat(todo);
+  data.todos.push(todo);
   return todo;
 }
 

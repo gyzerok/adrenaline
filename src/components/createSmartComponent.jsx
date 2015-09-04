@@ -2,7 +2,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
-import { mapValues, reduce } from 'lodash';
+import { mapValues, reduce, isFunction } from 'lodash';
 import GraphQLConnector from './GraphQLConnector';
 import shadowEqualScalar from '../utils/shadowEqualScalar';
 import getDisplayName from '../utils/getDisplayName';
@@ -22,36 +22,32 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
     constructor(props, context) {
       super(props, context);
-      const initialArgs = specs.initialArgs || () => {};
-      this.args = initialArgs(props);
+      const initialArgs = specs.initialArgs || {};
+      this.state = isFunction(initialArgs) ? initialArgs(props) : initialArgs;
 
       DecoratedComponent.prototype.setArgs = (nextArgs) => {
-        this.args = {
-          ...this.args,
-          ...nextArgs,
-        };
-        this.fetch();
+        this.setState(nextArgs, () => this.fetch());
       };
 
       this.mutations = mapValues(specs.mutations, m => {
-        return (...args) => this.context.performMutation(m, ...args);
+        return (params, files) => this.context.performMutation(m, params, files);
       });
 
       this.fetch();
     }
 
-    shouldComponentUpdate(nextProps) {
+    /*shouldComponentUpdate(nextProps) {
       return !shadowEqualScalar(this.props, nextProps);
-    }
+    }*/
 
-    fetch(args = this.args) {
+    fetch(args = this.state) {
       const { performQuery } = this.context;
       const { query } = specs;
 
-      performQuery(query(args));
+      performQuery(query, args);
     }
 
-    renderComponent(state) {
+    renderDecoratedComponent(state) {
       invariant(
         DecoratedComponent.propTypes !== undefined,
         'You have to declare propTypes for %s',
@@ -79,15 +75,15 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
       return (
         <DecoratedComponent {...this.props} {...state}
-          args={this.args}
+          args={this.state}
           mutations={this.mutations} />
       );
     }
 
     render() {
       return (
-        <GraphQLConnector query={specs.query} queryArgs={this.args}>
-          {this.renderComponent.bind(this)}
+        <GraphQLConnector query={specs.query} variables={this.state}>
+          {this.renderDecoratedComponent.bind(this)}
         </GraphQLConnector>
       );
     }

@@ -1,17 +1,33 @@
+/* @flow */
+
 import { join } from 'path';
 import express from 'express';
-import { json as jsonParser } from 'body-parser';
-
-/********************************************/
-/*                 SERVER                   */
-/********************************************/
+import graphqlHTTP from 'express-graphql';
+import multer from 'multer';
+import schema from '../shared/schema';
+import * as conn from './data';
 
 const app = express();
 
 const publicPath = join(__dirname, '..', '..', '.tmp');
 app.use(express.static(publicPath));
+app.use(multer({ dest: './uploads' }).array('files'));
 
-app.use(jsonParser());
+function handleFiles(req, res, next) {
+  if (req.files) {
+    const { variables } = req.body;
+    req.body.variables = JSON.stringify({
+      ...JSON.parse(variables),
+      files: req.files.map(file => file.path),
+    });
+  }
+  next();
+}
+
+app.use('/graphql', handleFiles, graphqlHTTP({
+  schema,
+  rootValue: conn,
+}));
 
 const serverPort = process.env.PORT || 1337;
 const server = app.listen(serverPort, () => {
@@ -20,15 +36,6 @@ const server = app.listen(serverPort, () => {
 
   console.log('Listening at http://%s:%s', host, port); // eslint-disable-line no-console
 });
-
-/********************************************/
-/*                   API                    */
-/********************************************/
-
-
-import { graphql } from 'graphql';
-import schema from '../shared/schema';
-import * as conn from './data';
 
 app.get('/', (req, res) => {
   res.send(`
@@ -44,16 +51,4 @@ app.get('/', (req, res) => {
       </body>
     </html>
   `);
-});
-
-app.post('/graphql', (req, res) => {
-  const { query } = req.body;
-
-  graphql(schema, query, conn)
-    .then(result => {
-      if (result.errors) {
-        res.status(400);
-      }
-      res.json(result);
-    });
 });

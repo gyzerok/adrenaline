@@ -32,9 +32,9 @@ class TodoList extends Component {
 
 export default createDumbComponent(TodoList, {
   fragments: {
-    todos: ({ count }) => `
+    todos: `
       User {
-        todos(count: ${count}) {
+        todos(count: $count) {
           id,
           ${TodoItem.getFragment('todo')}
         }

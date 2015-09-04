@@ -57,7 +57,8 @@ const userType = new GraphQLObjectType({
       },
       resolve: (user, params, { rootValue: root }) => {
         if (__CLIENT__) {
-          return user.todos.map(id => root.Todo[id]);
+          const todos = user.todos.map(id => root.Todo[id]);
+          return params.count ? todos.slice(0, params.count) : todos;
         }
         return root.findTodo(params);
       },
@@ -83,6 +84,18 @@ export default new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'Mutation',
     fields: () => ({
+      upload: {
+        type: GraphQLString,
+        args: {
+          files: {
+            name: 'files',
+            type: new GraphQLList(GraphQLString),
+          },
+        },
+        resolve: (root, { files }) => {
+          return files[0];
+        },
+      },
       createTodo: {
         type: todoType,
         args: {

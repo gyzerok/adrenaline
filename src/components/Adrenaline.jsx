@@ -53,7 +53,7 @@ export default class Adrenaline extends Component {
     this.store = createCacheSore(this.parsedSchema, props.middlewares);
   }
 
-  performQuery(query) {
+  performQuery(query, params) {
     if (this.pendingQueries.indexOf(query) > -1) return;
     this.pendingQueries = this.pendingQueries.concat(query);
 
@@ -61,7 +61,7 @@ export default class Adrenaline extends Component {
     const { parsedSchema, store } = this;
     const { dispatch } = store;
 
-    request(endpoint, { query })
+    request(endpoint, { query, params })
       .then(json => {
         dispatch({
           type: UPDATE_CACHE,
@@ -75,7 +75,7 @@ export default class Adrenaline extends Component {
       });
   }
 
-  performMutation({ mutation, updateCache = [] }, ...args) {
+  performMutation({ mutation, updateCache = [] }, params, files) {
     invariant(
       mutation !== undefined && mutation !== null,
       'You have to declare "mutation" field in your mutation'
@@ -85,7 +85,7 @@ export default class Adrenaline extends Component {
     const { parsedSchema, store } = this;
     const { dispatch } = store;
 
-    request(endpoint, { query: mutation(...args) })
+    request(endpoint, { mutation, params }, files)
       .then(json => {
         const payload = normalize(parsedSchema, json.data);
         dispatch({ type: UPDATE_CACHE, payload });

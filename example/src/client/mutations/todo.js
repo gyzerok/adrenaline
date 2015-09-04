@@ -1,9 +1,9 @@
 /* @flow */
 
 export const createTodo = {
-  mutation: ({ text }) => `
-    mutation AppMutation {
-      createTodo(text: "${text}") {
+  mutation: `
+    mutation AppMutation($text: String) {
+      createTodo(text: $text) {
         id,
         text,
         createdAt,

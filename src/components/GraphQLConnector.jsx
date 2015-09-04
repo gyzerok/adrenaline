@@ -14,8 +14,8 @@ export default class GraphQLConnector extends Component {
   static propTypes = {
     children: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
-    query: PropTypes.func.isRequired,
-    queryArgs: PropTypes.object.isRequired,
+    query: PropTypes.string.isRequired,
+    variables: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
@@ -34,7 +34,7 @@ export default class GraphQLConnector extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.queryArgs !== this.props.queryArgs) {
+    if (nextProps.variables !== this.props.variables) {
       this.handleChange(nextProps);
     }
   }
@@ -72,9 +72,9 @@ export default class GraphQLConnector extends Component {
     const state = context.store.getState();
 
     const { graphql, schema } = this.context;
-    const { query, queryArgs } = props;
+    const { query, variables } = props;
 
-    return graphql(schema, query(queryArgs), state)
+    return graphql(schema, query, state, variables)
       .then(({ data: slice }) => ({ slice }));
   }
 

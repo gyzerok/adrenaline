@@ -26,7 +26,7 @@ export default function createDumbComponent(DecoratedComponent, specs) {
     static displayName = displayName;
     static DecoratedComponent = DecoratedComponent;
 
-    static getFragment(key, args = {}) {
+    static getFragment(key) {
       invariant(
         isString(key),
         'You cant call getFragment(key: string) without string key in %s',
@@ -40,7 +40,7 @@ export default function createDumbComponent(DecoratedComponent, specs) {
         key
       );
 
-      return '... on ' + fragments[key](args).replace(/\s+/g, ' ').trim();
+      return '... on ' + fragments[key].replace(/\s+/g, ' ').trim();
     }
 
     render() {

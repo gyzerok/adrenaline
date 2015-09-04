@@ -8,10 +8,11 @@ import routes from './routes';
 import { Adrenaline } from '../../../src';
 import { graphql } from 'graphql';
 import schema from 'shared/schema';
+import Loader from './components/Loader';
 
 const rootNode = document.getElementById('root');
 React.render(
-  <Adrenaline graphql={graphql} schema={schema} endpoint="/graphql">
+  <Adrenaline graphql={graphql} schema={schema} renderLoading={Loader}>
     {() => <Router history={history} children={routes} />}
   </Adrenaline>,
   rootNode

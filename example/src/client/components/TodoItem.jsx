@@ -19,7 +19,7 @@ class TodoItem extends Component {
 
 export default createDumbComponent(TodoItem, {
   fragments: {
-    todo: () => `
+    todo: `
       Todo {
         text
       }
