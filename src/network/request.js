@@ -3,7 +3,7 @@
 export default function request(endpoint, data, files) {
   if (data.query) {
     const query = encodeURIComponent(data.query);
-    const variables = JSON.stringify(data.params);
+    const variables = encodeURIComponent(JSON.stringify(data.params));
     return fetch(`${endpoint}?query=${query}&variables=${variables}`).then(parseJSON);
   }
   if (data.mutation) {
