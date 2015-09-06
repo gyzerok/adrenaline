@@ -21,10 +21,9 @@ class TodoApp extends Component {
   onFile = () => {
     const { fileInput } = this.refs;
     const files = findDOMNode(fileInput).files;
-    console.log(files);
 
     const { upload } = this.props.mutations;
-    upload({}, files);
+    upload({}, { image: files[0] });
   }
 
   render() {

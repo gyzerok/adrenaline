@@ -19,8 +19,10 @@ export default function request(endpoint, data, files) {
   formData.append('query', data.mutation);
   formData.append('variables', JSON.stringify(data.params));
   if (files) {
-    for(let i = 0; i < files.length; i++) {
-      formData.append('files', files[i], files[i].name);
+    for (const filename in files) {
+      if (files.hasOwnProperty(filename)) {
+        formData.append(filename, files[filename]);
+      }
     }
   }
   return fetch(endpoint, {
