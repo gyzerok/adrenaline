@@ -9,7 +9,7 @@ export default function request(endpoint, data, files) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        query: data.query,
+        query: data.query || data.mutation,
         variables: data.params,
       }),
     }).then(parseJSON);
