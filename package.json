@@ -1,6 +1,6 @@
 {
   "name": "adrenaline",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "Redux-based Relay idea implementation",
   "main": "./lib/index.js",
   "scripts": {
