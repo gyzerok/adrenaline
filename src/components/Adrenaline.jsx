@@ -85,7 +85,7 @@ export default class Adrenaline extends Component {
     const { parsedSchema, store } = this;
     const { dispatch } = store;
 
-    request(endpoint, { query: mutation, params }, files)
+    request(endpoint, { mutation, params }, files)
       .then(json => {
         const payload = normalize(parsedSchema, json.data);
         dispatch({ type: UPDATE_CACHE, payload });
