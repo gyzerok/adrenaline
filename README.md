@@ -142,7 +142,7 @@ const todoType = new GraphQLObjectType({
           return root.User[todo.owner.id];
         }
         // resolve from database here
-      }
+      },
     },
   }),
 });
@@ -153,13 +153,19 @@ const schema = new GraphQLSchema({
     fields: () => ({
       viewer: {
         type: userType,
-        resolve: (root) => {
+        args: {
+          id: {
+            name: 'id',
+            type: new GraphQLNonNull(GraphQLID),
+          },
+        },
+        resolve: (root, { id }) => {
           if (__CLIENT__) {
-            return root.User[1];
+            return root.User[id];
           }
-          // Your resolve logic
-        }
-      }
+          // resolve from database here
+        },
+      },
     }),
   }),
 });
@@ -174,9 +180,89 @@ Root of your application should be wrapped with Adrenaline component.
   - `schema`: An instance of GraphQL schema you are using.
   - `createStore`: Function for creating a store. Reducers would be created automatically, you just need to provide this function in order to be able to configure it with custom middlewares and higher-order stores. If nothing is provided `Redux.createStore` will be used.
 
+### `createDumbComponent(Component, { fragments })`
+
+As in [react-redux dumb components idea]() all your dumb components may be declared as simple React components. But if you want to declare your data requirements in similar to Relay way you can use `createDumbComponent` function.
+
+```js
+import React, { Component } from 'react';
+import { createDumbComponent } from 'adrenaline';
+
+class TodoList extends Component {
+  /* ... */
+}
+
+export default createDumbComponent(TodoList, {
+  fragments: {
+    todos: `
+      Todo {
+        id,
+        text
+      }
+    `,
+  },
+});
+```
+
 ### `createSmartComponent(Component, { initialArgs, query, mutations })`
 
-This function is the main building block for your application.
+This function is the main building block for your application. It is similar to [react-redux smart component](https://github.com/rackt/react-redux#smart-components-are-connect-ed-to-redux) but with ability to declare your data query with GraphQL.
+
+  - `Component`: Its your component which would be wrapped.
+  - `initialArgs`: This is an are your arguments which would be applied to your query. You can declare it as a plain object or as a function of props.
+  - `query`: Your GraphQL query string.
+  - `mutations`: Your mutations which would be binded to dispatch.
+
+**Note:** When you use `createSmartComponent` you need do declare `propTypes` in your decorated component. If you declare prop as `isRequired` your view wouldnt be showed until data is available.
+
+```js
+import React, { Component, PropTypes } from 'react';
+import { createSmartComponent } from 'adrenaline';
+import TodoList from './TodoList';
+
+class UserItem extends Component {
+  static propTypes = {
+    viewer: PropTypes.object.isRequired,
+  }
+  /* ... */
+}
+
+// With initialArgs as a plain object
+export default createSmartComponent(UserItem, {
+  initialArgs: {
+    id: 1,
+  },
+  query: `
+    query Q($id: ID!) {
+      viewer(id: $id) {
+        id,
+        name,
+        todos {
+          ${TodoList.getFragment('todos')}
+        }
+      }
+    }
+  `,
+});
+
+// Or with initialArgs as a function of props
+export default createSmartComponent(UserItem, {
+  initialArgs: (props) => ({
+    id: props.userId,
+  }),
+  query: `
+    query Q($id: ID!) {
+      viewer(id: $id) {
+        id,
+        name,
+        todos {
+          ${TodoList.getFragment('todos')}
+        }
+      }
+    }
+  `,
+});
+```
 
 ### Mutations
 
@@ -196,7 +282,47 @@ const createTodo = {
   `,
 }
 ```
-In this example
+Then you can use this mutation with your component
+```js
+import React, { Component, PropTypes } from 'react';
+import { createSmartComponent } from 'adrenaline';
+
+class UserItem extends Component {
+  static propTypes = {
+    mutations: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
+  }
+
+  onSomeButtonClick() {
+    this.props.mutations.createTodo({
+      text: 'Hello, World',
+      owner: this.props.viewer.id,
+    });
+  }
+}
+
+const createTodo = /* ... */
+
+export default createSmartComponent(UserItem, {
+  initialArgs: (props) => ({
+    id: props.userId,
+  }),
+  query: `
+    query Q($id: ID!) {
+      viewer(id: $id) {
+        id,
+        name,
+        todos {
+          ${TodoList.getFragment('todos')}
+        }
+      }
+    }
+  `,
+  mutations: {
+    createTodo,
+  },
+});
+```
 
 But sometimes you need to update some references in order to make your client data consistent. Thats why there is an `updateCache` property which stands for an array of actions which need to be done in order to make data consistent. Those actions are quite similar to reducers. They have to return state pieces to update internal cache.
 ```js
@@ -228,7 +354,6 @@ const createTodo = {
 ```
 
 ## Way to 1.0
- - Mutations
  - Queries batching
  - Default middlware for express
  - Isomorphism
