@@ -22,7 +22,7 @@ export default class Adrenaline extends Component {
 
   static propTypes = {
     children: PropTypes.func.isRequired,
-    middlewares: PropTypes.array,
+    createStore: PropTypes.func,
     graphql: PropTypes.func.isRequired,
     endpoint: PropTypes.string,
     renderLoading: PropTypes.func,
@@ -50,7 +50,7 @@ export default class Adrenaline extends Component {
     this.pendingQueries = [];
     this.pendingMutations = [];
     this.parsedSchema = parseSchema(props.schema);
-    this.store = createCacheSore(this.parsedSchema, props.middlewares);
+    this.store = createCacheSore(this.parsedSchema, props.createStore);
   }
 
   performQuery(query, params) {
@@ -90,15 +90,15 @@ export default class Adrenaline extends Component {
         const payload = normalize(parsedSchema, json.data);
         dispatch({ type: UPDATE_CACHE, payload });
 
-        const state = store.getState();
         updateCache.forEach((fn) => {
-          const { parentId, parentName, resolve } = fn(Object.values(json.data)[0]);
-          const parent = state[parentName][parentId];
+          const { parentId, parentType, resolve } = fn(Object.values(json.data)[0]);
+          const state = store.getState();
+          const parent = state[parentType][parentId];
           if (!parent) return;
           dispatch({
             type: UPDATE_CACHE,
             payload: {
-              [parentName]: {
+              [parentType]: {
                 [parent.id]: resolve(parent),
               },
             },

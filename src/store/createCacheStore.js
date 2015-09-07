@@ -1,14 +1,10 @@
 /* @flow */
 
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import merge from '../utils/merge';
 import { UPDATE_CACHE } from '../constants';
 
-export default function createCache(parsedSchema, middlewares = []) {
-  const composedStore = (
-    !middlewares.length ? createStore :
-    applyMiddleware(...middlewares)(createStore)
-  );
+export default function createCache(parsedSchema, composedStore = createStore) {
   const reducer = combineReducers(
     Object.keys(parsedSchema).reduce((acc, key) => {
       return {
