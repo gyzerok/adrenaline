@@ -182,7 +182,7 @@ Root of your application should be wrapped with Adrenaline component.
 
 ### `createDumbComponent(Component, { fragments })`
 
-As in [react-redux dumb components idea]() all your dumb components may be declared as simple React components. But if you want to declare your data requirements in similar to Relay way you can use `createDumbComponent` function.
+As in [react-redux dumb components idea](https://github.com/rackt/react-redux#dumb-components-are-unaware-of-redux) all your dumb components may be declared as simple React components. But if you want to declare your data requirements in similar to Relay way you can use `createDumbComponent` function.
 
 ```js
 import React, { Component } from 'react';
@@ -195,9 +195,11 @@ class TodoList extends Component {
 export default createDumbComponent(TodoList, {
   fragments: {
     todos: `
-      Todo {
-        id,
-        text
+      User {
+        todos {
+          id,
+          text
+        }
       }
     `,
   },
@@ -237,9 +239,7 @@ export default createSmartComponent(UserItem, {
       viewer(id: $id) {
         id,
         name,
-        todos {
-          ${TodoList.getFragment('todos')}
-        }
+        ${TodoList.getFragment('todos')}
       }
     }
   `,
@@ -255,9 +255,7 @@ export default createSmartComponent(UserItem, {
       viewer(id: $id) {
         id,
         name,
-        todos {
-          ${TodoList.getFragment('todos')}
-        }
+        ${TodoList.getFragment('todos')}
       }
     }
   `,
