@@ -171,7 +171,7 @@ const schema = new GraphQLSchema({
 });
 ```
 
-### `<Adrenaline schema createStore>`
+### `<Adrenaline graphql schema createStore>`
 
 Root of your application should be wrapped with Adrenaline component.
 
@@ -179,6 +179,7 @@ Root of your application should be wrapped with Adrenaline component.
 
   - `schema`: An instance of GraphQL schema you are using.
   - `createStore`: Function for creating a store. Reducers would be created automatically, you just need to provide this function in order to be able to configure it with custom middlewares and higher-order stores. If nothing is provided `Redux.createStore` will be used.
+  - `graphql`: Pass here a `graphql` function. The necessity of doing it would be removed later.
 
 ### `createDumbComponent(Component, { fragments })`
 
