@@ -84,18 +84,6 @@ export default new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'Mutation',
     fields: () => ({
-      upload: {
-        type: GraphQLString,
-        args: {
-          files: {
-            name: 'files',
-            type: new GraphQLList(GraphQLString),
-          },
-        },
-        resolve: (root, { files }) => {
-          return files[0];
-        },
-      },
       createTodo: {
         type: todoType,
         args: {

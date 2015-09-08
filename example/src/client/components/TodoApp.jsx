@@ -3,7 +3,6 @@
 import React, { Component, PropTypes, findDOMNode } from 'react';
 import TodoList from 'client/components/TodoList';
 import * as todoMutations from '../mutations/todo';
-import * as fileMutations from '../mutations/file';
 import { createSmartComponent } from '../../../../src';
 
 class TodoApp extends Component {
@@ -18,22 +17,11 @@ class TodoApp extends Component {
     }, 2000);
   }
 
-  onFile = () => {
-    const { fileInput } = this.refs;
-    const files = findDOMNode(fileInput).files;
-
-    const { upload } = this.props.mutations;
-    upload({}, { image: files[0] });
-  }
-
   render() {
     const { viewer, mutations } = this.props;
 
     return (
-      <div>
-        <TodoList todos={viewer.todos} mutations={mutations} />
-        <input ref="fileInput" type="file" onChange={this.onFile} />
-      </div>
+      <TodoList todos={viewer.todos} mutations={mutations} />
     );
   }
 }
@@ -52,6 +40,5 @@ export default createSmartComponent(TodoApp, {
   `,
   mutations: {
     ...todoMutations,
-    ...fileMutations,
   },
 });

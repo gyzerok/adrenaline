@@ -27,25 +27,3 @@ export const createTodo = {
     }),
   ],
 };
-
-export const removeTodo = {
-  mutation: ({ id }) => `
-    mutation AppMutation {
-      removeTodo(id: ${id}) {
-        id,
-        text,
-        createdAt,
-        owner {
-          id
-        }
-      }
-    }
-  `,
-  collisionKey: ({ id }) => `todo_${id}`,
-  updateCache: [
-    (todo) => ({
-      parentId: todo.owner.id,
-      resolve: (parent) => parent,
-    }),
-  ],
-};
