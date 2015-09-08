@@ -3,7 +3,6 @@
 import { join } from 'path';
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
-import { reduce } from 'lodash';
 import schema from '../shared/schema';
 import * as conn from './data';
 
