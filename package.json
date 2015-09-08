@@ -9,6 +9,15 @@
   },
   "author": "Fedor Nezhivoi <gyzerok@gmail.com>",
   "license": "MIT",
+  "keywords": [
+    "react",
+    "redux",
+    "react-redux",
+    "bindings",
+    "relay",
+    "graphql",
+    "flux"
+  ],
   "peerDependencies": {
     "react": "^0.13.3",
     "graphql": "^0.4.2",
