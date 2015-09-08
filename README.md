@@ -14,7 +14,7 @@ Personally I've found [Redux](https://github.com/rackt/redux) the best [Flux](ht
 
 `npm install --save adrenaline`
 
-Adrenaline requires **React 0.13.**
+Adrenaline requires **React 0.13 or later.**
 
 ## API
 
