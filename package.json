@@ -1,7 +1,7 @@
 {
   "name": "adrenaline",
   "version": "0.10.0",
-  "description": "Redux-based Relay idea implementation",
+  "description": "React bindings for Redux with Relay in mind",
   "main": "./lib/index.js",
   "scripts": {
     "test": "node_modules/.bin/babel-tape-runner 'src/**/*.spec.js' | node_modules/.bin/tap-spec",
