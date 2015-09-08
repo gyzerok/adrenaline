@@ -21,7 +21,7 @@ export const createTodo = {
       resolve: (parent) => {
         return {
           ...parent,
-          todos: parent.todos.concat(todo.id),
+          todos: [...parent.todos, todo.id],
         };
       },
     }),
