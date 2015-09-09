@@ -10,6 +10,7 @@
   "author": "Fedor Nezhivoi <gyzerok@gmail.com>",
   "license": "MIT",
   "keywords": [
+    "adrenaline",
     "react",
     "redux",
     "react-redux",
