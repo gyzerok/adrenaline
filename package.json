@@ -21,7 +21,7 @@
   ],
   "peerDependencies": {
     "react": "^0.13.3",
-    "graphql": "^0.4.2",
+    "graphql": "^0.4.3",
     "redux": "^2.0.0"
   },
   "devDependencies": {
