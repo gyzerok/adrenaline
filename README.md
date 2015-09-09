@@ -356,10 +356,6 @@ const createTodo = {
 
 ## Way to 1.0
  - Queries batching
- - Default middlware for express
  - Isomorphism
- - Allow to specify starting params for component via props
+ - Somehow solve necessity of implementing cache resolve in the GraphQL schema
  - Memoize fieldASTs to reduce overhead for query parsing
- - Move all to Redux as a deps to prevent implementing same things
- - Move all query sending into Adrenaline component?
- - Somehow solve nessesity of implementing cache resolve in the GraphQL schema
