@@ -1,4 +1,5 @@
-# Adrenaline
+Adrenaline
+==========
 
 **Note: Currently docs are under development!**
 
