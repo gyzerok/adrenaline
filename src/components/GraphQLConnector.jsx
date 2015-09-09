@@ -3,11 +3,11 @@
 import React, { Component, PropTypes } from 'react';
 import createStoreShape from '../store/createStoreShape';
 import shallowEqual from '../utils/shallowEqual';
+import { graphql } from 'graphql';
 
 export default class GraphQLConnector extends Component {
   static contextTypes = {
     store: createStoreShape(PropTypes).isRequired,
-    graphql: PropTypes.func.isRequired,
     schema: PropTypes.object.isRequired,
   }
 
@@ -71,7 +71,7 @@ export default class GraphQLConnector extends Component {
   selectState(props, context) {
     const state = context.store.getState();
 
-    const { graphql, schema } = this.context;
+    const { schema } = this.context;
     const { query, variables } = props;
 
     return graphql(schema, query, state, variables)

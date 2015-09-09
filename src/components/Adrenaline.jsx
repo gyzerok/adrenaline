@@ -13,7 +13,6 @@ import { UPDATE_CACHE } from '../constants';
 export default class Adrenaline extends Component {
   static childContextTypes = {
     store: createStoreShape(PropTypes).isRequired,
-    graphql: PropTypes.func.isRequired,
     Loading: PropTypes.func.isRequired,
     schema: PropTypes.object.isRequired,
     performQuery: PropTypes.func.isRequired,
@@ -23,7 +22,6 @@ export default class Adrenaline extends Component {
   static propTypes = {
     children: PropTypes.func.isRequired,
     createStore: PropTypes.func,
-    graphql: PropTypes.func.isRequired,
     endpoint: PropTypes.string,
     renderLoading: PropTypes.func,
   }
@@ -36,7 +34,6 @@ export default class Adrenaline extends Component {
   getChildContext() {
     return {
       store: this.store,
-      graphql: this.props.graphql,
       Loading: this.props.renderLoading,
       schema: this.props.schema,
       performQuery: this.performQuery.bind(this),
