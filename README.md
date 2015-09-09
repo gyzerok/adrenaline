@@ -25,7 +25,7 @@ Adrenaline uses `fetch` under the hood so your need to install polyfill by your 
 First thing you need to know in order to use Adrenaline is how your client cache looks like. Your local client cache consists of normalized data. Adrenaline automatically normalizes data for you based on your GraphQL schema.
 
 Suppose you do have following types in your schema:
-```js
+```javascript
 const userType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
@@ -77,7 +77,7 @@ const schema = new GraphQLSchema({
 });
 ```
 Assume in the database you have one user with two todos. Then your cache might be:
-```js
+```javascript
 {
   User: {
     1: {
@@ -106,7 +106,7 @@ Assume in the database you have one user with two todos. Then your cache might b
 In order to make things workinng you need to declare schema with one little addition. For all `resolve` function you need to declare behaviour for the client-side. One possible solution for this is to set global `__CLIENT__` variable and use it inside resolve functions.
 
 With an example below it might looks like the following:
-```js
+```javascript
 const userType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
@@ -187,7 +187,7 @@ Root of your application should be wrapped with Adrenaline component.
 
 As in [react-redux dumb components idea](https://github.com/rackt/react-redux#dumb-components-are-unaware-of-redux) all your dumb components may be declared as simple React components. But if you want to declare your data requirements in similar to Relay way you can use `createDumbComponent` function.
 
-```js
+```javascript
 import React, { Component } from 'react';
 import { createDumbComponent } from 'adrenaline';
 
@@ -220,7 +220,7 @@ This function is the main building block for your application. It is similar to 
 
 **Note:** When you use `createSmartComponent` you need do declare `propTypes` in your decorated component. If you declare prop as `isRequired` your view wouldnt be showed until data is available.
 
-```js
+```javascript
 import React, { Component, PropTypes } from 'react';
 import { createSmartComponent } from 'adrenaline';
 import TodoList from './TodoList';
@@ -268,7 +268,7 @@ export default createSmartComponent(UserItem, {
 ### Mutations
 
 Mutations should be declared as a plain objects. Simple mutation can be declared in the following way:
-```js
+```javascript
 const createTodo = {
   mutation: `
     mutation YourMutationName($text: String, $owner: ID) {
@@ -284,7 +284,7 @@ const createTodo = {
 }
 ```
 Then you can use this mutation with your component
-```js
+```javascript
 import React, { Component, PropTypes } from 'react';
 import { createSmartComponent } from 'adrenaline';
 
@@ -326,7 +326,7 @@ export default createSmartComponent(UserItem, {
 ```
 
 But sometimes you need to update some references in order to make your client data consistent. Thats why there is an `updateCache` property which stands for an array of actions which need to be done in order to make data consistent. Those actions are quite similar to reducers. They have to return state pieces to update internal cache.
-```js
+```javascript
 const createTodo = {
   mutation: `
     mutation YourMutationName($text: String, $owner: ID) {
