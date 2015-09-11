@@ -41,5 +41,9 @@
     "deepmerge": "^0.2.10",
     "invariant": "^2.1.0",
     "lodash": "^3.10.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gyzerok/adrenaline.git"
   }
 }
