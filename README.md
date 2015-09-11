@@ -3,13 +3,18 @@ Adrenaline
 
 **Note: Currently docs are under development!**
 
-React bindings for [Redux](https://github.com/rackt/redux) with [Relay](https://github.com/facebook/relay) in mind.
+[React](https://github.com/facebook/react) bindings for [Redux](https://github.com/rackt/redux) with [Relay](https://github.com/facebook/relay) in mind.
 
 [![build status](https://img.shields.io/travis/gyzerok/adrenaline/master.svg?style=flat-square)](https://travis-ci.org/gyzerok/adrenaline)
 [![npm version](https://img.shields.io/npm/v/adrenaline.svg?style=flat-square)](https://www.npmjs.com/package/adrenaline)
 [![npm downloads](https://img.shields.io/npm/dm/adrenaline.svg?style=flat-square)](https://www.npmjs.com/package/adrenaline)
 
 Personally I've found [Redux](https://github.com/rackt/redux) the best [Flux](https://github.com/facebook/flux) implementation for now. On the other hand I think that ideas behind [GraphQL](https://github.com/facebook/graphql) and [Relay](https://github.com/facebook/relay) are really great. Currently Relay API feels to be tightly coupled with Facebook cases and ecosystem. This project is an attempt to provide simplier Relay-like API with an ability to use full Redux features (time-travel, middlewares, etc...).
+
+## Why?
+
+ - The first thing here - I love Redux. Its so much simple and extensible! I love an idea of middlewares and higher-order stores. I'd like to keep using these. But if you want to use Relay you have to fotget about this. It was true until Adrenaline :)
+ - Relay forces
 
 ## Installation
 
