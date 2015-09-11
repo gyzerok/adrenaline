@@ -22,7 +22,7 @@ Personally I've found [Redux](https://github.com/rackt/redux) the best [Flux](ht
 
 Adrenaline requires **React 0.13 or later.**
 
-Adrenaline uses `fetch` under the hood so your need to install polyfill by your own.
+Adrenaline uses `fetch` under the hood so you need to install polyfill by yourself.
 
 ## API
 
