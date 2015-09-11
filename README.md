@@ -15,8 +15,8 @@ Personally I've found [Redux](https://github.com/rackt/redux) the best [Flux](ht
 
  - **Redux:** Its super developer-friendly! I love an idea of middlewares and higher-order stores. I'd like to keep using these. But if you want to use Relay you have to forget about this. It was true until Adrenaline :)
  - **Relay connections:** Most of the time I do not need connections. The problem is Relay forces me to use them.
- - **Relay mutations `getConfigs`:** as a developer you have no freedom to handle this cuz you can chose only predefined strategies like `RANGE_ADD`. In Adrenaline there is an ability to use more functional and extensible way to handle this.
- - **Relay routes:** Imaging usage of Relay routes with react-router. If you want to move your view from one route to another you would have to fix it in two places: in RR routes and Relay routes. Here I found react-redux idea with smart component much better.
+ - **Relay mutations `getConfigs`:** As a developer you have no freedom to handle this cuz you can chose only predefined strategies like `RANGE_ADD`. In Adrenaline there is an ability to use more functional and extensible way to handle this.
+ - **Relay routes:** Imagine usage of Relay routes with react-router. If you want to move your view from one route to another you would have to fix it in two places: in RR routes and Relay routes. Here I found react-redux idea with smart component much better.
 
 ## Installation
 
