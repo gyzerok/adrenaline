@@ -51,9 +51,6 @@ export default class Adrenaline extends Component {
   }
 
   performQuery(query, params) {
-    if (this.pendingQueries.indexOf(query) > -1) return;
-    this.pendingQueries = this.pendingQueries.concat(query);
-
     const { endpoint } = this.props;
     const { parsedSchema, store } = this;
     const { dispatch } = store;
@@ -64,11 +61,9 @@ export default class Adrenaline extends Component {
           type: UPDATE_CACHE,
           payload: normalize(parsedSchema, json.data),
         });
-        this.pendingQueries = this.pendingQueries.filter(p => p === request);
       })
       .catch(err => {
         dispatch({ type: UPDATE_CACHE, payload: err, error: true });
-        this.pendingQueries = this.pendingQueries.filter(p => p === request);
       });
   }
 
