@@ -44,8 +44,6 @@ export default class Adrenaline extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.pendingQueries = [];
-    this.pendingMutations = [];
     this.parsedSchema = parseSchema(props.schema);
     this.store = createCacheStore(this.parsedSchema, props.createStore);
   }
