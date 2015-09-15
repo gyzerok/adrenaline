@@ -111,7 +111,7 @@ Assume in the database you have one user with two todos. Then your cache might b
 
 ### GraphQL schema
 
-In order to make things workinng you need to declare schema with one little addition. For all `resolve` function you need to declare behaviour for the client-side. One possible solution for this is to set global `__CLIENT__` variable and use it inside resolve functions.
+In order to make things work you need to declare schema with one little addition. For all `resolve` function you need to declare behaviour for the client-side. One possible solution for this is to set global `__CLIENT__` variable and use it inside resolve functions.
 
 With an example below it might looks like the following:
 ```javascript
