@@ -1,17 +1,19 @@
 /* @flow */
 
 import { reduce } from 'lodash';
-import { GraphQLList, GraphQLObjectType, GraphQLScalarType } from 'graphql';
+import { GraphQLList, GraphQLNonNull, GraphQLScalarType } from 'graphql';
 
 export default function parseSchema(schema) {
   const typeMap = schema.getTypeMap();
   const userTypes = reduce(typeMap, (acc, val, key) => {
-    if (!isDefinedType(key)) return acc;
+    if (key.startsWith('__')) return acc;
+    if (isScalar(val)) return acc;
+    console.log(val, isScalar(val));
     return {
       ...acc,
       [key]: {
         ...reduce(val.getFields(), (memo, field, name) => {
-          const typename = parseType(field.type, isDefinedType);
+          const typename = parseType(field.type);
           return typename !== undefined ? { ...memo, [name]: typename } : memo;
         }, {}),
       },
@@ -21,33 +23,32 @@ export default function parseSchema(schema) {
 }
 
 function parseType(type) {
-  const complexType = (
-    type instanceof GraphQLList ||
-    type instanceof GraphQLScalarType ||
-    type instanceof GraphQLObjectType
-  );
-  if (!complexType) return parseType(type.ofType);
-  if (type instanceof GraphQLList) {
+  if (isDefined(type)) return type.name;
+  if (isComplex(type)) return parseType(type.ofType);
+  if (isList(type)) {
     const typename = type.ofType.name;
-    return isDefinedType(typename) ? ([typename]) : undefined;
+    return isDefined(typename) ? ([typename]) : undefined;
   }
-  return isDefinedType(type.name) ? type.name : undefined;
+
+  return undefined;
 }
 
-function isDefinedType(typename) {
-  return !isIntrospectionType(typename) && !isBuiltInScalar(typename);
+function isComplex(type) {
+  return type instanceof GraphQLNonNull;
 }
 
-function isIntrospectionType(typename) {
-  return typename.indexOf('__') === 0;
+function isList(type) {
+  return type instanceof GraphQLList;
 }
 
-function isBuiltInScalar(typename) {
-  return (
-    typename === 'String' ||
-    typename === 'Boolean' ||
-    typename === 'Int' ||
-    typename === 'Float' ||
-    typename === 'ID'
+function isScalar(type) {
+  return type instanceof GraphQLScalarType;
+}
+
+function isDefined(type) {
+  return !(
+    isList(type) ||
+    isComplex(type) ||
+    isScalar(type)
   );
 }

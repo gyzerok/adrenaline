@@ -1,14 +1,18 @@
-import describe from 'tape';
+import test from 'tape';
 import React, { Component } from 'react';
-import createSmartComponent from '../createSmartComponent';
+import createDumbComponent from '../createDumbComponent';
 
-describe('createSmartComponent should return React.Component', assert => {
+test('createDumbComponent should return React.Component', assert => {
   class TestComponent {
     render() {
       return <div></div>;
     }
   }
-  const decorated = createSmartComponent(TestComponent, {});
+  const decorated = createDumbComponent(TestComponent, {
+    fragments: {
+      foo: 'baz',
+    },
+  });
 
   assert.equal(Component.isPrototypeOf(decorated), true);
 
