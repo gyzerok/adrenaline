@@ -9,20 +9,12 @@ import * as conn from './data';
 const app = express();
 
 const publicPath = join(__dirname, '..', '..', '.tmp');
-app.use(express.static(publicPath));
+app.use('/public', express.static(publicPath));
 
 app.use('/graphql', graphqlHTTP({
   schema,
   rootValue: conn,
 }));
-
-const serverPort = process.env.PORT || 1337;
-const server = app.listen(serverPort, () => {
-  const host = server.address().address;
-  const port = server.address().port;
-
-  console.log('Listening at http://%s:%s', host, port); // eslint-disable-line no-console
-});
 
 app.get('/', (req, res) => {
   res.send(`
@@ -34,8 +26,10 @@ app.get('/', (req, res) => {
       </head>
       <body>
         <div id="root"></div>
-        <script type="text/javascript" src="bundle.js"></script>
+        <script type="text/javascript" src="/public/bundle.js"></script>
       </body>
     </html>
   `);
 });
+
+export default app;
