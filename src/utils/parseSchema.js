@@ -8,7 +8,6 @@ export default function parseSchema(schema) {
   const userTypes = reduce(typeMap, (acc, val, key) => {
     if (key.startsWith('__')) return acc;
     if (isScalar(val)) return acc;
-    console.log(val, isScalar(val));
     return {
       ...acc,
       [key]: {
