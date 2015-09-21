@@ -148,7 +148,7 @@ const todoType = new GraphQLObjectType({
     owner: {
       type: userType,
       resolve: (todo, _, { rootValue: root }) => {
-        if (__CLEINT__) {
+        if (__CLIENT__) {
           return root.User[todo.owner.id];
         }
         // resolve from database here
