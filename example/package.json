@@ -13,6 +13,7 @@
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
     "express-graphql": "^0.3.0",
+    "graphql": "^0.4.4",
     "multer": "^1.0.3",
     "react": "^0.13.3",
     "react-redux": "^0.8.2",
