@@ -5,15 +5,16 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node index.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Fedor Nezhivoi <gyzerok@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
     "express-graphql": "^0.3.0",
     "multer": "^1.0.3",
+    "react": "^0.13.3",
     "react-redux": "^0.8.2",
     "react-router": "1.0.0-beta3",
     "redux": "^1.0.0-rc",
