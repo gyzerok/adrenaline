@@ -7,8 +7,6 @@ test('getDisplayName should return String or Component for empty object', assert
     { name: 'ho' },
     {}
   ].map(getDisplayName);
-
   assert.deepEqual(mapped, ['hey', 'ho', 'Component']);
-
   assert.end();
 });

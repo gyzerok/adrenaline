@@ -7,6 +7,7 @@ import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLID,
+  GraphQLInt,
 } from 'graphql';
 import normalize from '../normalize';
 import parseSchema from '../parseSchema'
@@ -20,6 +21,9 @@ const todoType = new GraphQLObjectType({
     text: {
       type: GraphQLString,
     },
+    nested: {
+      type: nestedType,
+    }
   }),
 });
 
@@ -38,6 +42,21 @@ const userType = new GraphQLObjectType({
         return user.todos.map(id => root.Todo[id]);
       },
     },
+    nested: {
+      type: new GraphQLList(nestedType),
+    }
+  }),
+});
+
+const nestedType = new GraphQLObjectType({
+  name: 'Nested',
+  fields: () => ({
+    one: {
+      type: GraphQLInt,
+    },
+    two: {
+      type: GraphQLInt,
+    }
   }),
 });
 
@@ -86,16 +105,31 @@ test('normalize for queries', assert => {
         id: 'u-1',
         name: 'User1',
         todos: ['t-1', 't-2'],
-      }
+        nested: [{
+          one: 1,
+          two: 2,
+        }, {
+          one: 11,
+          two: 11,
+        }],
+      },
     },
     Todo: {
       't-1': {
         id: 't-1',
         text: 'Hello',
+        nested: {
+          one: 1,
+          two: 2,
+        },
       },
       't-2': {
         id: 't-2',
         text: 'World',
+        nested: {
+          one: 11,
+          two: 22,
+        },
       },
     },
   };
@@ -106,7 +140,15 @@ test('normalize for queries', assert => {
         name,
         todos {
           id,
-          text
+          text,
+          nested {
+            one,
+            two
+          }
+        },
+        nested {
+          one,
+          two
         }
       }
     }
