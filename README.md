@@ -26,6 +26,54 @@ Adrenaline requires **React 0.13 or later.**
 
 Adrenaline uses `fetch` under the hood so you need to install polyfill by yourself.
 
+## Known issues
+
+Here is a list of know issues. This issues are just convensions to make all the things work together. Currently there are other things to solve before solving these issues. Be sure they would be resolved before 1.0.
+
+### Only `id`
+
+Currently **Adrenaline** supports only `id` as a name for id attribute on your type.
+
+```javascript
+// Invalid
+const fooType = new GraphQLObjectType({
+  name: 'Foo',
+  fields: () => {
+    customIdName: {
+      type: new GraphQLNonNull(GraphQLID),
+      description: 'Entity id',
+    },
+    baz: {
+      type: GraphQLString,
+      description: 'some stuff',
+    },
+  },
+});
+
+// Valid
+const fooType = new GraphQLObjectType({
+  name: 'Foo',
+  fields: () => {
+    id: {
+      type: new GraphQLNonNull(GraphQLID),
+      description: 'Entity id',
+    },
+    baz: {
+      type: GraphQLString,
+      description: 'some stuff',
+    },
+  },
+});
+```
+
+### `id` is required
+
+For now you have to require `id` field inside your queries and mutations in order for normalization to work correctly. You do not have to required `id` only for embedded types.
+
+### Root query and mutation fields
+
+Currently you have to name your root fields as `Query` and `Mutation`.
+
 ## API
 
 ### Cache
