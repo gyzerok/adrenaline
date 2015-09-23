@@ -13,7 +13,7 @@ export default function normalize(parsedSchema, data) {
     keys.every(key => parsedSchema.Mutation.hasOwnProperty(key))
   );
 
-  let bag = {};
+  const bag = {};
   if (isQuery) {
     normalizeAny(parsedSchema, 'Query', bag, data);
   }

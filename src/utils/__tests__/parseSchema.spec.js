@@ -18,6 +18,9 @@ const todoType = new GraphQLObjectType({
     },
     text: {
       type: GraphQLString,
+    },
+    nested: {
+      type: new GraphQLList(nestedType),
     }
   })
 });
@@ -33,8 +36,21 @@ const userType = new GraphQLObjectType({
     },
     todos: {
       type: new GraphQLList(todoType),
+    },
+    nested: {
+      type: nestedType,
     }
   })
+});
+
+const nestedType = new GraphQLObjectType({
+  name: 'Nested',
+  fields: () => ({
+    hello: {
+      type: GraphQLString,
+      resolve: () => 'world',
+    }
+  }),
 });
 
 const schema = new GraphQLSchema({

@@ -8,12 +8,14 @@ export default function parseSchema(schema) {
   const userTypes = reduce(typeMap, (acc, val, key) => {
     if (key.startsWith('__')) return acc;
     if (isScalar(val)) return acc;
+    if (isNested(val)) return acc;
+
     return {
       ...acc,
       [key]: {
         ...reduce(val.getFields(), (memo, field, name) => {
           const typename = parseType(field.type);
-          return typename !== undefined ? { ...memo, [name]: typename } : memo;
+          return typename ? { ...memo, [name]: typename } : memo;
         }, {}),
       },
     };
@@ -22,14 +24,12 @@ export default function parseSchema(schema) {
 }
 
 function parseType(type) {
-  if (isDefined(type)) return type.name;
+  if (isDefined(type) && !isNested(type)) return type.name;
   if (isComplex(type)) return parseType(type.ofType);
   if (isList(type)) {
-    const typename = type.ofType.name;
-    return isDefined(typename) ? ([typename]) : undefined;
+    const childType = type.ofType;
+    if (isDefined(childType) && !isNested(childType)) return [childType.name];
   }
-
-  return undefined;
 }
 
 function isComplex(type) {
@@ -49,5 +49,13 @@ function isDefined(type) {
     isList(type) ||
     isComplex(type) ||
     isScalar(type)
+  );
+}
+
+function isNested(type) {
+  return (
+    !type.getFields().hasOwnProperty('id') &&
+    type.name !== 'Query' &&
+    type.name !== 'Mutation'
   );
 }
