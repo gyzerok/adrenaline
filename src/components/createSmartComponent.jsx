@@ -3,9 +3,11 @@
 import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
 import { mapValues, reduce, isFunction } from 'lodash';
-import GraphQLConnector from './GraphQLConnector';
+import AdrenalineConnector from './AdrenalineConnector';
 import shadowEqualScalar from '../utils/shadowEqualScalar';
 import getDisplayName from '../utils/getDisplayName';
+import createAdaptorShape from '../adaptor/createAdaptorShape';
+import createStoreShape from '../store/createStoreShape';
 
 export default function createSmartComponent(DecoratedComponent, specs) {
   const displayName = `SmartComponent(${getDisplayName(DecoratedComponent)})`;
@@ -16,8 +18,8 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
     static contextTypes = {
       Loading: PropTypes.func.isRequired,
-      performQuery: PropTypes.func.isRequired,
-      performMutation: PropTypes.func.isRequired,
+      adrenaline: createAdaptorShape(PropTypes),
+      store: createStoreShape(PropTypes),
     }
 
     constructor(props, context) {
@@ -29,8 +31,12 @@ export default function createSmartComponent(DecoratedComponent, specs) {
         this.setState(nextArgs, () => this.fetch());
       };
 
+
       this.mutations = mapValues(specs.mutations, m => {
-        return (params, files) => this.context.performMutation(m, params, files);
+        return (params, files) => {
+            const { adrenaline, store } = this.context;
+            adrenaline.performMutation(store, m, params, files);
+        }
       });
 
       this.fetch();
@@ -41,10 +47,11 @@ export default function createSmartComponent(DecoratedComponent, specs) {
     }*/
 
     fetch(args = this.state) {
-      const { performQuery } = this.context;
+      const { adrenaline, store } = this.context;
+      const { dispatch } = store;
       const { query } = specs;
 
-      performQuery(query, args);
+      adrenaline.performQuery(dispatch, query, args);
     }
 
     renderDecoratedComponent(state) {
@@ -82,9 +89,9 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
     render() {
       return (
-        <GraphQLConnector query={specs.query} variables={this.state}>
+        <AdrenalineConnector query={specs.query} variables={this.state}>
           {this.renderDecoratedComponent.bind(this)}
-        </GraphQLConnector>
+        </AdrenalineConnector>
       );
     }
   };

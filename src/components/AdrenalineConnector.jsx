@@ -2,13 +2,13 @@
 
 import React, { Component, PropTypes } from 'react';
 import createStoreShape from '../store/createStoreShape';
+import createAdaptorShape from '../adaptor/createAdaptorShape';
 import shallowEqual from '../utils/shallowEqual';
-import { graphql } from 'graphql';
 
-export default class GraphQLConnector extends Component {
+export default class AdrenalineConnector extends Component {
   static contextTypes = {
-    store: createStoreShape(PropTypes).isRequired,
-    schema: PropTypes.object.isRequired,
+    adrenaline: createStoreShape(PropTypes).isRequired,
+    store: createStoreShape(PropTypes).isRequired
   }
 
   static propTypes = {
@@ -60,22 +60,18 @@ export default class GraphQLConnector extends Component {
 
   handleChange(props = this.props) {
     this.selectState(props, this.context)
-      .then(nextState => {
-        if (!this.isSliceEqual(this.state.slice, nextState.slice)) {
-          this.setState(nextState);
+      .then(slice => {
+        if (!this.isSliceEqual(this.state.slice, {slice})) {
+          this.setState({slice});
         }
       })
       .catch(err => console.error(err));
   }
 
   selectState(props, context) {
-    const state = context.store.getState();
-
-    const { schema } = this.context;
-    const { query, variables } = props;
-
-    return graphql(schema, query, state, variables)
-      .then(({ data: slice }) => ({ slice }));
+    const { store, adrenaline } = context;
+    const { query, variables } = this.props;
+    return adrenaline.selectState(store, query, variables)
   }
 
   render() {
