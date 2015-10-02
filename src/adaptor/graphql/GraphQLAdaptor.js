@@ -2,7 +2,6 @@ import AdrenalineAdaptor from '../AdrenalineAdaptor';
 import parseSchema from './parseSchema';
 import invariant from 'invariant';
 import request from './request';
-import { createStore, combineReducers } from 'redux';
 import merge from '../../utils/merge';
 import { UPDATE_CACHE } from '../../constants';
 import normalize from './normalize';
@@ -17,8 +16,10 @@ export default class GraphQLAdaptor  extends AdrenalineAdaptor {
         this.parsedSchema = parseSchema(schema);
     }
 
-    createCacheStore(composedStore){
-        return createCacheStore(this.parsedSchema, composedStore)
+    createCacheStore(createStore){
+        return super.createCacheStore(()=>{
+            return createCacheStore(this.parsedSchema, createStore);
+        });
     }
 
     selectState(store, query, variables) {
@@ -28,22 +29,28 @@ export default class GraphQLAdaptor  extends AdrenalineAdaptor {
         .then(({ data }) => data);
     }
 
-    performQuery(dispatch, query, params){
+    performQuery(store, query, variables){
+        const { dispatch } = store;
         const { endpoint, parsedSchema } = this;
 
-        request(endpoint, { query, params })
-          .then(json => {
-            dispatch({
-              type: UPDATE_CACHE,
-              payload: normalize(parsedSchema, json.data),
-            });
-          })
-          .catch(err => {
-            dispatch({ type: UPDATE_CACHE, payload: err, error: true });
-          });
+        return new Promise((resolve, reject)=>{
+            return request(endpoint, { query, variables })
+              .then(json => {
+                this.dispatchCacheUpdate(store,{
+                  payload: normalize(parsedSchema, json.data),
+                });
+                resolve({query, variables})
+              })
+              .catch(err => {
+                this.dispatchCacheUpdate(store,{
+                  payload: err,
+                  error: true
+                });
+                reject({query, variables});
+              });
+        });
     }
 
-    // TODO
     performMutation(store, { mutation, updateCache = [] }, params, files){
         invariant(
           mutation !== undefined && mutation !== null,
@@ -51,20 +58,18 @@ export default class GraphQLAdaptor  extends AdrenalineAdaptor {
         );
 
         const { endpoint, parsedSchema } = this;
-        const { dispatch } = store;
 
         request(endpoint, { mutation, params }, files)
           .then(json => {
             const payload = normalize(parsedSchema, json.data);
-            dispatch({ type: UPDATE_CACHE, payload });
+            this.dispatchCacheUpdate(store, { payload });
 
             updateCache.forEach((fn) => {
               const { parentId, parentType, resolve } = fn(Object.values(json.data)[0]);
               const state = store.getState();
               const parent = state[parentType][parentId];
               if (!parent) return;
-              dispatch({
-                type: UPDATE_CACHE,
+              this.dispatchCacheUpdate(store, {
                 payload: {
                   [parentType]: {
                     [parent.id]: resolve(parent),

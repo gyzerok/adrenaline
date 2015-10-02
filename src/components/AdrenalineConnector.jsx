@@ -1,34 +1,30 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react/addons';
 import createStoreShape from '../store/createStoreShape';
 import createAdaptorShape from '../adaptor/createAdaptorShape';
 import shallowEqual from '../utils/shallowEqual';
 
 export default class AdrenalineConnector extends Component {
-  static contextTypes = {
-    adrenaline: createStoreShape(PropTypes).isRequired,
-    store: createStoreShape(PropTypes).isRequired
-  }
 
   static propTypes = {
+    adrenaline: createAdaptorShape(PropTypes).isRequired,
+    store: createStoreShape(PropTypes).isRequired,
     children: PropTypes.func.isRequired,
-    select: PropTypes.func.isRequired,
-    query: PropTypes.string.isRequired,
+    query: PropTypes.oneOfType([
+        PropTypes.string.isRequired,
+        PropTypes.func.isRequired
+    ]),
     variables: PropTypes.object.isRequired,
   }
 
-  static defaultProps = {
-    select: state => state,
+  constructor(props) {
+    super(props);
+    this.state = {};
   }
 
-  constructor(props, context) {
-    super(props, context);
-    this.state = this.selectState(props, context);
-  }
-
-  componentDidMount() {
-    const { store } = this.context;
+  componentWillMount() {
+    const { store } = this.props;
     this.unsubscribe = store.subscribe(this.handleChange.bind(this));
     this.handleChange();
   }
@@ -59,26 +55,28 @@ export default class AdrenalineConnector extends Component {
   }
 
   handleChange(props = this.props) {
-    this.selectState(props, this.context)
+    this.selectState(props)
       .then(slice => {
         if (!this.isSliceEqual(this.state.slice, {slice})) {
           this.setState({slice});
         }
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+          throw err;
+      });
   }
 
-  selectState(props, context) {
-    const { store, adrenaline } = context;
-    const { query, variables } = this.props;
+  selectState(props) {
+    const { store, adrenaline, query, variables } = props;
     return adrenaline.selectState(store, query, variables)
   }
 
   render() {
     const { children } = this.props;
     const { slice } = this.state;
-    const { dispatch } = this.context.store;
-
-    return children({ dispatch, ...slice });
+    if(!slice){
+        return null;
+    }
+    return children(slice);
   }
 }

@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react/addons';
 import invariant from 'invariant';
 import { mapValues, reduce, isFunction } from 'lodash';
 import AdrenalineConnector from './AdrenalineConnector';
@@ -8,6 +8,7 @@ import shadowEqualScalar from '../utils/shadowEqualScalar';
 import getDisplayName from '../utils/getDisplayName';
 import createAdaptorShape from '../adaptor/createAdaptorShape';
 import createStoreShape from '../store/createStoreShape';
+import { extend, isUndefined } from 'lodash';
 
 export default function createSmartComponent(DecoratedComponent, specs) {
   const displayName = `SmartComponent(${getDisplayName(DecoratedComponent)})`;
@@ -18,19 +19,28 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
     static contextTypes = {
       Loading: PropTypes.func.isRequired,
-      adrenaline: createAdaptorShape(PropTypes),
-      store: createStoreShape(PropTypes),
+      adrenaline: createAdaptorShape(PropTypes).isRequired,
+      store: createStoreShape(PropTypes).isRequired,
+    }
+
+    static childContextTypes = {
+      Loading: PropTypes.func.isRequired,
+      adrenaline: PropTypes.object.isRequired,
+      store: createStoreShape(PropTypes).isRequired
     }
 
     constructor(props, context) {
       super(props, context);
-      const initialArgs = specs.initialArgs || {};
-      this.state = isFunction(initialArgs) ? initialArgs(props) : initialArgs;
 
-      DecoratedComponent.prototype.setArgs = (nextArgs) => {
-        this.setState(nextArgs, () => this.fetch());
+      const initialVariables = specs.initialVariables || specs.initialArgs || {};
+      this.state = {
+          uncommittedVariables: isFunction(initialVariables) ? initialVariables(props) : initialVariables
       };
 
+      DecoratedComponent.prototype.setVariables = (nextVariables) => {
+        const uncommittedVariables = extend(this.state.uncommittedVariables, nextVariables);
+        this.setState({ uncommittedVariables }, () => this.fetch());
+      };
 
       this.mutations = mapValues(specs.mutations, m => {
         return (params, files) => {
@@ -38,58 +48,51 @@ export default function createSmartComponent(DecoratedComponent, specs) {
             adrenaline.performMutation(store, m, params, files);
         }
       });
+    }
 
-      this.fetch();
+    componentWillMount(){
+        this.fetch();
     }
 
     /*shouldComponentUpdate(nextProps) {
       return !shadowEqualScalar(this.props, nextProps);
     }*/
 
-    fetch(args = this.state) {
+    fetch() {
+      const variables = this.state.uncommittedVariables;
       const { adrenaline, store } = this.context;
-      const { dispatch } = store;
       const { query } = specs;
-
-      adrenaline.performQuery(dispatch, query, args);
+      adrenaline.performQuery(store, query, variables)
+        .then(({query, variables})=>{
+          // commit the newly loaded variables
+          this.setState({ variables: variables || null });
+        })
+        .catch((query, variables)=>{
+          console.error('Query failed with variables', query, variables);
+        });
     }
 
-    renderDecoratedComponent(state) {
-      invariant(
-        DecoratedComponent.propTypes !== undefined,
-        'You have to declare propTypes for %s',
-        displayName,
-      );
-
-      const { propTypes } = DecoratedComponent;
-      const requiredPropTypes = reduce(propTypes, (memo, val, key) => {
-        if (!val.hasOwnProperty('isRequired')) {
-          return [...memo, key];
-        }
-        return memo;
-      }, []);
-      const dataLoaded = requiredPropTypes.every(key => {
-        if (key === 'mutations') {
-          return true;
-        }
-        return state.hasOwnProperty(key) && state[key] !== null;
-      });
-
-      const { Loading } = this.context;
-      if (!dataLoaded) {
-        return <Loading />;
-      }
-
+    renderDecoratedComponent(slice){
       return (
-        <DecoratedComponent {...this.props} {...state}
-          args={this.state}
+        <DecoratedComponent {...this.props} {...slice}
+          adrenaline={this.state}
           mutations={this.mutations} />
-      );
+      )
     }
 
     render() {
+      const dataLoaded = !isUndefined(this.state.variables);
+      if (!dataLoaded) {
+        const { Loading } = this.context;
+        return <Loading />;
+      }
+      const { store, adrenaline } = this.context;
       return (
-        <AdrenalineConnector query={specs.query} variables={this.state}>
+        <AdrenalineConnector
+            store={store}
+            adrenaline={adrenaline}
+            query={specs.query}
+            variables={this.state.variables}>
           {this.renderDecoratedComponent.bind(this)}
         </AdrenalineConnector>
       );

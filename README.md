@@ -265,16 +265,15 @@ export default createDumbComponent(TodoList, {
 });
 ```
 
-### `createSmartComponent(Component, { initialArgs, query, mutations })`
+### `createSmartComponent(Component, { initialVariables, query, mutations })`
 
 This function is the main building block for your application. It is similar to [react-redux smart component](https://github.com/rackt/react-redux#smart-components-are-connect-ed-to-redux) but with ability to declare your data query with GraphQL.
 
   - `Component`: Its your component which would be wrapped.
-  - `initialArgs`: This is an are your arguments which would be applied to your query. You can declare it as a plain object or as a function of props.
+  - `initialVariables`: This is an are your arguments which would be applied to your query. You can declare it as a plain object or as a function of props.
   - `query`: Your GraphQL query string.
   - `mutations`: Your mutations which would be binded to dispatch.
 
-**Note:** When you use `createSmartComponent` you need do declare `propTypes` in your decorated component. If you declare prop as `isRequired` your view wouldnt be showed until data is available.
 
 ```javascript
 import React, { Component, PropTypes } from 'react';
@@ -288,9 +287,9 @@ class UserItem extends Component {
   /* ... */
 }
 
-// With initialArgs as a plain object
+// With initialVariables as a plain object
 export default createSmartComponent(UserItem, {
-  initialArgs: {
+  initialVariables: {
     id: 1,
   },
   query: `
@@ -304,9 +303,9 @@ export default createSmartComponent(UserItem, {
   `,
 });
 
-// Or with initialArgs as a function of props
+// Or with initialVariables as a function of props
 export default createSmartComponent(UserItem, {
-  initialArgs: (props) => ({
+  initialVariables: (props) => ({
     id: props.userId,
   }),
   query: `
@@ -361,7 +360,7 @@ class UserItem extends Component {
 const createTodo = /* ... */
 
 export default createSmartComponent(UserItem, {
-  initialArgs: (props) => ({
+  initialVariables: (props) => ({
     id: props.userId,
   }),
   query: `

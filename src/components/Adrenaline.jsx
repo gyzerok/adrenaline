@@ -1,57 +1,81 @@
 /* @flow */
 
 import React, { Component, PropTypes, Children } from 'react';
-import invariant from 'invariant';
-import Loading from './Loading';
 import GraphQLAdaptor from '../adaptor/graphql/GraphQLAdaptor';
+import Loading from './Loading';
+import { createStore } from 'redux';
 import createStoreShape from '../store/createStoreShape';
+import createAdaptorShape from '../adaptor/createAdaptorShape';
 import { UPDATE_CACHE } from '../constants';
+import invariant from 'invariant';
+import { isUndefined } from 'lodash';
+
+const adaptorShape = createAdaptorShape(PropTypes);
 
 export default class Adrenaline extends Component {
   static childContextTypes = {
+    Loading: PropTypes.func.isRequired,
     store: createStoreShape(PropTypes).isRequired,
-    adrenaline: PropTypes.object.isRequired,
-    Loading: PropTypes.func.isRequired
-  };
-
-  static propTypes = {
-    children: PropTypes.func.isRequired,
-    createStore: PropTypes.func,
-    endpoint: PropTypes.string,
-    renderLoading: PropTypes.func,
-    schema: PropTypes.object,
-    adaptor: PropTypes.object,
-    customProp: function(props, propName, componentName) {
-        // TODO require either graphql defaults or adaptor
-    //   if (!/matchme/.test(props[propName])) {
-    //     return new Error('Validation failed!');
-    //   }
-    }
+    adrenaline: adaptorShape.isRequired
   }
 
   static defaultProps = {
-    renderLoading: Loading
+    renderLoading: Loading,
+    createStore: createStore
+  }
+
+  static propTypes = {
+    renderLoading: PropTypes.func,
+    children: PropTypes.func.isRequired,
+    endpoint: PropTypes.string,
+    schema: PropTypes.object,
+    adaptor: function(props, propName, componentName) {
+        if(props[propName]){
+            return adaptorShape(props, propName, componentName);
+        } else {
+            if(!props.schema){
+                return new Error(propName + ' in ' + componentName + " is required if 'schema' is not specified.");
+            }
+            return null;
+        }
+    },
+    createStore: PropTypes.func,
+    store: createStoreShape(PropTypes)
   }
 
   getChildContext() {
     return {
+      Loading: this.props.renderLoading,
       store: this.store,
-      adrenaline: this.adaptor,
-      Loading: this.props.renderLoading
+      adrenaline: this.adaptor
     };
   }
 
   constructor(props, context) {
     super(props, context);
-    if(props.schema){
-        this.adaptor = new GraphQLAdaptor(props.schema, props.endpoint);
-    }
+
     // mutually exclusive.
     if(props.adaptor){
-        this.adaptor = adaptor;
+        this.adaptor = props.adaptor;
+    } else {
+        if(props.schema){
+            this.adaptor = new GraphQLAdaptor(props.schema, props.endpoint);
+        }
     }
-    this.store = this.adaptor.createCacheStore(this.props.createStore);
-    console.log('store', this.store);
+    invariant(
+        !isUndefined(this.adaptor) && this.adaptor !== null,
+        "Adrenaline requires that you provide an adaptor or a GraphQL schema for which a default adaptor can be constructed."
+    );
+
+    if(this.props.store){
+        this.store = props.store;
+    } else {
+        this.store = this.adaptor.createCacheStore(this.props.createStore);
+    }
+    invariant(
+        !isUndefined(this.store) && this.store !== null,
+        "Adrenaline requires a redux store."
+    );
   }
 
   render() {
