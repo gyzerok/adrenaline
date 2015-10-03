@@ -1,9 +1,9 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react';
-import TodoInput from 'client/components/TodoInput';
-import TodoItem from 'client/components/TodoItem';
-import { createDumbComponent } from '../../../../src';
+import TodoInput from './TodoInput';
+import TodoItem from './TodoItem';
+import { createDumbComponent } from '../../../../../src';
 
 class TodoList extends Component {
   static propTypes = {

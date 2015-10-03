@@ -1,9 +1,9 @@
 /* @flow */
 
 import React, { Component, PropTypes, findDOMNode } from 'react';
-import TodoList from 'client/components/TodoList';
+import TodoList from './TodoList';
 import * as todoMutations from '../mutations/todo';
-import { createSmartComponent } from '../../../../src';
+import { createSmartComponent } from '../../../../../src';
 
 class TodoApp extends Component {
   static propTypes = {
