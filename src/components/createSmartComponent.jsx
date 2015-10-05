@@ -17,10 +17,16 @@ export default function createSmartComponent(DecoratedComponent, specs) {
     static displayName = displayName
     static DecoratedComponent = DecoratedComponent
 
+    static propTypes = {
+      Loading: PropTypes.func,
+      adrenaline: createAdaptorShape(PropTypes),
+      store: createStoreShape(PropTypes)
+    }
+
     static contextTypes = {
-      Loading: PropTypes.func.isRequired,
-      adrenaline: createAdaptorShape(PropTypes).isRequired,
-      store: createStoreShape(PropTypes).isRequired,
+      Loading: PropTypes.func,
+      adrenaline: createAdaptorShape(PropTypes),
+      store: createStoreShape(PropTypes)
     }
 
     static childContextTypes = {
@@ -31,6 +37,9 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
     constructor(props, context) {
       super(props, context);
+      this.adrenaline = this.props.adrenaline || this.context.adrenaline;
+      this.store = this.props.store || this.context.store;
+      this.Loading = this.props.Loading || this.context.Loading;
 
       const initialVariables = specs.initialVariables || specs.initialArgs || {};
       this.state = {
@@ -44,7 +53,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
       this.mutations = mapValues(specs.mutations, m => {
         return (params, files) => {
-            const { adrenaline, store } = this.context;
+            const { adrenaline, store } = this
             adrenaline.performMutation(store, m, params, files);
         }
       });
@@ -60,8 +69,9 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
     fetch() {
       const variables = this.state.uncommittedVariables;
-      const { adrenaline, store } = this.context;
+      const { adrenaline, store } = this;
       const { query } = specs;
+
       adrenaline.performQuery(store, query, variables)
         .then(({query, variables})=>{
           // commit the newly loaded variables
@@ -83,10 +93,10 @@ export default function createSmartComponent(DecoratedComponent, specs) {
     render() {
       const dataLoaded = !isUndefined(this.state.variables);
       if (!dataLoaded) {
-        const { Loading } = this.context;
+        const { Loading } = this;
         return <Loading />;
       }
-      const { store, adrenaline } = this.context;
+      const { store, adrenaline } = this;
       return (
         <AdrenalineConnector
             store={store}
