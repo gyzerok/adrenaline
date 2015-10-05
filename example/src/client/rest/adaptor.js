@@ -1,3 +1,4 @@
+import 'whatwg-fetch';
 import AdrenalineAdaptor from '../../../../src/adaptor/AdrenalineAdaptor';
 import { UPDATE_CACHE } from '../../../../src/constants';
 import { reduce, pairs, extend, map } from 'lodash';
