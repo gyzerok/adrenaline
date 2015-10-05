@@ -1,9 +1,7 @@
 /* @flow */
 
-import { reduce } from 'lodash';
-
 export default function merge(objA, objB) {
-  let dst = { ...objA };
+  const dst = { ...objA };
   for (const key in objB) {
     if (objB.hasOwnProperty(key)) {
       dst[key] = dst[key] || {};

@@ -18,7 +18,7 @@ export function createReducer(key) {
   };
 }
 
-export default function createCacheStore(parsedSchema, composedStore = createStore){
+export default function createCacheStore(parsedSchema, composedStore = createStore) {
   const reducer = combineReducers(
     Object.keys(parsedSchema).reduce((acc, key) => {
       return {

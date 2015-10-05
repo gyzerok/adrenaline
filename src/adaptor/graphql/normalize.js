@@ -16,11 +16,9 @@ export default function normalize(parsedSchema, data) {
   const bag = {};
   if (isQuery) {
     normalizeAny(parsedSchema, 'Query', bag, data);
-  }
-  else if (isMutation) {
+  } else if (isMutation) {
     normalizeAny(parsedSchema, 'Mutation', bag, data);
-  }
-  else {
+  } else {
     throw new Error('Unrecognized GraphQL result');
   }
 
@@ -53,7 +51,7 @@ function normalizeArray(parsedSchema, typename, bag, data) {
 
 function normalizeObject(parsedSchema, typename, bag, data) {
   const itemSchema = parsedSchema[typename];
-  let normalized = {};
+  const normalized = {};
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
       const node = normalizeAny(parsedSchema, itemSchema[key], bag, data[key]);
@@ -74,7 +72,7 @@ function normalizeType(parsedSchema, typename, bag, data) {
     bag[typename][id] = {};
   }
 
-  let stored = bag[typename][id];
+  const stored = bag[typename][id];
   const normalized = normalizeObject(parsedSchema, typename, bag, data);
   merge(stored, normalized);
 

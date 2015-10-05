@@ -29,8 +29,6 @@ export default function request(endpoint, data, files) {
     method: 'post',
     body: formData,
   }).then(parseJSON);
-
-  throw new Error('Unsupported request');
 }
 
 function parseJSON(res) {
