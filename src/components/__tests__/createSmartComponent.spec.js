@@ -1,8 +1,7 @@
 import test from 'tape';
 import sinon from 'sinon';
 import sinonAsPromised from 'sinon-as-promised';
-import React, { Component, PropTypes } from 'react/addons';
-const TestUtils = React.addons.TestUtils;
+import React, { Component, PropTypes } from 'react';
 import createSmartComponent from '../createSmartComponent';
 import sd from 'skin-deep';
 import AdrenalineConnector from '../AdrenalineConnector';
@@ -25,7 +24,7 @@ test('createSmartComponent', t=>{
     t.plan(9);
 
     let resolveQuery, rejectQuery;
-    const context = {
+    let context = {
         adrenaline: {
             performQuery: sinon.stub().returns(new Promise(()=>{})),
             performMutation: sinon.stub().returns(new Promise(()=>{})),

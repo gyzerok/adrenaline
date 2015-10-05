@@ -62,7 +62,7 @@ export default class AdrenalineConnector extends Component {
         }
       })
       .catch(err => {
-          throw err;
+          console.error("Error computing state for component", err)
       });
   }
 

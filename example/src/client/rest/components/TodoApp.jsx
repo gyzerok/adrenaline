@@ -6,7 +6,7 @@ import { createSmartComponent } from '../../../../../src';
 
 class TodoApp extends Component {
   static propTypes = {
-    todos: PropTypes.arrayOf(PropTypes.object).isRequired
+    todo: PropTypes.arrayOf(PropTypes.object).isRequired
   }
 
   componentDidMount() {
