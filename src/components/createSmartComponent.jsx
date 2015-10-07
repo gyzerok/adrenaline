@@ -2,16 +2,21 @@
 
 import React, { Component, PropTypes } from 'react/addons';
 import invariant from 'invariant';
-import { mapValues, reduce, isFunction } from 'lodash';
+import { mapValues, reduce, isFunction, extend, isUndefined } from 'lodash';
 import AdrenalineConnector from './AdrenalineConnector';
-import shadowEqualScalar from '../utils/shadowEqualScalar';
+import shallowEqual from '../utils/shallowEqual';
 import getDisplayName from '../utils/getDisplayName';
 import createAdaptorShape from '../adaptor/createAdaptorShape';
 import createStoreShape from '../store/createStoreShape';
-import { extend, isUndefined } from 'lodash';
 
 export default function createSmartComponent(DecoratedComponent, specs) {
   const displayName = `SmartComponent(${getDisplayName(DecoratedComponent)})`;
+  invariant(!!specs,
+    "Adrenaline smart component requires configuration.");
+  invariant(!!specs.initialVariables ? !specs.variables : !!specs.variables,
+    "Must specify either initialVariables or variables options, but not both.");
+  invariant(!!specs.variables ? isFunction(specs.variables) : true,
+    "Variables must be defined as a function of props, otherwise simply declare 'initialVariables'.");
 
   return class extends Component {
     static displayName = displayName
@@ -41,15 +46,12 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       this.store = this.props.store || this.context.store;
       this.Loading = this.props.Loading || this.context.Loading;
 
-      const initialVariables = specs.initialVariables || specs.initialArgs || {};
+      const initialVariables = specs.initialVariables || specs.variables || this.props;
       this.state = {
           uncommittedVariables: isFunction(initialVariables) ? initialVariables(props) : initialVariables
       };
 
-      DecoratedComponent.prototype.setVariables = (nextVariables) => {
-        const uncommittedVariables = extend(this.state.uncommittedVariables, nextVariables);
-        this.setState({ uncommittedVariables }, () => this.fetch());
-      };
+      DecoratedComponent.prototype.setVariables = this.setVariables.bind(this);
 
       this.mutations = mapValues(specs.mutations, m => {
         return (params, files) => {
@@ -59,8 +61,21 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       });
     }
 
+    setVariables(nextVariables){
+      const uncommittedVariables = extend(this.state.uncommittedVariables, nextVariables);
+      this.setState({ uncommittedVariables }, () => this.fetch());
+    }
+
     componentWillMount(){
         this.fetch();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(isFunction(specs.variables)
+            && nextProps != this.props
+            && !shallowEqual(nextProps, this.props)){
+            this.setVariables(specs.variables(nextProps))
+        }
     }
 
     /*shouldComponentUpdate(nextProps) {

@@ -35,7 +35,7 @@
     "eslint-plugin-react": "^3.0.0",
     "sinon": "^1.17.1",
     "sinon-as-promised": "^4.0.0",
-    "skin-deep": "^0.6.1",
+    "skin-deep": "^0.8.0",
     "tap-spec": "^4.0.2",
     "tape": "^4.0.2",
     "webpack": "^1.12.0"
