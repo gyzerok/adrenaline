@@ -5,12 +5,12 @@ import { isArray, isEqual } from 'lodash';
 export default function normalize(parsedSchema, data) {
   const keys = Object.keys(data);
   const isQuery = (
-    parsedSchema.hasOwnProperty('Query') &&
-    keys.every(key => parsedSchema.Query.hasOwnProperty(key))
+    parsedSchema.hasOwnProperty('Query')
+    && keys.every(key => parsedSchema.Query.hasOwnProperty(key))
   );
   const isMutation = (
-    parsedSchema.hasOwnProperty('Mutation') &&
-    keys.every(key => parsedSchema.Mutation.hasOwnProperty(key))
+    parsedSchema.hasOwnProperty('Mutation')
+    && keys.every(key => parsedSchema.Mutation.hasOwnProperty(key))
   );
 
   const bag = {};

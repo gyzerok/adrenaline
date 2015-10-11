@@ -46,16 +46,16 @@ function isScalar(type) {
 
 function isDefined(type) {
   return !(
-    isList(type) ||
-    isComplex(type) ||
-    isScalar(type)
+    isList(type)
+    || isComplex(type)
+    || isScalar(type)
   );
 }
 
 function isNested(type) {
   return (
-    !type.getFields().hasOwnProperty('id') &&
-    type.name !== 'Query' &&
-    type.name !== 'Mutation'
+    !type.getFields().hasOwnProperty('id')
+    && type.name !== 'Query'
+    && type.name !== 'Mutation'
   );
 }
