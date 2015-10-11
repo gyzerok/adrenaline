@@ -1,5 +1,5 @@
 import test from 'tape';
 
-test('patchSchema works correctly', assert => {
-  
+test('patchSchema works correctly', { skip: true }, assert => {
+
 });
