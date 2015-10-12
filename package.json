@@ -1,6 +1,6 @@
 {
   "name": "adrenaline",
-  "version": "0.10.6",
+  "version": "0.11.0",
   "description": "React bindings for Redux with Relay in mind",
   "main": "./lib/index.js",
   "scripts": {
