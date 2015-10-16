@@ -2,7 +2,7 @@
 
 import React, { Component, PropTypes } from 'react/addons';
 import invariant from 'invariant';
-import { mapValues, reduce, isFunction, extend, isUndefined } from 'lodash';
+import { mapValues, reduce, isFunction, extend, isUndefined, clone } from 'lodash';
 import AdrenalineConnector from './AdrenalineConnector';
 import shallowEqual from '../utils/shallowEqual';
 import getDisplayName from '../utils/getDisplayName';
@@ -63,7 +63,7 @@ export default function createSmartComponent(DecoratedComponent, specs) {
 
     setVariables(nextVariables){
       const uncommittedVariables = extend(this.state.uncommittedVariables, nextVariables);
-      this.setState({ uncommittedVariables }, () => this.fetch());
+      this.setState({ uncommittedVariables: clone(uncommittedVariables) }, () => this.fetch());
     }
 
     componentWillMount(){
@@ -90,9 +90,9 @@ export default function createSmartComponent(DecoratedComponent, specs) {
       adrenaline.performQuery(store, query, variables)
         .then(({query, variables})=>{
           // commit the newly loaded variables
-          this.setState({ variables: variables || null });
+          this.setState({ variables: clone(variables) || null });
         })
-        .catch((query, variables)=>{
+        .catch(({query, variables})=>{
           console.error('Query failed with variables', query, variables);
         });
     }
@@ -112,12 +112,14 @@ export default function createSmartComponent(DecoratedComponent, specs) {
         return <Loading />;
       }
       const { store, adrenaline } = this;
+      const { variables } = this.state;
+
       return (
         <AdrenalineConnector
             store={store}
             adrenaline={adrenaline}
             query={specs.query}
-            variables={this.state.variables}>
+            variables={variables}>
           {this.renderDecoratedComponent.bind(this)}
         </AdrenalineConnector>
       );

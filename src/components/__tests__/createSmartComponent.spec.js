@@ -99,8 +99,10 @@ test('createSmartComponent', t=>{
                 t.isEquivalent(adrenalineConnector.props.variables, {call:1}, "should set variables to the passed props");
                 props.call = 2;
                 tree.reRender(<SmartComponent {...context} {...props} />);
-                adrenalineConnector = tree.getRenderOutput();
-                t.isEquivalent(adrenalineConnector.props.variables, {call:2}, "should update variables when the props change");
+                setTimeout(()=>{
+                    adrenalineConnector = tree.getRenderOutput();
+                    t.isEquivalent(adrenalineConnector.props.variables, {call:2}, "should update variables when the props change");
+                });
             });
         }
     );
