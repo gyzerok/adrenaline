@@ -48,12 +48,12 @@ test('AdrenalineConnector', t=>{
         );
 
         setTimeout(()=>{
-            t.ok(childRenderStub.calledWith({slice:'slice'}), "should render child with the resolved state slice ");
+            t.ok(childRenderStub.calledWith({variables: {foo: 'bar'}, props: {slice:'slice'}}), "should render child with the resolved state slice ");
 
             props.adrenaline.selectState.resolves({secondSlice: 'secondSlice'});
             props.store.subscribe.getCall(0).args[0]();
             setTimeout(()=>{
-                t.ok(childRenderStub.calledWith({secondSlice: 'secondSlice'}), "should subscribe to store changes and render the child with an updated state slice");
+                t.ok(childRenderStub.calledWith({variables: {foo: 'bar'}, props: { secondSlice: 'secondSlice'}}), "should subscribe to store changes and render the child with an updated state slice");
             });
         });
 

@@ -97,10 +97,10 @@ export default function createSmartComponent(DecoratedComponent, specs) {
         });
     }
 
-    renderDecoratedComponent(slice){
+    renderDecoratedComponent({variables, props}){
       return (
-        <DecoratedComponent {...this.props} {...slice}
-          adrenaline={this.state}
+        <DecoratedComponent {...this.props} {...props}
+          adrenaline={extend({}, this.state, {variables, slice: props})}
           mutations={this.mutations} />
       )
     }

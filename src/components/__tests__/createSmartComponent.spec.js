@@ -74,7 +74,7 @@ test('createSmartComponent', t=>{
                 t.notEqual(component.type, LoadingComponent, "should not render <Loading/>");
                 t.equal(component.type, AdrenalineConnector, "should render the <AdrenalineConnector/> for managing child state");
                 t.ok(isFunction(component.props.children), "should pass a state slice rendering function to render the decorated component as child of <AdrenalineConnector/>")
-                const decoratedComponent = component.props.children({slice: 'slice'});
+                const decoratedComponent = component.props.children({props: {slice: 'slice'}});
                 t.equal(decoratedComponent.type, TestComponent, "should render the decorated component when invoked with a state slice");
                 t.equal(decoratedComponent.props.slice, 'slice', "should pass the state slice as props to the decorated component");
                 t.isEquivalent(pick(decoratedComponent.props, 'foo', 'bar'), {foo: 'foo', bar: 'bar'}, "should pass other props through to the decorated component");

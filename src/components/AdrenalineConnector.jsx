@@ -60,15 +60,16 @@ export default class AdrenalineConnector extends Component {
         if (!this.isSliceEqual(this.state.slice, {slice})) {
           this.setState({slice});
         }
-      })
-      .catch(err => {
-          console.error("Error computing state for component", err)
       });
   }
 
   selectState(props) {
     const { store, adrenaline, query, variables } = props;
     return adrenaline.selectState(store, query, variables)
+        .then(stateProps =>({
+            variables: variables,
+            props: stateProps
+        }));
   }
 
   render() {
