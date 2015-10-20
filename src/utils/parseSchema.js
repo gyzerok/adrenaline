@@ -1,14 +1,18 @@
 /* @flow */
 
 import { reduce } from 'lodash';
-import { GraphQLList, GraphQLNonNull, GraphQLScalarType } from 'graphql';
+import {
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLScalarType,
+  GraphQLEnumType,
+} from 'graphql';
 
 export default function parseSchema(schema) {
   const typeMap = schema.getTypeMap();
   const userTypes = reduce(typeMap, (acc, val, key) => {
     if (key.startsWith('__')) return acc;
-    if (isScalar(val)) return acc;
-    if (isNested(val)) return acc;
+    if (isScalar(val) || isEnum(val) || isNested(val)) return acc;
 
     return {
       ...acc,
@@ -44,6 +48,10 @@ function isScalar(type) {
   return type instanceof GraphQLScalarType;
 }
 
+function isEnum(type) {
+  return type instanceof GraphQLEnumType;
+}
+
 function isDefined(type) {
   return !(
     isList(type)
@@ -54,7 +62,9 @@ function isDefined(type) {
 
 function isNested(type) {
   return (
-    !type.getFields().hasOwnProperty('id')
+    !isScalar(type)
+    && !isEnum(type)
+    && !type.getFields().hasOwnProperty('id')
     && type.name !== 'Query'
     && type.name !== 'Mutation'
   );
