@@ -65,7 +65,7 @@ export default class GraphQLConnector extends Component {
           this.setState(nextState);
         }
       })
-      .catch(err => console.error(err));
+      .catch(err => console.error(err.message, err.stack));
   }
 
   selectState(props, context) {
