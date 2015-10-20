@@ -1,4 +1,3 @@
-
 {
   "parser": "babel-eslint",
   "plugins": [
@@ -33,7 +32,7 @@
     "strict": [2, "never"],
     "no-var": 2,
     "prefer-const": 2,
-    "no-shadow": 2,
+    "no-shadow": 0,
     "no-shadow-restricted-names": 2,
     "no-unused-vars": [2, {
       "vars": "local",
@@ -57,7 +56,7 @@
     "no-invalid-regexp": 2,
     "no-irregular-whitespace": 2,
     "no-obj-calls": 2,
-    "quote-props": [2, "as-needed"],
+    "no-reserved-keys": 2,
     "no-sparse-arrays": 2,
     "no-unreachable": 2,
     "use-isnan": 2,
@@ -103,7 +102,7 @@
     "yoda": 2,
     "indent": [2, 2],
     "brace-style": [2,
-      "1tbs", {
+      "stroustrup", {
       "allowSingleLine": true
     }],
     "quotes": [
@@ -133,7 +132,7 @@
     "no-new-object": 2,
     "no-spaced-func": 2,
     "no-trailing-spaces": 2,
-    "no-extra-parens": 2,
+    "no-wrap-func": 2,
     "no-underscore-dangle": 0,
     "one-var": [2, "never"],
     "padded-blocks": [2, "never"],
@@ -147,7 +146,7 @@
     "space-before-function-paren": [2, "never"],
     "space-infix-ops": 2,
     "space-return-throw-case": 2,
-    "spaced-comment": 2,
+    "spaced-line-comment": 2,
     "react/display-name": 0,
     "react/jsx-boolean-value": 2,
     "react/jsx-quotes": [2, "double"],
@@ -170,11 +169,9 @@
         "propTypes",
         "contextTypes",
         "childContextTypes",
-        "mixins",
         "statics",
         "defaultProps",
-        "getDefaultProps",
-        "getInitialState",
+        "constructor",
         "getChildContext",
         "componentWillMount",
         "componentDidMount",
@@ -184,7 +181,8 @@
         "componentDidUpdate",
         "componentWillUnmount",
         "/^on.+$/",
-        "/^get.+$/",
+        "/^update.+$/",
+        "/^handle.+$/",
         "/^render.+$/",
         "render"
       ]
