@@ -36,7 +36,7 @@ export default class AdrenalineConnector extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return !this.isSliceEqual(this.state.slice, nextState.slice) ||
+    return !shallowEqual(this.state.slice, nextState.slice) ||
            !shallowEqual(this.props, nextProps);
   }
 
@@ -44,20 +44,15 @@ export default class AdrenalineConnector extends Component {
     this.unsubscribe();
   }
 
-  isSliceEqual(slice, nextSlice) {
-    const isRefEqual = slice === nextSlice;
-    if (isRefEqual) {
-      return true;
-    } else if (typeof slice !== 'object' || typeof nextSlice !== 'object') {
-      return isRefEqual;
-    }
-    return shallowEqual(slice, nextSlice);
+  hasSliceChanged(props, slice, nextSlice) {
+    const { adrenaline} = props;
+    return adrenaline.hasStateChanged((slice||{}).props, (nextSlice||{}).props);
   }
 
   handleChange(props = this.props) {
     this.selectState(props)
       .then(slice => {
-        if (!this.isSliceEqual(this.state.slice, {slice})) {
+        if (this.hasSliceChanged(props, this.state.slice, slice)) {
           this.setState({slice});
         }
       });

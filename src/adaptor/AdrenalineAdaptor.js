@@ -1,5 +1,6 @@
 import { UPDATE_CACHE } from '../constants';
 import { createStore as createReduxStore } from 'redux';
+import shallowEqual from '../utils/shallowEqual';
 
 export default class AdrenalineAdaptor {
 
@@ -13,6 +14,25 @@ export default class AdrenalineAdaptor {
    */
   createCacheStore(createStore = createReduxStore) {
     return createStore();
+  }
+
+  /**
+   * Determines if a state slice has changed. State selected from redux cache
+   * may be composed of multiple sources, but this default behavior is to do
+   * a shallow refernce equality check.
+   * @param  {Object}  state     State selected previously by this adaptor
+   * @param  {Object}  nextState Future state for a component selected by this
+   *                             adaptor
+   * @return {Boolean}           Whether the state has changed.
+   */
+  hasStateChanged(state, nextState){
+    const isRefEqual = state === nextState;
+    if (isRefEqual) {
+      return true;
+    } else if (typeof state !== 'object' || typeof nextState !== 'object') {
+      return isRefEqual;
+    }
+    return !shallowEqual(state, nextState);
   }
 
   /**

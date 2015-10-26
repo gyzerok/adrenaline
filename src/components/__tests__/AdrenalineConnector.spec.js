@@ -42,7 +42,10 @@ test('AdrenalineConnector', t=>{
     });
 
     isolatedTest(({props, childRenderStub, unsubscribeStub})=>{
-        props.adrenaline.selectState = sinon.stub().resolves({slice: 'slice'});
+        props.adrenaline = {
+            selectState: sinon.stub().resolves({slice: 'slice'}),
+            hasStateChanged: sinon.stub().resolves(true)
+        };
         const tree = sd.shallowRender(
             <AdrenalineConnector {...props}>{childRenderStub}</AdrenalineConnector>
         );
