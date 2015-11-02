@@ -17,7 +17,7 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 app.get('/rest/todo', (req, res)=>{
-    res.json(conn.findTodo({count: req.params.count}));
+    res.json(conn.findTodo({count: req.query.count}));
 });
 
 app.get('/', (req, res) => {
