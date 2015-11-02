@@ -5,7 +5,7 @@ export default function request(endpoint, data, files) {
     return fetch(endpoint, {
       method: 'post',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

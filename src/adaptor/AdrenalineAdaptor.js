@@ -25,11 +25,12 @@ export default class AdrenalineAdaptor {
    *                             adaptor
    * @return {Boolean}           Whether the state has changed.
    */
-  hasStateChanged(state, nextState){
+  hasStateChanged(state, nextState) {
     const isRefEqual = state === nextState;
     if (isRefEqual) {
       return true;
-    } else if (typeof state !== 'object' || typeof nextState !== 'object') {
+    }
+    else if (typeof state !== 'object' || typeof nextState !== 'object') {
       return isRefEqual;
     }
     return !shallowEqual(state, nextState);

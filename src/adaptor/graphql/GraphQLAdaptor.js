@@ -8,7 +8,7 @@ import { graphql } from 'graphql';
 
 export default class GraphQLAdaptor extends AdrenalineAdaptor {
 
-  constructor(schema, endpoint='/graphql') {
+  constructor(schema, endpoint = '/graphql') {
     super();
     this.schema = schema;
     this.endpoint = endpoint;
