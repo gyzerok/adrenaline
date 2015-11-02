@@ -55,7 +55,8 @@ export default class AdrenalineConnector extends Component {
         if (this.hasSliceChanged(props, this.state.slice, slice)) {
           this.setState({slice});
         }
-      });
+      })
+      .catch(err => console.error(err.message, err.stack));
   }
 
   selectState(props) {

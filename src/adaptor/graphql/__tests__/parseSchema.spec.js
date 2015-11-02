@@ -7,65 +7,72 @@ import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLID,
+  GraphQLEnumType,
 } from 'graphql';
 import parseSchema from '../parseSchema'
 
-const todoType = new GraphQLObjectType({
-  name: 'Todo',
-  fields: () => ({
-    id: {
-      type: new GraphQLNonNull(GraphQLID),
-    },
-    text: {
-      type: GraphQLString,
-    },
-    nested: {
-      type: new GraphQLList(nestedType),
-    }
-  })
+test('parseSchema', (assert) => {
+  test1(assert);
+  test2(assert);
+  assert.end();
 });
 
-const userType = new GraphQLObjectType({
-  name: 'User',
-  fields: () => ({
-    id: {
-      type: new GraphQLNonNull(GraphQLID),
-    },
-    name: {
-      type: GraphQLString
-    },
-    todos: {
-      type: new GraphQLList(todoType),
-    },
-    nested: {
-      type: nestedType,
-    }
-  })
-});
-
-const nestedType = new GraphQLObjectType({
-  name: 'Nested',
-  fields: () => ({
-    hello: {
-      type: GraphQLString,
-      resolve: () => 'world',
-    }
-  }),
-});
-
-const schema = new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: 'Query',
+function test1(assert) {
+  let todoType = new GraphQLObjectType({
+    name: 'Todo',
     fields: () => ({
-      viewer: {
-        type: userType,
+      id: {
+        type: new GraphQLNonNull(GraphQLID),
+      },
+      text: {
+        type: GraphQLString,
+      },
+      nested: {
+        type: new GraphQLList(nestedType),
+      }
+    })
+  });
+
+  let userType = new GraphQLObjectType({
+    name: 'User',
+    fields: () => ({
+      id: {
+        type: new GraphQLNonNull(GraphQLID),
+      },
+      name: {
+        type: GraphQLString
+      },
+      todos: {
+        type: new GraphQLList(todoType),
+      },
+      nested: {
+        type: nestedType,
+      }
+    })
+  });
+
+  let nestedType = new GraphQLObjectType({
+    name: 'Nested',
+    fields: () => ({
+      hello: {
+        type: GraphQLString,
+        resolve: () => 'world',
       }
     }),
-  }),
-});
+  });
 
-test('parseSchema', assert => {
-  const expected = {
+  let schema = new GraphQLSchema({
+    query: new GraphQLObjectType({
+      name: 'Query',
+      fields: () => ({
+        viewer: {
+          type: userType,
+        }
+      }),
+    }),
+  });
+
+  let expected = {
     Query: {
       viewer: 'User',
     },
@@ -74,6 +81,48 @@ test('parseSchema', assert => {
     },
     Todo: {},
   }
-  assert.deepEqual(parseSchema(schema), expected);
-  assert.end();
-});
+  assert.deepEqual(parseSchema(schema), expected, 'supports simple types');
+}
+
+function test2(assert) {
+  let enumType = new GraphQLEnumType({
+    name: 'TestEnum',
+    values: {
+      ONE: {
+        value: 1,
+      },
+      TWO: {
+        value: 2,
+      },
+    },
+  });
+
+  let objectType = new GraphQLObjectType({
+    name: 'TestObject',
+    fields: () => ({
+      id: {
+        type: new GraphQLNonNull(GraphQLID),
+        enum: enumType,
+      }
+    }),
+  });
+
+  let schema = new GraphQLSchema({
+    query: new GraphQLObjectType({
+      name: 'Query',
+      fields: () => ({
+        object: {
+          type: objectType,
+        }
+      }),
+    }),
+  });
+
+  let expected = {
+    Query: {
+      object: 'TestObject',
+    },
+    TestObject: {},
+  }
+  assert.deepEqual(parseSchema(schema), expected, 'supports GraphQLEnumType');
+}

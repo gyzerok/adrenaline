@@ -7,6 +7,7 @@ import {
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
+  GraphQLEnumType,
   GraphQLSchema,
 } from 'graphql';
 
@@ -66,6 +67,18 @@ const userType = new GraphQLObjectType({
   }),
 });
 
+const enumType = new GraphQLEnumType({
+  name: 'Test',
+  values: {
+    ONE: {
+      value: 1,
+    },
+    TWO: {
+      value: 2,
+    },
+  },
+});
+
 export default new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
@@ -78,6 +91,10 @@ export default new GraphQLSchema({
           }
           return root.findUser();
         },
+      },
+      test: {
+        type: enumType,
+        resolve: () => 1,
       },
     }),
   }),
