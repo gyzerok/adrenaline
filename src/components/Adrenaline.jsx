@@ -1,103 +1,81 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
-import invariant from 'invariant';
+import React, { Component, PropTypes, Children } from 'react';
+import GraphQLAdaptor from '../adaptor/graphql/GraphQLAdaptor';
 import Loading from './Loading';
-import parseSchema from '../utils/parseSchema';
+import { createStore } from 'redux';
 import createStoreShape from '../store/createStoreShape';
-import createCacheStore from '../store/createCacheStore';
-import request from '../network/request';
-import normalize from '../utils/normalize';
+import createAdaptorShape from '../adaptor/createAdaptorShape';
 import { UPDATE_CACHE } from '../constants';
+import invariant from 'invariant';
+import { isUndefined } from 'lodash';
+
+const adaptorShape = createAdaptorShape(PropTypes);
 
 export default class Adrenaline extends Component {
   static childContextTypes = {
-    store: createStoreShape(PropTypes).isRequired,
     Loading: PropTypes.func.isRequired,
-    schema: PropTypes.object.isRequired,
-    performQuery: PropTypes.func.isRequired,
-    performMutation: PropTypes.func.isRequired,
-  };
-
-  static propTypes = {
-    children: PropTypes.func.isRequired,
-    createStore: PropTypes.func,
-    endpoint: PropTypes.string,
-    renderLoading: PropTypes.func,
+    store: createStoreShape(PropTypes).isRequired,
+    adrenaline: adaptorShape.isRequired
   }
 
   static defaultProps = {
     renderLoading: Loading,
-    endpoint: '/graphql',
+    createStore: createStore
+  }
+
+  static propTypes = {
+    renderLoading: PropTypes.func,
+    children: PropTypes.func.isRequired,
+    endpoint: PropTypes.string,
+    schema: PropTypes.object,
+    adaptor: function(props, propName, componentName) {
+        if(props[propName]){
+            return adaptorShape(props, propName, componentName);
+        } else {
+            if(!props.schema){
+                return new Error(propName + ' in ' + componentName + " is required if 'schema' is not specified.");
+            }
+            return null;
+        }
+    },
+    createStore: PropTypes.func,
+    store: createStoreShape(PropTypes)
   }
 
   getChildContext() {
     return {
-      store: this.store,
       Loading: this.props.renderLoading,
-      schema: this.props.schema,
-      performQuery: this.performQuery.bind(this),
-      performMutation: this.performMutation.bind(this),
+      store: this.store,
+      adrenaline: this.adaptor
     };
   }
 
   constructor(props, context) {
     super(props, context);
 
-    this.parsedSchema = parseSchema(props.schema);
-    this.store = createCacheStore(this.parsedSchema, props.createStore);
-  }
-
-  performQuery(query, params) {
-    const { endpoint } = this.props;
-    const { parsedSchema, store } = this;
-    const { dispatch } = store;
-
-    request(endpoint, { query, params })
-      .then(json => {
-        dispatch({
-          type: UPDATE_CACHE,
-          payload: normalize(parsedSchema, json.data),
-        });
-      })
-      .catch(err => {
-        dispatch({ type: UPDATE_CACHE, payload: err, error: true });
-      });
-  }
-
-  performMutation({ mutation, updateCache = [] }, params, files) {
+    // mutually exclusive.
+    if(props.adaptor){
+        this.adaptor = props.adaptor;
+    } else {
+        if(props.schema){
+            this.adaptor = new GraphQLAdaptor(props.schema, props.endpoint);
+        }
+    }
     invariant(
-      mutation !== undefined && mutation !== null,
-      'You have to declare "mutation" field in your mutation'
+        !isUndefined(this.adaptor) && this.adaptor !== null,
+        "Adrenaline requires that you provide an adaptor or a GraphQL schema for which a default adaptor can be constructed."
     );
 
-    const { endpoint } = this.props;
-    const { parsedSchema, store } = this;
-    const { dispatch } = store;
-
-    request(endpoint, { mutation, params }, files)
-      .then(json => {
-        const payload = normalize(parsedSchema, json.data);
-        dispatch({ type: UPDATE_CACHE, payload });
-
-        updateCache.forEach((fn) => {
-          const { parentId, parentType, resolve } = fn(Object.values(json.data)[0]);
-          const state = store.getState();
-          const parent = state[parentType][parentId];
-          if (!parent) return;
-          dispatch({
-            type: UPDATE_CACHE,
-            payload: {
-              [parentType]: {
-                [parent.id]: resolve(parent),
-              },
-            },
-          });
-        });
-      })
-      .catch(err => {
-        dispatch({ type: UPDATE_CACHE, payload: err, error: true });
-      });
+    if(this.props.store){
+        this.store = props.store;
+    } else {
+        this.store = this.adaptor.createCacheStore(this.props.createStore);
+    }
+    invariant(
+        !isUndefined(this.store) && this.store !== null,
+        "Adrenaline requires a redux store."
+    );
   }
 
   render() {

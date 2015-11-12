@@ -33,6 +33,10 @@
     "babel-tape-runner": "^1.2.0",
     "eslint": "^1.6.0",
     "eslint-plugin-react": "^3.5.1",
+    "react-addons-test-utils": "^0.14.1",
+    "sinon": "^1.17.1",
+    "sinon-as-promised": "^4.0.0",
+    "skin-deep": "^0.12.0",
     "tap-spec": "^4.0.2",
     "tape": "^4.2.1",
     "webpack": "^1.12.2"

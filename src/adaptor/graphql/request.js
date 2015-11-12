@@ -5,7 +5,7 @@ export default function request(endpoint, data, files) {
     return fetch(endpoint, {
       method: 'post',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -29,8 +29,6 @@ export default function request(endpoint, data, files) {
     method: 'post',
     body: formData,
   }).then(parseJSON);
-
-  throw new Error('Unsupported request');
 }
 
 function parseJSON(res) {

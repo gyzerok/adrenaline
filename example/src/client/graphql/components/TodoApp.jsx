@@ -1,9 +1,9 @@
 /* @flow */
 
 import React, { Component, PropTypes, findDOMNode } from 'react';
-import TodoList from 'client/components/TodoList';
+import TodoList from './TodoList';
 import * as todoMutations from '../mutations/todo';
-import { createSmartComponent } from '../../../../src';
+import { createSmartComponent } from '../../../../../src';
 
 class TodoApp extends Component {
   static propTypes = {
@@ -13,7 +13,7 @@ class TodoApp extends Component {
 
   componentDidMount() {
     setTimeout(() => {
-      this.setArgs({ count: 10 });
+      this.setVariables({ count: 10 });
     }, 2000);
   }
 
@@ -27,7 +27,7 @@ class TodoApp extends Component {
 }
 
 export default createSmartComponent(TodoApp, {
-  initialArgs: {
+  initialVariables: {
     count: 2,
   },
   query: `

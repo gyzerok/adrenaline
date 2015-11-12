@@ -61,11 +61,9 @@ function isDefined(type) {
 }
 
 function isNested(type) {
-  return (
-    !isScalar(type)
+  return !isScalar(type)
     && !isEnum(type)
     && !type.getFields().hasOwnProperty('id')
     && type.name !== 'Query'
-    && type.name !== 'Mutation'
-  );
+    && type.name !== 'Mutation';
 }

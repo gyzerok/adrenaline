@@ -265,16 +265,16 @@ export default createDumbComponent(TodoList, {
 });
 ```
 
-### `createSmartComponent(Component, { initialArgs, query, mutations })`
+### `createSmartComponent(Component, { initialVariables, variables, query, mutations })`
 
 This function is the main building block for your application. It is similar to [react-redux smart component](https://github.com/rackt/react-redux#smart-components-are-connect-ed-to-redux) but with ability to declare your data query with GraphQL.
 
   - `Component`: Its your component which would be wrapped.
-  - `initialArgs`: This is an are your arguments which would be applied to your query. You can declare it as a plain object or as a function of props.
+  - `initialVariables`: Optional. This is an are your arguments which would be applied to your query. You can declare it as a plain object or as a function of props. When variables have changed, your component will need to notify adrenaline by invoking this.setVariables(variables).
+  - `variables`: Optional. An alternative to 'initialVariables', defined as a pure function of your props. Adrenaline will manage prop updates and refresh your query requirements as props change. function(props) should return an object of query variables.
   - `query`: Your GraphQL query string.
   - `mutations`: Your mutations which would be binded to dispatch.
 
-**Note:** When you use `createSmartComponent` you need do declare `propTypes` in your decorated component. If you declare prop as `isRequired` your view wouldnt be showed until data is available.
 
 ```javascript
 import React, { Component, PropTypes } from 'react';
@@ -288,9 +288,9 @@ class UserItem extends Component {
   /* ... */
 }
 
-// With initialArgs as a plain object
+// With initialVariables as a plain object
 export default createSmartComponent(UserItem, {
-  initialArgs: {
+  initialVariables: {
     id: 1,
   },
   query: `
@@ -304,9 +304,25 @@ export default createSmartComponent(UserItem, {
   `,
 });
 
-// Or with initialArgs as a function of props
+// Or with initialVariables as a function of props
 export default createSmartComponent(UserItem, {
-  initialArgs: (props) => ({
+  initialVariables: (props) => ({
+    id: props.userId,
+  }),
+  query: `
+    query Q($id: ID!) {
+      viewer(id: $id) {
+        id,
+        name,
+        ${TodoList.getFragment('todos')}
+      }
+    }
+  `,
+});
+
+// Or with variables as a function of props
+export default createSmartComponent(UserItem, {
+  variables: (props) => ({
     id: props.userId,
   }),
   query: `
@@ -361,7 +377,7 @@ class UserItem extends Component {
 const createTodo = /* ... */
 
 export default createSmartComponent(UserItem, {
-  initialArgs: (props) => ({
+  initialVariables: (props) => ({
     id: props.userId,
   }),
   query: `

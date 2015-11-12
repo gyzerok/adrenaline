@@ -3,10 +3,13 @@ var webpack = require('webpack');
 
 module.exports = {
   devtool: 'eval-source-map',
-  entry: path.join(__dirname, 'src', 'client'),
+  entry: {
+    graphql: path.join(__dirname, 'src', 'client', 'graphql'),
+    rest: path.join(__dirname, 'src', 'client', 'rest')
+  },
   output: {
     path: path.join(__dirname, '.tmp'),
-    filename: 'bundle.js'
+    filename: "[name].bundle.js"
   },
   plugins: [
     new webpack.DefinePlugin({
