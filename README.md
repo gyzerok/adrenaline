@@ -28,7 +28,7 @@ Adrenaline uses `fetch` under the hood so you need to install polyfill by yourse
 
 ## Known issues
 
-Here is a list of know issues. This issues are just convensions to make all the things work together. Currently there are other things to solve before solving these issues. Be sure they would be resolved before 1.0.
+Here is a list of know issues. This issues are just conventions to make all the things work together. Currently there are other things to solve before solving these issues. Be sure they would be resolved before 1.0.
 
 ### Only `id`
 
