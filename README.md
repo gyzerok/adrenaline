@@ -99,8 +99,8 @@ export default container({
 
 Also container would pass you 2 additional properties
 
-* `mutate({ mutation, variables = {}, invalidate = true }): Promise`: You need to use this function in order to perform mutations. `invalidate` argument means you need to resolve data declarations after mutation.
-* `isFetching`: This property helps you understand if your component is in the middle of resolving data.
+* `mutate({ mutation: String, variables: Object = {}, invalidate: boolean = true }): Promise`: You need to use this function in order to perform mutations. `invalidate` argument means you need to resolve data declarations after mutation.
+* `isFetching: boolean`: This property helps you understand if your component is in the middle of resolving data.
 
 ### Mutations
 
