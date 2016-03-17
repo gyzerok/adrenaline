@@ -65,18 +65,13 @@ export default presenter({
 
 ### `container({ variables, queries })(Component)`
 
-This function is the main building block for your application. It is similar to [react-redux smart component](https://github.com/rackt/react-redux#smart-components-are-connect-ed-to-redux) but with ability to declare your data query with GraphQL.
-
-  - `Component`: Its your component which would be wrapped.
-  - `initialVariables`: Optional. This is an are your arguments which would be applied to your query. You can declare it as a plain object or as a function of props. When variables have changed, your component will need to notify adrenaline by invoking this.setVariables(variables).
-  - `variables`: Optional. An alternative to 'initialVariables', defined as a pure function of your props. Adrenaline will manage prop updates and refresh your query requirements as props change. function(props) should return an object of query variables.
-  - `query`: Your GraphQL query string.
-  - `mutations`: Your mutations which would be binded to dispatch.
+  - `variables`: This is a pure function of `props` which results in variables to send to GraphQL endpoint with Component's queries.
+  - `queries`: This should be a function that returns queries which should be used to request data from GraphQL endpoint. Object key becomes aliases for query result.
 
 
 ```javascript
 import React, { Component, PropTypes } from 'react';
-import { createSmartComponent } from 'adrenaline';
+import { container } from 'adrenaline';
 import TodoList from './TodoList';
 
 class UserItem extends Component {
@@ -86,45 +81,12 @@ class UserItem extends Component {
   /* ... */
 }
 
-// With initialVariables as a plain object
-export default createSmartComponent(UserItem, {
-  initialVariables: {
-    id: 1,
-  },
-  query: `
-    query Q($id: ID!) {
-      viewer(id: $id) {
-        id,
-        name,
-        ${TodoList.getFragment('todos')}
-      }
-    }
-  `,
-});
-
-// Or with initialVariables as a function of props
-export default createSmartComponent(UserItem, {
-  initialVariables: (props) => ({
-    id: props.userId,
-  }),
-  query: `
-    query Q($id: ID!) {
-      viewer(id: $id) {
-        id,
-        name,
-        ${TodoList.getFragment('todos')}
-      }
-    }
-  `,
-});
-
-// Or with variables as a function of props
-export default createSmartComponent(UserItem, {
+export default container({
   variables: (props) => ({
     id: props.userId,
   }),
-  query: `
-    query Q($id: ID!) {
+  query: () => `
+    query ($id: ID!) {
       viewer(id: $id) {
         id,
         name,
@@ -132,94 +94,55 @@ export default createSmartComponent(UserItem, {
       }
     }
   `,
-});
+})(UserItem);
 ```
+
+Also container would pass you 2 additional properties
+
+* `mutate({ mutation, variables = {}, invalidate = true }): Promise`: You need to use this function in order to perform mutations. `invalidate` argument means you need to resolve data declarations after mutation.
+* `isFetching`: This property helps you understand if your component is in the middle of resolving data.
 
 ### Mutations
 
-Mutations should be declared as a plain objects. Simple mutation can be declared in the following way:
+You can declare your mutations as simple as
+
 ```javascript
-const createTodo = {
-  mutation: `
-    mutation YourMutationName($text: String, $owner: ID) {
-      createTodo(text: $text, owner: $owner) {
-        id,
-        text,
-        owner {
-          id
-        }
+const createTodo = `
+  mutation ($text: String, $owner: ID) {
+    createTodo(text: $text, owner: $owner) {
+      id,
+      text,
+      owner {
+        id
       }
     }
-  `,
-}
+  }
+`;
 ```
+
 Then you can use this mutation with your component
+
 ```javascript
 import React, { Component, PropTypes } from 'react';
 import { createSmartComponent } from 'adrenaline';
 
 class UserItem extends Component {
   static propTypes = {
-    mutations: PropTypes.object.isRequired,
     viewer: PropTypes.object.isRequired,
   }
 
   onSomeButtonClick() {
-    this.props.mutations.createTodo({
-      text: 'Hello, World',
-      owner: this.props.viewer.id,
+    this.props.mutate({
+      mutation: createTodo,
+      variables: {
+        text: hello,
+        owner: this.props.viewer.id
+      },
     });
   }
-}
 
-const createTodo = /* ... */
-
-export default createSmartComponent(UserItem, {
-  initialVariables: (props) => ({
-    id: props.userId,
-  }),
-  query: `
-    query Q($id: ID!) {
-      viewer(id: $id) {
-        id,
-        name,
-        todos {
-          ${TodoList.getFragment('todos')}
-        }
-      }
-    }
-  `,
-  mutations: {
-    createTodo,
-  },
-});
-```
-
-But sometimes you need to update some references in order to make your client data consistent. Thats why there is an `updateCache` property which stands for an array of actions which need to be done in order to make data consistent. Those actions are quite similar to reducers. They have to return state pieces to update internal cache.
-```javascript
-const createTodo = {
-  mutation: `
-    mutation YourMutationName($text: String, $owner: ID) {
-      createTodo(text: $text, owner: $owner) {
-        id,
-        text,
-        owner {
-          id
-        }
-      }
-    }
-  `,
-  updateCache: [
-    (todo) => ({
-      parentId: todo.owner.id,
-      parentType: 'Todo',
-      resolve: (parent) => {
-        return {
-          ...parent,
-          todos: parent.todos.concat([todo.id]),
-        };
-      },
-    })
-  ],
+  render() {
+    /* render some stuff */
+  }
 }
 ```
