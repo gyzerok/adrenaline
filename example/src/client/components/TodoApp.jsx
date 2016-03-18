@@ -37,12 +37,12 @@ class TodoApp extends Component {
 }
 
 export default container({
-  queries: () => ({
-    viewer: `
+  query: `
+    query {
       viewer {
         id,
         ${TodoList.getFragment('todos')}
       }
-    `,
-  }),
+    }
+  `,
 })(TodoApp);

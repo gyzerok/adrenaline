@@ -17,8 +17,8 @@ export default function container(specs) {
     );
 
     invariant(
-      typeof specs.queries === 'function',
-      `You have to define 'queries' as a function in ${displayName}.`
+      typeof specs.query === 'string',
+      `You have to define 'query' as a string ${displayName}.`
     );
 
     invariant(
@@ -66,11 +66,11 @@ export default function container(specs) {
       }
 
       query = () => {
-        const { queries } = specs;
+        const { query } = specs;
         const variables = mapPropsToVariables(this.props);
 
         this.setState({ data: null }, () => {
-          this.context.query(queries, variables)
+          this.context.query(query, variables)
             .catch(err => {
               console.err(err);
             })
