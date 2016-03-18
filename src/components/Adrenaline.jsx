@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import performQuery from '../network/performQuery';
-import performMutation from '../network/performMutation';
+import defaultNetworkLayer from '../network/defaultNetworkLayer';
 
 
 export default class Adrenaline extends Component {
@@ -12,21 +11,25 @@ export default class Adrenaline extends Component {
 
   static propTypes = {
     endpoint: PropTypes.string,
+    networkLayer: PropTypes.object,
     children: PropTypes.element.isRequired,
   }
 
   static defaultProps = {
     endpoint: '/graphql',
+    networkLayer: defaultNetworkLayer,
   }
 
   getChildContext() {
-    const { endpoint } = this.props;
+    const { endpoint, networkLayer } = this.props;
 
     return {
       query: (query, variables) => {
-        return performQuery(endpoint, query, variables);
+        return networkLayer.performQuery(endpoint, query, variables);
       },
-      mutate: (...args) => performMutation(endpoint, ...args),
+      mutate: (...args) => {
+        return networkLayer.performMutation(endpoint, ...args);
+      },
     };
   }
 
