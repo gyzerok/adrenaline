@@ -1,13 +1,17 @@
 {
   "name": "adrenaline",
   "version": "0.11.1",
-  "description": "React bindings for Redux with Relay in mind",
+  "description": "Relay-like framework with simplier API",
   "main": "./lib/index.js",
   "scripts": {
     "test": "mocha --compilers js:babel/register $(find ./src -name '*.spec.js')",
     "postinstall": "node_modules/.bin/babel src --ignore __tests__ --out-dir lib/ --source-maps --stage=0"
   },
   "author": "Fedor Nezhivoi <gyzerok@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gyzerok/adrenaline.git"
+  },
   "license": "MIT",
   "keywords": [
     "adrenaline",
@@ -37,9 +41,5 @@
   },
   "dependencies": {
     "invariant": "^2.1.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gyzerok/adrenaline.git"
   }
 }
