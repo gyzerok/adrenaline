@@ -1,260 +1,58 @@
-Adrenaline
-==========
-
-**Note: Currently docs are under development!**
-
-[React](https://github.com/facebook/react) bindings for [Redux](https://github.com/rackt/redux) with [Relay](https://github.com/facebook/relay) in mind.
+# Adrenaline
 
 [![build status](https://img.shields.io/travis/gyzerok/adrenaline/master.svg?style=flat-square)](https://travis-ci.org/gyzerok/adrenaline)
 [![npm version](https://img.shields.io/npm/v/adrenaline.svg?style=flat-square)](https://www.npmjs.com/package/adrenaline)
 [![npm downloads](https://img.shields.io/npm/dm/adrenaline.svg?style=flat-square)](https://www.npmjs.com/package/adrenaline)
 
-Personally I've found [Redux](https://github.com/rackt/redux) the best [Flux](https://github.com/facebook/flux) implementation for now. On the other hand I think that ideas behind [GraphQL](https://github.com/facebook/graphql) and [Relay](https://github.com/facebook/relay) are really great. Currently Relay API feels to be tightly coupled with Facebook cases and ecosystem. This project is an attempt to provide simplier Relay-like API with an ability to use full Redux features (time-travel, middlewares, etc...).
+This library provides subset of [Relay](https://github.com/facebook/relay) behaviour with a cleaner API.
 
 ## Why?
 
- - **Redux:** Its super developer-friendly! I love an idea of middlewares and higher-order stores. I'd like to keep using these. But if you want to use Relay you have to forget about this. It was true until Adrenaline :)
- - **Relay connections:** Most of the time I do not need connections. The problem is Relay forces me to use them.
- - **Relay mutations `getConfigs`:** As a developer you have no freedom to handle this cuz you can chose only predefined strategies like `RANGE_ADD`. In Adrenaline there is an ability to use more functional and extensible way to handle this.
- - **Relay routes:** Imagine usage of Relay routes with react-router. If you want to move your view from one route to another you would have to fix it in two places: in RR routes and Relay routes. Here I found react-redux idea with smart component much better.
+Relay is a great framework with exiting ideas behind it. The downside is that in order to get all cool features of one you need to deal with complex API. Relay provides you a lot of tricky optimistions which probably are more suitable for huge projects. In small, medium and even large ones you would prefer to have better DX while working with a simple minimalistic set of APIs.
+
+Adrenaline intend to provide you Relay-like ability to describe your components with declarative data requirements, while keeping API as simple as possible. You are free to use it with different libraries like Redux, React Router and etc.
+
+## When not use it?
+
+- You have a huge project and highly need tricky optimisations to reduce client-server traffic.
+- When you don't understand why should you prefer Adrenaline to Relay.
 
 ## Installation
 
 `npm install --save adrenaline`
 
-Adrenaline requires **React 0.13 or later.**
+Adrenaline requires **React 0.14 or later.**
 
-Adrenaline uses `fetch` under the hood so you need to install polyfill by yourself.
-
-## Known issues
-
-Here is a list of know issues. This issues are just conventions to make all the things work together. Currently there are other things to solve before solving these issues. Be sure they would be resolved before 1.0.
-
-### Only `id`
-
-Currently **Adrenaline** supports only `id` as a name for id attribute on your type.
-
-```javascript
-// Invalid
-const fooType = new GraphQLObjectType({
-  name: 'Foo',
-  fields: () => {
-    customIdName: {
-      type: new GraphQLNonNull(GraphQLID),
-      description: 'Entity id',
-    },
-    baz: {
-      type: GraphQLString,
-      description: 'some stuff',
-    },
-  },
-});
-
-// Valid
-const fooType = new GraphQLObjectType({
-  name: 'Foo',
-  fields: () => {
-    id: {
-      type: new GraphQLNonNull(GraphQLID),
-      description: 'Entity id',
-    },
-    baz: {
-      type: GraphQLString,
-      description: 'some stuff',
-    },
-  },
-});
-```
-
-### `id` is required
-
-For now you have to require `id` field inside your queries and mutations in order for normalization to work correctly. You do not have to required `id` only for embedded types.
-
-### Root query and mutation fields
-
-Currently you have to name your root fields as `Query` and `Mutation`.
+Adrenaline uses `fetch` under the hood so you need to install [polyfill](https://github.com/github/fetch) by yourself.
 
 ## API
 
-### Cache
+Adrenaline follows the idea of [Presentational and Container Components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0#.b5g7ctse2)
 
-First thing you need to know in order to use Adrenaline is how your client cache looks like. Your local client cache consists of normalized data. Adrenaline automatically normalizes data for you based on your GraphQL schema.
-
-Suppose you do have following types in your schema:
-```javascript
-const userType = new GraphQLObjectType({
-  name: 'User',
-  fields: () => ({
-    id: {
-      type: new GraphQLNonNull(GraphQLID),
-    },
-    name: {
-      type: GraphQLString,
-    },
-    todos: {
-      type: new GraphQLList(todoType),
-      resolve: (user) => {
-        // Your resolve logic
-      },
-    },
-  }),
-});
-
-const todoType = new GraphQLObjectType({
-  name: 'Todo',
-  fields: () => ({
-    id: {
-      type: new GraphQLNonNull(GraphQLID),
-    },
-    text: {
-      type: GraphQLString,
-    },
-    owner: {
-      type: userType,
-      resolve: (todo) => {
-        // Your resolve logic
-      }
-    },
-  }),
-});
-
-const schema = new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: 'Query',
-    fields: () => ({
-      viewer: {
-        type: userType,
-        resolve: () => {
-          // Your resolve logic
-        }
-      }
-    }),
-  }),
-});
-```
-Assume in the database you have one user with two todos. Then your cache might be:
-```javascript
-{
-  User: {
-    1: {
-      id: 1,
-      name: 'John Wick',
-      todos: [1, 2],
-    },
-  },
-  Todo: {
-    1: {
-      id: 1,
-      text: 'Kill my enemies',
-      owner: 1,
-    },
-    2: {
-      id: 2,
-      text: 'Drink some whiskey',
-      owner: 1,
-    },
-  },
-}
-```
-
-### GraphQL schema
-
-In order to make things work you need to declare schema with one little addition. For all `resolve` function you need to declare behaviour for the client-side. One possible solution for this is to set global `__CLIENT__` variable and use it inside resolve functions.
-
-With an example below it might looks like the following:
-```javascript
-const userType = new GraphQLObjectType({
-  name: 'User',
-  fields: () => ({
-    id: {
-      type: new GraphQLNonNull(GraphQLID),
-    },
-    name: {
-      type: GraphQLString,
-    },
-    todos: {
-      type: new GraphQLList(todoType),
-      resolve: (user, _, { rootValue: root }) => {
-        if (__CLIENT__) {
-          return user.todos.map(id => root.Todo[id]);
-        }
-        // resolve from database here
-      },
-    },
-  }),
-});
-
-const todoType = new GraphQLObjectType({
-  name: 'Todo',
-  fields: () => ({
-    id: {
-      type: new GraphQLNonNull(GraphQLID),
-    },
-    text: {
-      type: GraphQLString,
-    },
-    owner: {
-      type: userType,
-      resolve: (todo, _, { rootValue: root }) => {
-        if (__CLIENT__) {
-          return root.User[todo.owner.id];
-        }
-        // resolve from database here
-      },
-    },
-  }),
-});
-
-const schema = new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: 'Query',
-    fields: () => ({
-      viewer: {
-        type: userType,
-        args: {
-          id: {
-            name: 'id',
-            type: new GraphQLNonNull(GraphQLID),
-          },
-        },
-        resolve: (root, { id }) => {
-          if (__CLIENT__) {
-            return root.User[id];
-          }
-          // resolve from database here
-        },
-      },
-    }),
-  }),
-});
-```
-
-### `<Adrenaline endpoint schema createStore>`
+### `<Adrenaline endpoint />`
 
 Root of your application should be wrapped with Adrenaline component.
 
 #### Props
 
-  - `endpoint`: URL to your GraphQL endpoint.
-  - `schema`: An instance of GraphQL schema you are using.
-  - `createStore`: Function for creating a store. Reducers would be created automatically, you just need to provide this function in order to be able to configure it with custom middlewares and higher-order stores. If nothing is provided `Redux.createStore` will be used.
+* `endpoint`: URI of your GraphQL endpoint. Defaults to `/graphql`.
 
-### `createDumbComponent(Component, { fragments })`
+### `presenter({ fragments })(Component)`
 
-As in [react-redux dumb components idea](https://github.com/rackt/react-redux#dumb-components-are-unaware-of-redux) all your dumb components may be declared as simple React components. But if you want to declare your data requirements in similar to Relay way you can use `createDumbComponent` function.
+As in [presentational components idea](https://github.com/rackt/react-redux#dumb-components-are-unaware-of-redux) all your dumb components may be declared as simple React components. But if you want to declare your data requirements in similar to Relay way you can use `createDumbComponent` function.
 
 ```javascript
 import React, { Component } from 'react';
-import { createDumbComponent } from 'adrenaline';
+import { presenter } from 'adrenaline';
 
 class TodoList extends Component {
   /* ... */
 }
 
-export default createDumbComponent(TodoList, {
+export default presenter({
   fragments: {
     todos: `
-      User {
+      fragment on User {
         todos {
           id,
           text
@@ -262,23 +60,18 @@ export default createDumbComponent(TodoList, {
       }
     `,
   },
-});
+})(Component);
 ```
 
-### `createSmartComponent(Component, { initialVariables, variables, query, mutations })`
+### `container({ variables, queries })(Component)`
 
-This function is the main building block for your application. It is similar to [react-redux smart component](https://github.com/rackt/react-redux#smart-components-are-connect-ed-to-redux) but with ability to declare your data query with GraphQL.
-
-  - `Component`: Its your component which would be wrapped.
-  - `initialVariables`: Optional. This is an are your arguments which would be applied to your query. You can declare it as a plain object or as a function of props. When variables have changed, your component will need to notify adrenaline by invoking this.setVariables(variables).
-  - `variables`: Optional. An alternative to 'initialVariables', defined as a pure function of your props. Adrenaline will manage prop updates and refresh your query requirements as props change. function(props) should return an object of query variables.
-  - `query`: Your GraphQL query string.
-  - `mutations`: Your mutations which would be binded to dispatch.
+  - `variables`: This is a pure function of `props` which results in variables to send to GraphQL endpoint with Component's queries.
+  - `queries`: This should be a function that returns queries which should be used to request data from GraphQL endpoint. Object key becomes aliases for query result.
 
 
 ```javascript
 import React, { Component, PropTypes } from 'react';
-import { createSmartComponent } from 'adrenaline';
+import { container } from 'adrenaline';
 import TodoList from './TodoList';
 
 class UserItem extends Component {
@@ -288,45 +81,12 @@ class UserItem extends Component {
   /* ... */
 }
 
-// With initialVariables as a plain object
-export default createSmartComponent(UserItem, {
-  initialVariables: {
-    id: 1,
-  },
-  query: `
-    query Q($id: ID!) {
-      viewer(id: $id) {
-        id,
-        name,
-        ${TodoList.getFragment('todos')}
-      }
-    }
-  `,
-});
-
-// Or with initialVariables as a function of props
-export default createSmartComponent(UserItem, {
-  initialVariables: (props) => ({
-    id: props.userId,
-  }),
-  query: `
-    query Q($id: ID!) {
-      viewer(id: $id) {
-        id,
-        name,
-        ${TodoList.getFragment('todos')}
-      }
-    }
-  `,
-});
-
-// Or with variables as a function of props
-export default createSmartComponent(UserItem, {
+export default container({
   variables: (props) => ({
     id: props.userId,
   }),
-  query: `
-    query Q($id: ID!) {
+  query: () => `
+    query ($id: ID!) {
       viewer(id: $id) {
         id,
         name,
@@ -334,100 +94,55 @@ export default createSmartComponent(UserItem, {
       }
     }
   `,
-});
+})(UserItem);
 ```
+
+Also container would pass you 2 additional properties
+
+* `mutate({ mutation: String, variables: Object = {}, invalidate: boolean = true }): Promise`: You need to use this function in order to perform mutations. `invalidate` argument means you need to resolve data declarations after mutation.
+* `isFetching: boolean`: This property helps you understand if your component is in the middle of resolving data.
 
 ### Mutations
 
-Mutations should be declared as a plain objects. Simple mutation can be declared in the following way:
+You can declare your mutations as simple as
+
 ```javascript
-const createTodo = {
-  mutation: `
-    mutation YourMutationName($text: String, $owner: ID) {
-      createTodo(text: $text, owner: $owner) {
-        id,
-        text,
-        owner {
-          id
-        }
+const createTodo = `
+  mutation ($text: String, $owner: ID) {
+    createTodo(text: $text, owner: $owner) {
+      id,
+      text,
+      owner {
+        id
       }
     }
-  `,
-}
+  }
+`;
 ```
+
 Then you can use this mutation with your component
+
 ```javascript
 import React, { Component, PropTypes } from 'react';
 import { createSmartComponent } from 'adrenaline';
 
 class UserItem extends Component {
   static propTypes = {
-    mutations: PropTypes.object.isRequired,
     viewer: PropTypes.object.isRequired,
   }
 
   onSomeButtonClick() {
-    this.props.mutations.createTodo({
-      text: 'Hello, World',
-      owner: this.props.viewer.id,
+    this.props.mutate({
+      mutation: createTodo,
+      variables: {
+        text: hello,
+        owner: this.props.viewer.id
+      },
     });
   }
-}
 
-const createTodo = /* ... */
-
-export default createSmartComponent(UserItem, {
-  initialVariables: (props) => ({
-    id: props.userId,
-  }),
-  query: `
-    query Q($id: ID!) {
-      viewer(id: $id) {
-        id,
-        name,
-        todos {
-          ${TodoList.getFragment('todos')}
-        }
-      }
-    }
-  `,
-  mutations: {
-    createTodo,
-  },
-});
-```
-
-But sometimes you need to update some references in order to make your client data consistent. Thats why there is an `updateCache` property which stands for an array of actions which need to be done in order to make data consistent. Those actions are quite similar to reducers. They have to return state pieces to update internal cache.
-```javascript
-const createTodo = {
-  mutation: `
-    mutation YourMutationName($text: String, $owner: ID) {
-      createTodo(text: $text, owner: $owner) {
-        id,
-        text,
-        owner {
-          id
-        }
-      }
-    }
-  `,
-  updateCache: [
-    (todo) => ({
-      parentId: todo.owner.id,
-      parentType: 'Todo',
-      resolve: (parent) => {
-        return {
-          ...parent,
-          todos: parent.todos.concat([todo.id]),
-        };
-      },
-    })
-  ],
+  render() {
+    /* render some stuff */
+  }
 }
 ```
-
-## Way to 1.0
- - Queries batching
- - Isomorphism
- - Somehow solve necessity of implementing cache resolve in the GraphQL schema
- - Memoize fieldASTs to reduce overhead for query parsing

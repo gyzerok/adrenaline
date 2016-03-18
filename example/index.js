@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 global.__CLIENT__ = false;
 require('babel/register')({
   stage: 0,
