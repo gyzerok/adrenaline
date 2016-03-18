@@ -66,7 +66,7 @@ export default presenter({
 ### `container({ variables, queries })(Component)`
 
   - `variables`: This is a pure function of `props` which results in variables to send to GraphQL endpoint with Component's queries.
-  - `queries`: This should be a function that returns queries which should be used to request data from GraphQL endpoint. Object key becomes aliases for query result.
+  - `query`: This should be a query which should be used to request data from GraphQL endpoint.
 
 
 ```javascript
@@ -85,7 +85,7 @@ export default container({
   variables: (props) => ({
     id: props.userId,
   }),
-  query: () => `
+  query: `
     query ($id: ID!) {
       viewer(id: $id) {
         id,
