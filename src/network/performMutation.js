@@ -5,7 +5,7 @@ export default function performMutation(endpoint, mutation, variables, files) {
     return fetch(endpoint, {
       method: 'post',
       headers: {
-        'Accept': 'application/json',
+        'Accept': 'application/json', // eslint-disable-line
         'Content-Type': 'application/json',
       },
       credentials: 'same-origin',

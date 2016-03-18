@@ -4,7 +4,7 @@ export default function performQuery(endpoint, query, variables) {
   const opts = {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      'Accept': 'application/json', //eslint-disable-line
       'Content-Type': 'application/json',
     },
     credentials: 'same-origin',

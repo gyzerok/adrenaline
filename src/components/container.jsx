@@ -1,5 +1,3 @@
-/* @flow */
-
 import React, { Component, PropTypes } from 'react';
 import invariant from 'invariant';
 
@@ -61,10 +59,6 @@ export default function container(specs) {
         }
       }
 
-      componentWillUnmount() {
-        //this.unsubscribe();
-      }
-
       query = () => {
         const { query } = specs;
         const variables = mapPropsToVariables(this.props);
@@ -72,7 +66,7 @@ export default function container(specs) {
         this.setState({ data: null }, () => {
           this.context.query(query, variables)
             .catch(err => {
-              console.err(err);
+              console.err(err); // eslint-disable-line
             })
             .then(data => this.setState({ data }));
         });

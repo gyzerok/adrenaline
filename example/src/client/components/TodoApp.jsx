@@ -11,6 +11,8 @@ import { createTodo } from '../mutations/todo';
 class TodoApp extends Component {
   static propTypes = {
     viewer: PropTypes.object,
+    isFetching: PropTypes.bool.isRequired,
+    mutate: PropTypes.func.isRequired,
   }
 
   createTodo = (args) => {
