@@ -31,42 +31,20 @@ Adrenaline follows the idea of [Presentational and Container Components](https:/
 
 ### `<Adrenaline endpoint />`
 
-Root of your application should be wrapped with Adrenaline component.
+Root of your application should be wrapped with Adrenaline component. This component is a provider component which injects some helpful stuff in your React application.
 
-#### Props
-
-* `endpoint`: URI of your GraphQL endpoint. Defaults to `/graphql`.
-
-### `presenter({ fragments })(Component)`
-
-As in [presentational components idea](https://github.com/rackt/react-redux#dumb-components-are-unaware-of-redux) all your dumb components may be declared as simple React components. But if you want to declare your data requirements in similar to Relay way you can use `createDumbComponent` function.
-
-```javascript
-import React, { Component } from 'react';
-import { presenter } from 'adrenaline';
-
-class TodoList extends Component {
-  /* ... */
-}
-
-export default presenter({
-  fragments: {
-    todos: `
-      fragment on User {
-        todos {
-          id,
-          text
-        }
-      }
-    `,
-  },
-})(Component);
-```
+prop name | type   | default/required | purpose
+----------|--------|------------------|--------
+endpoint  | string | '/graphql'       | URI of your GraphQL endpoint
 
 ### `container({ variables, queries })(Component)`
 
-  - `variables`: This is a pure function of `props` which results in variables to send to GraphQL endpoint with Component's queries.
-  - `query`: This should be a query which should be used to request data from GraphQL endpoint.
+In Adrenaline you would create container components mostly for your route handlers. Purpose of containers is to collect data requirements from presentation components in a single GraphQL query. Also they behave like view controllers and are able to speak to outside world using mutations.
+
+key       | type                     | default/required | purpose
+----------|--------------------------|------------------|--------
+variables | (props: Props) => Object | () => ({})       | describe query variables as a pure function of props
+query     | string                   | **required**     | your GraphQL query for this container
 
 
 ```javascript
@@ -97,10 +75,36 @@ export default container({
 })(UserItem);
 ```
 
-Also container would pass you 2 additional properties
+Also container would pass 2 additional properties to your component
 
 * `mutate({ mutation: String, variables: Object = {}, invalidate: boolean = true }): Promise`: You need to use this function in order to perform mutations. `invalidate` argument means you need to resolve data declarations after mutation.
 * `isFetching: boolean`: This property helps you understand if your component is in the middle of resolving data.
+
+### `presenter({ fragments })(Component)`
+
+As in [presentational components idea](https://github.com/rackt/react-redux#dumb-components-are-unaware-of-redux) all your dumb components may be declared as simple React components. But if you want to declare your data requirements in similar to Relay way you can use `createDumbComponent` function.
+
+```javascript
+import React, { Component } from 'react';
+import { presenter } from 'adrenaline';
+
+class TodoList extends Component {
+  /* ... */
+}
+
+export default presenter({
+  fragments: {
+    todos: `
+      fragment on User {
+        todos {
+          id,
+          text
+        }
+      }
+    `,
+  },
+})(Component);
+```
 
 ### Mutations
 
