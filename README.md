@@ -37,7 +37,7 @@ prop name | type   | default/required | purpose
 ----------|--------|------------------|--------
 endpoint  | string | '/graphql'       | URI of your GraphQL endpoint
 
-### `container({ variables, queries })(Component)`
+### `container({ variables, query })(Component)`
 
 In Adrenaline you would create container components mostly for your route handlers. Purpose of containers is to collect data requirements from presentation components in a single GraphQL query. Also they behave like view controllers and are able to speak to outside world using mutations.
 
