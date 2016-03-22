@@ -25,6 +25,28 @@ Adrenaline requires **React 0.14 or later.**
 
 Adrenaline uses `fetch` under the hood so you need to install [polyfill](https://github.com/github/fetch) by yourself.
 
+In order to use `fetch` polyfill you need to install it first
+
+`npm install whatwg-fetch`
+
+and then import it at the very top of your entry JavaScript file
+
+```js
+import 'whatwg-fetch';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Adrenaline } from 'adrenaline';
+
+import App from './components/App';
+
+ReactDOM.render(
+  <Adrenaline>
+    <App />
+  </Adrenaline>,
+  document.getElementById('root')
+)
+```
+
 ## API
 
 Adrenaline follows the idea of [Presentational and Container Components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0#.b5g7ctse2)
