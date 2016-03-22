@@ -23,9 +23,7 @@ Adrenaline intend to provide you Relay-like ability to describe your components 
 
 Adrenaline requires **React 0.14 or later.**
 
-Adrenaline uses `fetch` under the hood so you need to install [polyfill](https://github.com/github/fetch) by yourself.
-
-In order to use `fetch` polyfill you need to install it first
+Adrenaline uses `fetch` under the hood so you need to install [polyfill](https://github.com/github/fetch) by yourself
 
 `npm install whatwg-fetch`
 
