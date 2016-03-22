@@ -25,7 +25,7 @@ Adrenaline requires **React 0.14 or later.**
 
 Adrenaline uses `fetch` under the hood so you need to install [polyfill](https://github.com/github/fetch) by yourself
 
-`npm install whatwg-fetch`
+`npm install --save whatwg-fetch`
 
 and then import it at the very top of your entry JavaScript file
 
