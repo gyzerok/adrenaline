@@ -35,7 +35,7 @@ Root of your application should be wrapped with Adrenaline component. This compo
 
 prop name | type   | default/required | purpose
 ----------|--------|------------------|--------
-endpoint  | string | '/graphql'       | URI of your GraphQL endpoint
+endpoint  | string | "/graphql"       | URI of your GraphQL endpoint
 
 ### `container({ variables, query })(Component)`
 
