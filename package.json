@@ -25,7 +25,7 @@
     "flux"
   ],
   "dependencies": {
-    "invariant": "^2.1.0"
+    "invariant": "^2.2.1"
   },
   "peerDependencies": {
     "react": "^0.14.0",
