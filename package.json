@@ -1,11 +1,12 @@
 {
   "name": "adrenaline",
-  "version": "0.11.1",
+  "version": "1.0.0-rc0",
   "description": "Relay-like framework with simplier API",
   "main": "./lib/index.js",
   "scripts": {
     "test": "mocha --compilers js:babel/register $(find ./src -name '*.spec.js')",
-    "postinstall": "node_modules/.bin/babel src --ignore __tests__ --out-dir lib/ --source-maps --stage=0"
+    "build": "node_modules/.bin/babel src --ignore __tests__ --out-dir lib/ --source-maps --stage=0",
+    "postinstall": "npm run build"
   },
   "author": "Fedor Nezhivoi <gyzerok@gmail.com>",
   "repository": {

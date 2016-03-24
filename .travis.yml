@@ -1,8 +1,6 @@
 language: node_js
 node_js:
-  - '0.12'
-  - iojs-v2
-  - iojs
+  - "4"
 before_deploy:
   - npm test
   - npm run build
