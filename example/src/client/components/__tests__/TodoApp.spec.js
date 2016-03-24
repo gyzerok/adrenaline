@@ -1,5 +1,5 @@
 import expect from 'expect';
-import { TestUtils } from 'adrenaline';
+import TestUtils from 'adrenaline/lib/test';
 
 import schema from '../../../server/schema';
 import TodoApp from '../TodoApp';

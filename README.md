@@ -181,7 +181,7 @@ For this case Adrenaline provides you helper utilities for integration testing. 
 
 ```js
 import expect from 'expect';
-import { TestUtils } from 'adrenaline';
+import TestUtils from 'adrenaline/lib/test';
 
 import schema from 'path/to/schema';
 // TodoApp is a container component
