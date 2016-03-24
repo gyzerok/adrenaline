@@ -1,9 +1,7 @@
 /* eslint-disable */
 
 global.__CLIENT__ = false;
-require('babel/register')({
-  stage: 0,
-});
+require('babel-register');
 
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
@@ -30,5 +28,5 @@ devServer.listen(3000, 'localhost', function () {
   console.log('Listening at http://%s:%s', 'localhost', 3000);
 });
 
-var app = require('./src/server');
+var app = require('./src/server').default;
 app.listen(appPort, function () {});
