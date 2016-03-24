@@ -172,3 +172,26 @@ class UserItem extends Component {
   }
 }
 ```
+
+### Testing
+
+There is a common problem I've discovered so far while developing applications. When you change GraphQL schema you'd like to know which particular subtrees in your applications need to be fixed. And you probably do not want to check this running your application and go through it by hands.
+
+For this case Adrenaline provides you helper utilities for integration testing. Currently for `expect` only. You can use `toBeValidAgainst` for checking your components data requirements against your schema with GraphQL validation mechanism.
+
+```js
+import expect from 'expect';
+import { TestUtils } from 'adrenaline';
+
+import schema from 'path/to/schema';
+// TodoApp is a container component
+import TodoApp from 'path/to/TodoApp';
+
+expect.extend(TestUtils.expect);
+
+describe('Queries regression', () => {
+  it('for TodoApp', () => {
+    expect(TodoApp).toBeValidAgainst(schema);
+  });
+});
+```
