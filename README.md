@@ -195,3 +195,5 @@ describe('Queries regression', () => {
   });
 });
 ```
+
+![Image](https://raw.githubusercontent.com/gyzerok/adrenaline/master/images/resgression-example.png)

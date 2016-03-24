@@ -1,4 +1,5 @@
 .*
 node_modules
 example
+images
 *__tests__
