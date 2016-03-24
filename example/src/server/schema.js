@@ -18,10 +18,6 @@ const todoType = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLID),
       description: 'Todo id',
     },
-    text: {
-      type: new GraphQLNonNull(GraphQLString),
-      description: 'Todo text',
-    },
     owner: {
       type: userType,
       resolve: (todo, _, { rootValue: root }) => {
