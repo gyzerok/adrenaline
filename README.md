@@ -1,5 +1,7 @@
 # Adrenaline
 
+**Warning:** master branch is currently out of sync with npm. Switch to the [0.11.1 tag](https://github.com/gyzerok/adrenaline/tree/v0.11.1) to see previous docs!
+
 [![build status](https://img.shields.io/travis/gyzerok/adrenaline/master.svg?style=flat-square)](https://travis-ci.org/gyzerok/adrenaline)
 [![npm version](https://img.shields.io/npm/v/adrenaline.svg?style=flat-square)](https://www.npmjs.com/package/adrenaline)
 [![npm downloads](https://img.shields.io/npm/dm/adrenaline.svg?style=flat-square)](https://www.npmjs.com/package/adrenaline)
@@ -95,7 +97,7 @@ export default container({
 })(UserItem);
 ```
 
-Also container would pass 2 additional properties to your component
+Also container would pass 2 additional properties to your component `mutate` and `isFetching`.
 
 * `mutate({ mutation: String, variables: Object = {}, invalidate: boolean = true }): Promise`: You need to use this function in order to perform mutations. `invalidate` argument means you need to resolve data declarations after mutation.
 * `isFetching: boolean`: This property helps you understand if your component is in the middle of resolving data.
