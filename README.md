@@ -10,7 +10,7 @@ This library provides subset of [Relay](https://github.com/facebook/relay) behav
 
 ## Why?
 
-Relay is a great framework with exiting ideas behind it. The downside is that in order to get all cool features of one you need to deal with complex API. Relay provides you a lot of tricky optimizations which probably are more suitable for huge projects. In small, medium and even large ones you would prefer to have better developer experience while working with a simple minimalistic set of APIs.
+Relay is a great framework with exciting ideas behind it. The downside is that in order to get all cool features of one you need to deal with complex API. Relay provides you a lot of tricky optimizations which probably are more suitable for huge projects. In small, medium and even large ones you would prefer to have better developer experience while working with a simple minimalistic set of APIs.
 
 Adrenaline intend to provide you Relay-like ability to describe your components with declarative data requirements, while keeping API as simple as possible. You are free to use it with different libraries like Redux, React Router and etc.
 
