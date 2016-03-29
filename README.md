@@ -125,7 +125,7 @@ export default presenter({
       }
     `,
   },
-})(Component);
+})(TodoList);
 ```
 
 ### Mutations
