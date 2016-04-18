@@ -16,7 +16,7 @@ export default function container(specs) {
 
     invariant(
       typeof specs.query === 'string',
-      `You have to define 'query' as a string ${displayName}.`
+      `You have to define 'query' as a string in ${displayName}.`
     );
 
     invariant(
