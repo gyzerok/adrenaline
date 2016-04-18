@@ -46,6 +46,7 @@ export default function container(specs) {
 
         this.state = {
           data: null,
+          isFetching: true,
         };
       }
 
@@ -63,12 +64,12 @@ export default function container(specs) {
         const { query } = specs;
         const variables = mapPropsToVariables(this.props);
 
-        this.setState({ data: null }, () => {
+        this.setState({ isFetching: true }, () => {
           this.context.query(query, variables)
             .catch(err => {
               console.err(err); // eslint-disable-line
             })
-            .then(data => this.setState({ data }));
+            .then(data => this.setState({ data, isFetching: false }));
         });
       }
 
@@ -82,8 +83,7 @@ export default function container(specs) {
       }
 
       render() {
-        const { data } = this.state;
-        const isFetching = data === null;
+        const { data, isFetching } = this.state;
         const variables = mapPropsToVariables(this.props);
 
         const dataOrDefault = isFetching ? {} : data;
