@@ -4,3 +4,4 @@ example/.tmp
 example/node_modules
 example/uploads
 *.log
+*.DS_Store
