@@ -67,7 +67,7 @@ export default function container(specs) {
         this.setState({ isFetching: true }, () => {
           this.context.query(query, variables)
             .catch(err => {
-              console.err(err); // eslint-disable-line
+              console.error(err); // eslint-disable-line
             })
             .then(data => this.setState({ data, isFetching: false }));
         });
