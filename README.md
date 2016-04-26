@@ -128,6 +128,36 @@ export default presenter({
 })(TodoList);
 ```
 
+
+## Using ES7 decorators
+Adrenaline works as higher-order components, so you can decorate your container components using ES7 decorators (https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy).
+
+```javascript
+import { container } from 'adrenaline'
+
+@container({
+  variables: (props) => ({
+    id: props.userId,
+  }),
+  query: `
+    query ($id: ID!) {
+      viewer(id: $id) {
+        id,
+        name,
+        ${TodoList.getFragment('todos')}
+      }
+    }
+  `
+})
+export default class extends Component {
+  static propTypes = {
+    viewer: PropTypes.object.isRequired,
+  }
+  /* ... */
+}
+```
+
+
 ### Mutations
 
 You can declare your mutations as simple as
@@ -197,33 +227,3 @@ describe('Queries regression', () => {
 ```
 
 ![Image](https://raw.githubusercontent.com/gyzerok/adrenaline/master/images/resgression-example.png)
-
-
-
-## Using ES7 decorators
-Adrenaline works as higher-order components, so you can decorate your container components using ES7 decorators (https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy).
-
-```javascript
-import { container } from 'adrenaline'
-
-@container({
-  variables: (props) => ({
-    id: props.userId,
-  }),
-  query: `
-    query ($id: ID!) {
-      viewer(id: $id) {
-        id,
-        name,
-        ${TodoList.getFragment('todos')}
-      }
-    }
-  `
-})
-export default class extends Component {
-  static propTypes = {
-    viewer: PropTypes.object.isRequired,
-  }
-  /* ... */
-}
-```
