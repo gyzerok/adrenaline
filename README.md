@@ -130,7 +130,7 @@ export default presenter({
 
 
 ## Using ES7 decorators
-Adrenaline works as higher-order components, so you can decorate your container components using ES7 decorators (https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy).
+Adrenaline works as higher-order components, so you can decorate your container components using ES7 decorators
 
 ```javascript
 import { container } from 'adrenaline'
