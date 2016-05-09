@@ -6,18 +6,18 @@
 [![npm version](https://img.shields.io/npm/v/adrenaline.svg?style=flat-square)](https://www.npmjs.com/package/adrenaline)
 [![npm downloads](https://img.shields.io/npm/dm/adrenaline.svg?style=flat-square)](https://www.npmjs.com/package/adrenaline)
 
-This library provides subset of [Relay](https://github.com/facebook/relay) behaviour with a cleaner API.
+This library provides a subset of [Relay](https://github.com/facebook/relay)'s behaviour with a cleaner API.
 
 ## Why?
 
-Relay is a great framework with exciting ideas behind it. The downside is that in order to get all cool features of one you need to deal with complex API. Relay provides you a lot of tricky optimizations which probably are more suitable for huge projects. In small, medium and even large ones you would prefer to have better developer experience while working with a simple minimalistic set of APIs.
+Relay is a great framework with exciting ideas behind it. The downside is that in order to get all the cool features, you need to deal with a complex API. Relay provides you a lot of tricky optimizations which probably are more suitable for huge projects. In small, medium and even large ones you would prefer to have better developer experience while working with a simple, minimalistic set of APIs.
 
-Adrenaline intend to provide you Relay-like ability to describe your components with declarative data requirements, while keeping API as simple as possible. You are free to use it with different libraries like Redux, React Router and etc.
+Adrenaline intends to provide you Relay-like ability to describe your components with declarative data requirements, while keeping the API as simple as possible. You are free to use it with different libraries like Redux, React Router, etc.
 
-## When not use it?
+## When not to use it?
 
 - You have a huge project and highly need tricky optimisations to reduce client-server traffic.
-- When you don't understand why should you prefer Adrenaline to Relay.
+- When you don't understand why you should prefer Adrenaline to Relay.
 
 ## Installation
 
@@ -25,11 +25,11 @@ Adrenaline intend to provide you Relay-like ability to describe your components 
 
 Adrenaline requires **React 0.14 or later.**
 
-Adrenaline uses `fetch` under the hood so you need to install [polyfill](https://github.com/github/fetch) by yourself
+Adrenaline uses `fetch` under the hood so you need to install the [polyfill](https://github.com/github/fetch) by yourself.
 
 `npm install --save whatwg-fetch`
 
-and then import it at the very top of your entry JavaScript file
+and then import it at the very top of your entry JavaScript file:
 
 ```js
 import 'whatwg-fetch';
@@ -53,7 +53,7 @@ Adrenaline follows the idea of [Presentational and Container Components](https:/
 
 ### `<Adrenaline endpoint />`
 
-Root of your application should be wrapped with Adrenaline component. This component is a provider component which injects some helpful stuff in your React application.
+Root of your application should be wrapped with Adrenaline component. This component is a provider component which injects some helpful stuff into your React application.
 
 prop name | type   | default/required | purpose
 ----------|--------|------------------|--------
@@ -61,7 +61,7 @@ endpoint  | string | "/graphql"       | URI of your GraphQL endpoint
 
 ### `container({ variables, query })(Component)`
 
-In Adrenaline you would create container components mostly for your route handlers. Purpose of containers is to collect data requirements from presentation components in a single GraphQL query. Also they behave like view controllers and are able to speak to outside world using mutations.
+In Adrenaline, you create container components mostly for your route handlers. The purpose of containers is to collect data requirements from presentation components in a single GraphQL query. They also behave like view controllers and are able to speak to the outside world using mutations.
 
 key       | type                     | default/required | purpose
 ----------|--------------------------|------------------|--------
@@ -97,14 +97,14 @@ export default container({
 })(UserItem);
 ```
 
-Also container would pass 2 additional properties to your component `mutate` and `isFetching`.
+Containers may also pass 2 additional properties to your component: `mutate` and `isFetching`.
 
 * `mutate({ mutation: String, variables: Object = {}, invalidate: boolean = true }): Promise`: You need to use this function in order to perform mutations. `invalidate` argument means you need to resolve data declarations after mutation.
 * `isFetching: boolean`: This property helps you understand if your component is in the middle of resolving data.
 
 ### `presenter({ fragments })(Component)`
 
-As in [presentational components idea](https://github.com/rackt/react-redux#dumb-components-are-unaware-of-redux) all your dumb components may be declared as simple React components. But if you want to declare your data requirements in similar to Relay way you can use `createDumbComponent` function.
+As in the [presentational components idea](https://github.com/rackt/react-redux#dumb-components-are-unaware-of-redux), all your dumb components may be declared as simple React components. But if you want to declare your data requirements in a way similar to Relay, you can use the `presenter()` higher-order component.
 
 ```javascript
 import React, { Component } from 'react';
@@ -160,7 +160,7 @@ export default class extends Component {
 
 ### Mutations
 
-You can declare your mutations as simple as
+You can declare your mutations as simple as:
 
 ```javascript
 const createTodo = `
@@ -176,7 +176,7 @@ const createTodo = `
 `;
 ```
 
-Then you can use this mutation with your component
+Then you can use this mutation with your component:
 
 ```javascript
 import React, { Component, PropTypes } from 'react';
@@ -205,9 +205,9 @@ class UserItem extends Component {
 
 ### Testing
 
-There is a common problem I've discovered so far while developing applications. When you change GraphQL schema you'd like to know which particular subtrees in your applications need to be fixed. And you probably do not want to check this running your application and go through it by hands.
+There is a common problem I've discovered so far while developing applications. When you change the GraphQL schema, you'd like to know which particular subtrees in your applications need to be fixed. And you probably do not want to check this by running your application and going through it by hand.
 
-For this case Adrenaline provides you helper utilities for integration testing. Currently for `expect` only. You can use `toBeValidAgainst` for checking your components data requirements against your schema with GraphQL validation mechanism.
+For this case, Adrenaline provides you helper utilities for integration testing (currently for `expect` only). You can use `toBeValidAgainst` for checking your components' data requirements against your schema with GraphQL validation mechanism.
 
 ```js
 import expect from 'expect';
