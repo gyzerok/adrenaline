@@ -51,18 +51,18 @@ export default function container(specs) {
       }
 
       componentWillMount() {
-        this.query();
+        this.query(this.props);
       }
-
-      componentWillUpdate(nextProps) {
+      
+      componentWillReceiveProps(nextProps){
         if (!shallowEqual(this.props, nextProps)) {
-          this.query();
+          this.query(nextProps);
         }
       }
 
-      query = () => {
+      query = (props) => {
         const { query } = specs;
-        const variables = mapPropsToVariables(this.props);
+        const variables = mapPropsToVariables(props);
 
         this.setState({ isFetching: true }, () => {
           this.context.query(query, variables)
