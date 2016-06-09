@@ -51,7 +51,7 @@ export default function container(specs) {
       }
 
       componentWillMount() {
-        this.query(this.props);
+        this.query();
       }
       
       componentWillReceiveProps(nextProps){
@@ -60,7 +60,7 @@ export default function container(specs) {
         }
       }
 
-      query = (props) => {
+      query = (props = this.props) => {
         const { query } = specs;
         const variables = mapPropsToVariables(props);
 
