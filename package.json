@@ -1,6 +1,6 @@
 {
   "name": "adrenaline",
-  "version": "1.0.0-rc1",
+  "version": "1.0.0-rc2",
   "description": "Relay-like framework with simplier API",
   "main": "./lib/index.js",
   "scripts": {
