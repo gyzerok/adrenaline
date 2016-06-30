@@ -21,7 +21,7 @@ Adrenaline intends to provide you Relay-like ability to describe your components
 
 ## Installation
 
-`npm install --save adrenaline@1.0.0-rc1`
+`npm install --save adrenaline@1.0.0-rc2`
 
 Adrenaline requires **React 0.14 or later.**
 
