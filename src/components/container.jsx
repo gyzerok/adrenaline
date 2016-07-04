@@ -53,8 +53,8 @@ export default function container(specs) {
       componentWillMount() {
         this.query();
       }
-      
-      componentWillReceiveProps(nextProps){
+
+      componentWillReceiveProps(nextProps) {
         if (!shallowEqual(this.props, nextProps)) {
           this.query(nextProps);
         }
@@ -86,7 +86,7 @@ export default function container(specs) {
         const { data, isFetching } = this.state;
         const variables = mapPropsToVariables(this.props);
 
-        const dataOrDefault = isFetching ? {} : data;
+        const dataOrDefault = !data ? {} : data;
 
         return (
           <DecoratedComponent
