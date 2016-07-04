@@ -5,7 +5,7 @@ import express from 'express';
 import graphqlHTTP from 'express-graphql';
 
 import schema from './schema';
-import * as conn from './data';
+import * as connection from './data';
 
 
 const app = express();
@@ -15,7 +15,7 @@ app.use('/public', express.static(publicPath));
 
 app.use('/graphql', graphqlHTTP({
   schema,
-  rootValue: conn,
+  context: { connection },
 }));
 
 app.get('*', (req, res) => {

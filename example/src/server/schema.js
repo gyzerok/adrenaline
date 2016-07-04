@@ -24,8 +24,8 @@ const todoType = new GraphQLObjectType({
     },
     owner: {
       type: userType,
-      resolve: (todo, _, { rootValue: root }) => {
-        return root.findUser();
+      resolve: (todo, _, { connection }) => {
+        return connection.findUser();
       },
     },
     createdAt: {
@@ -52,8 +52,8 @@ const userType = new GraphQLObjectType({
           type: GraphQLInt,
         },
       },
-      resolve: (user, params, { rootValue: root }) => {
-        return root.findTodo(params);
+      resolve: (user, params, { connection }) => {
+        return connection.findTodo(params);
       },
     },
   }),
@@ -84,8 +84,8 @@ export default new GraphQLSchema({
     fields: () => ({
       viewer: {
         type: userType,
-        resolve: (root) => {
-          return root.findUser();
+        resolve: (root, args, { connection }) => {
+          return connection.findUser();
         },
       },
       test: {
@@ -104,8 +104,8 @@ export default new GraphQLSchema({
             type: todoInput,
           },
         },
-        resolve: (root, { input }) => {
-          return root.createTodo(input);
+        resolve: (root, { input }, { connection }) => {
+          return connection.createTodo(input);
         },
       },
     }),
