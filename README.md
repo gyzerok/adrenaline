@@ -1,7 +1,5 @@
 # Adrenaline
 
-**Warning:** master branch is currently out of sync with npm. Switch to the [0.11.1 tag](https://github.com/gyzerok/adrenaline/tree/v0.11.1) to see previous docs!
-
 [![build status](https://img.shields.io/travis/gyzerok/adrenaline/master.svg?style=flat-square)](https://travis-ci.org/gyzerok/adrenaline)
 [![npm version](https://img.shields.io/npm/v/adrenaline.svg?style=flat-square)](https://www.npmjs.com/package/adrenaline)
 [![npm downloads](https://img.shields.io/npm/dm/adrenaline.svg?style=flat-square)](https://www.npmjs.com/package/adrenaline)
@@ -21,9 +19,9 @@ Adrenaline intends to provide you Relay-like ability to describe your components
 
 ## Installation
 
-`npm install --save adrenaline@1.0.0-rc2`
+`npm install --save adrenaline`
 
-Adrenaline requires **React 0.14 or later.**
+Adrenaline requires **React 15.0 or later.**
 
 Adrenaline uses `fetch` under the hood so you need to install the [polyfill](https://github.com/github/fetch) by yourself.
 
