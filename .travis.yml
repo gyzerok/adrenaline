@@ -1,3 +1,15 @@
 language: node_js
 node_js:
   - "4"
+before_deploy:
+  - npm test
+  - npm run build
+deploy:
+  provider: npm
+  email: gyzerok@gmail.com
+  api_key:
+    secure: jLGdYG8wRfJW8MxjhJHQvUaLwQLjpqpacSON4brixl5qasaG+yUvNW/1h3FdzXee9LGuTpRQJmMVUW/DWdyAI4OVzS8nrV1GUdfNvxPul6yM+dhcsmmLVXotTzOUtb9JVAmfbpCEhl95+GMFUKrEZYQ2svqvKxWLWS2hvgGXXAO5tVzvu8OcNaboXNhn4iaIBmK62XBnqX+20eQ8oklWgx1+/APbAy1glSddWTCV1DYgx0GnYsmRxS8rQtOnkYIt5hdJpHCH5edW5o1nz+xtIqr+FDyXfhV+4BT/rmtgqhnxkCqisJsifk9fsf+BVDaI2Mabp5gYhCLTFFqsX26s+U5+qOapzwx3P1llH94feoAaBhloABbV573IAQEfnSlBvDFzA2e79Hg7OUpi7mJ87R3Ud32GDQzJTIqBa1D4mVqcORAysUyqiopceHJwwaJVfvP0bYykiXSk8Ahqnc5VnncmAxfy49w9ZoinhFJ95Z+OiI/0k7HP/LpKLXUHOgOBhJoVN/6ku4aoKnTMSv8UuSlCKa6qlkDU2sPUEriT6q+zpqW96AaYN0lWuwe3ICryxzJ+eWyHUXVbSQTF7A7xTFo7R1g0AcxDuJU7mrDX2cJXcA5hi59AioIcauTm8gKO4IYSUu6RcJ1TCDiTk8oWVzQ42NCQbeb0/d6hp6Bg2zQ=
+  on:
+    branch: master
+    tags: true
+    node: "4"
