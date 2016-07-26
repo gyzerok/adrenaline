@@ -9,9 +9,8 @@ export default class TodoInput extends Component {
 
   onEnter = (e) => {
     const { createTodo } = this.props;
-    const { input } = this.refs;
 
-    if (!input.value.length) return;
+    if (!this._input.value.length) return;
 
     if (e.keyCode === ENTER_KEY_CODE) {
       createTodo({ text: input.value });
@@ -22,7 +21,7 @@ export default class TodoInput extends Component {
   render() {
     return (
       <input
-        ref="input"
+        ref={(input) => { this._input = input }}
         type="text"
         onKeyDown={this.onEnter}
         autoFocus="true"
