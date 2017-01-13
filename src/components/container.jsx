@@ -55,7 +55,10 @@ export default function container(specs) {
       }
 
       componentWillReceiveProps(nextProps) {
-        if (!shallowEqual(this.props, nextProps)) {
+        if (!shallowEqual(
+          mapPropsToVariables(this.props),
+          mapPropsToVariables(nextProps)
+        )) {
           this.query(nextProps);
         }
       }
